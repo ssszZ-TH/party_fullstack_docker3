@@ -15,7 +15,7 @@ services:
     image: postgres:16
     volumes:
       - ./db-data:/var/lib/postgresql/data
-      - ./staticData:/staticData  # เพิ่ม Mount โฟลเดอร์ data
+      - ./staticData:/staticData
     environment:
       POSTGRES_DB: myapp
       POSTGRES_USER: spa
@@ -27,6 +27,9 @@ services:
 
   frontend:
     build: ./frontend
+    command: npm run dev -- --host 0.0.0.0 --port 5173
+    ports:
+      - "5173:5173"
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -36,8 +39,6 @@ services:
       - backend
     networks:
       - partymodelnet3
-    # ports:
-    #   - "5173:5173"
 
 networks:
   partymodelnet3:
