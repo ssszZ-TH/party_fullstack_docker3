@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   backend:
@@ -8,3 +8,37 @@ services:
       - "8080:8080"
     volumes:
       - ./backend:/app
+    networks:
+      - partymodelnet3
+
+  db:
+    image: postgres:16
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
+      - ./staticData:/staticData  # เพิ่ม Mount โฟลเดอร์ data
+    environment:
+      POSTGRES_DB: myapp
+      POSTGRES_USER: spa
+      POSTGRES_PASSWORD: spa
+    networks:
+      - partymodelnet3
+    ports:
+      - "5432:5432"
+
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend
+    networks:
+      - partymodelnet3
+    # ports:
+    #   - "5173:5173"
+
+networks:
+  partymodelnet3:
+    driver: bridge
