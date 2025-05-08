@@ -8,7 +8,7 @@ function App() {
 
   useEffect(() => {
     setTimeout(() => {
-      fetch('http://localhost:8080/')
+      fetch('http://172.0.0.1:8080/')
         .then((response) => response.json())
         .then((data) => console.log(data.message))
         .catch((error) => {

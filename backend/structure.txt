@@ -1,0 +1,25 @@
+/projfolder/backend
+├── /app
+│   ├── /config
+│   │   └── database.py         # การตั้งค่าการเชื่อมต่อฐานข้อมูล
+│   │   └── settings.py         # การโหลด .env และ config อื่นๆ
+│   ├── /models
+│   │   ├── /users
+│   │   │   └── user.py        # Model สำหรับ user (native queries)
+│   │   ├── /products
+│   │   │   └── product.py     # Model สำหรับ product
+│   │   └── ...                # Model อื่นๆ สำหรับแต่ละ service
+│   ├── /controllers
+│   │   ├── /users
+│   │   │   └── user.py        # Router/endpoint สำหรับ user
+│   │   ├── /products
+│   │   │   └── product.py     # Router/endpoint สำหรับ product
+│   │   └── ...                # Controller อื่นๆ
+│   ├── /schemas
+│   │   ├── user.py            # Pydantic schema สำหรับ user
+│   │   ├── product.py         # Pydantic schema สำหรับ product
+│   │   └── ...                # Schema อื่นๆ
+│   └── main.py                # FastAPI app และรวม routers
+├── .env                       # ไฟล์ environment variables
+├── requirements.txt           # Dependencies
+├── Dockerfile                 # Docker configuration

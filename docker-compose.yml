@@ -3,11 +3,12 @@ version: '3.8'
 services:
   backend:
     build: ./backend
-    command: sh -c "uvicorn main:app --host 0.0.0.0 --reload --port 8080"
+    command: sh -c "uvicorn app.main:app --host 0.0.0.0 --reload --port 8080"
     ports:
       - "8080:8080"
     volumes:
       - ./backend:/app
+      - ./backend/.env:/app/.env
     networks:
       - partymodelnet3
 
