@@ -144,9 +144,9 @@ curl -X GET "http://localhost:8080/users/1" \
 
 ## ผู้พัฒนา
 - **ชื่อ**: สิทธิพงษ์ จำรัสฤทธิรงค์
-- **รหัสนักศึกษา**: 6410301019
-- **อีเมล**: sitthipong@example.com
-- **GitHub**: https://github.com/<your-username>
+- **รหัสนักศึกษา**: 64...19
+- **อีเมล**: sitthipong.cham@gmail.com
+- **GitHub**: https://github.com/ssszZ-TH
 
 ## ที่มา
 โปรเจกต์นี้พัฒนาเป็นส่วนหนึ่งของโปรเจกต์จบ วิทยาการคอมพิวเตอร์ โดยอ้างอิง **The Data Model Resource Book** สำหรับการออกแบบ schema และเน้น data integrity และ performance optimization.
