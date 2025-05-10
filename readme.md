@@ -2,7 +2,7 @@
 
 โปรเจกต์จบสำหรับการพัฒนาระบบ Full-Stack โดยใช้ **FastAPI (Python)**, **React + TypeScript**, และ **PostgreSQL** รองรับการจัดการข้อมูลผู้ใช้ด้วย role-based authentication (เฉพาะ admin) และ deploy ด้วย **Docker Compose** โปรเจกต์นี้เน้น data integrity, performance optimization และ scalability สำหรับ dataset ขนาดใหญ่ (>100,000 records).
 
-**ผู้พัฒนา**: สิทธิพงษ์ จำรัสฤทธิรงค์ (รหัสนักศึกษา 6410301019)
+**ผู้พัฒนา**: Sithipong Chamratritthirong (รหัสนักศึกษา 64...19) สถาบันเทคโนโลยีจิตรลดา Chitralada Institute of Technology
 
 ## คุณสมบัติหลัก
 - **การจัดการผู้ใช้**:
@@ -143,7 +143,7 @@ curl -X GET "http://localhost:8080/users/1" \
 - ปรับปรุง PostgreSQL ด้วย partitioning และ index optimization สำหรับ dataset ขนาดใหญ่
 
 ## ผู้พัฒนา
-- **ชื่อ**: สิทธิพงษ์ จำรัสฤทธิรงค์
+- **ชื่อ**: Sitthipong Chamratritthirong
 - **รหัสนักศึกษา**: 64...19
 - **อีเมล**: sitthipong.cham@gmail.com
 - **GitHub**: https://github.com/ssszZ-TH
