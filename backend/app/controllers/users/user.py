@@ -39,16 +39,16 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         raise HTTPException(status_code=401, detail="Invalid token")
 
 # Endpoint สำหรับสร้างผู้ใช้ใหม่
-@router.post("/", response_model=UserOut)
-async def create_user_endpoint(user: UserCreate):
-    # อธิบาย: รับ UserCreate schema (name, email, password, role)
-    # ใช้ create_user จาก model ซึ่งตรวจสอบ email ซ้ำและตั้ง role='admin' โดย default
-    result = await create_user(user)
-    if not result:
-        logger.warning(f"Failed to create user: {user.email}")
-        raise HTTPException(status_code=400, detail="Email already exists")
-    logger.info(f"Created user: {user.email}, role={result.role}")
-    return result
+# @router.post("/", response_model=UserOut)
+# async def create_user_endpoint(user: UserCreate):
+#     # อธิบาย: รับ UserCreate schema (name, email, password, role)
+#     # ใช้ create_user จาก model ซึ่งตรวจสอบ email ซ้ำและตั้ง role='admin' โดย default
+#     result = await create_user(user)
+#     if not result:
+#         logger.warning(f"Failed to create user: {user.email}")
+#         raise HTTPException(status_code=400, detail="Email already exists")
+#     logger.info(f"Created user: {user.email}, role={result.role}")
+#     return result
 
 # Endpoint สำหรับดึงข้อมูลผู้ใช้
 @router.get("/{user_id}", response_model=UserOut)

@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config.database import database
 from app.controllers.users.user import router as user_router
 from app.controllers.auth.auth import router as auth_router
+from app.controllers.marital_status_type import router as marital_status_type_router
 
 # โหลด .env ก่อน import อื่นๆ
 load_dotenv()
@@ -22,6 +23,9 @@ app.add_middleware(
 # รวม routers
 app.include_router(user_router)
 app.include_router(auth_router)
+app.include_router(marital_status_type_router)
+
+# รวม routers อื่นๆ ที่มีใน controllers
 
 @app.on_event("startup")
 async def startup():
