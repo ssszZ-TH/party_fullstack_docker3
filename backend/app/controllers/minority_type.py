@@ -11,7 +11,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/v1/minority_type", tags=["minority_type"])
+router = APIRouter(prefix="/v1/minoritytype", tags=["minoritytype"])
 
 @router.post("/", response_model=MinorityTypeOut)
 async def create_minority_type_endpoint(minority_type: MinorityTypeCreate, current_user: dict = Depends(get_current_user)):
