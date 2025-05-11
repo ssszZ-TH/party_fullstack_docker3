@@ -6,6 +6,13 @@ from app.controllers.users.user import router as user_router
 from app.controllers.auth.auth import router as auth_router
 from app.controllers.marital_status_type import router as marital_status_type_router
 from app.controllers.minority_type import router as minority_type_router
+from app.controllers.industry_type import router as industry_type_router
+from app.controllers.employee_count_range import router as employee_count_range_router
+from app.controllers.ethnicity import router as ethnicity_router
+from app.controllers.income_range import router as income_range_router
+from app.controllers.physical_characteristic_type import router as physical_characteristic_type_router
+from app.controllers.person_name_type import router as person_name_type_router
+from app.controllers.country import router as country_router
 
 # โหลด .env ก่อน import อื่นๆ
 load_dotenv()
@@ -26,6 +33,13 @@ app.include_router(user_router)
 app.include_router(auth_router)
 app.include_router(marital_status_type_router)
 app.include_router(minority_type_router)
+app.include_router(industry_type_router)
+app.include_router(employee_count_range_router)
+app.include_router(ethnicity_router)
+app.include_router(income_range_router)
+app.include_router(physical_characteristic_type_router)
+app.include_router(person_name_type_router)
+app.include_router(country_router)
 
 # รวม routers อื่นๆ ที่มีใน controllers
 
