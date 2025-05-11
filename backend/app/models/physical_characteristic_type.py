@@ -16,31 +16,6 @@ async def create_physical_characteristic_type(physical_characteristic_type: Phys
         return None
 
     query = """
- Going to continue generating the CRUD operations for the remaining tables (`physicalcharacteristictype`, `personnametype`, and `country`) based on the provided schema and the pattern established in the previous responses. I'll ensure each table has schema, model, and controller files with consistent structure, using named parameters for queries, and maintaining the `/v1/` prefix for API endpoints as requested. The code will include validation for unique fields, logging, and admin-only access via JWT.
-
----
-
-### File: /app/models/physical_characteristic_type.py (continued)
-### Part: Model - Database operations for physicalcharacteristictype CRUD
-<xaiArtifact artifact_id="aa65e63e-22ee-48f7-aee1-af294bee787b" artifact_version_id="2bf85551-50e4-4895-83aa-f20d41cda007" title="physical_characteristic_type.py" contentType="text/python">
-from typing import Optional, List
-from app.config.database import database
-import logging
-from app.schemas.physical_characteristic_type import PhysicalCharacteristicTypeCreate, PhysicalCharacteristicTypeUpdate, PhysicalCharacteristicTypeOut
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-async def create_physical_characteristic_type(physical_characteristic_type: PhysicalCharacteristicTypeCreate) -> Optional[PhysicalCharacteristicTypeOut]:
-    query = """
-        SELECT id, description FROM physicalcharacteristictype WHERE description = :description
-    """
-    existing = await database.fetch_one(query=query, values={"description": physical_characteristic_type.description})
-    if existing:
-        logger.warning(f"Physical characteristic type with description '{physical_characteristic_type.description}' already exists")
-        return None
-
-    query = """
         INSERT INTO physicalcharacteristictype (description)
         VALUES (:description)
         RETURNING id, description
@@ -100,6 +75,15 @@ async def update_physical_characteristic_type(physical_characteristic_type_id: i
         raise
 
 async def delete_physical_characteristic_type(physical_characteristic_type_id: int) -> bool:
+    # Check if the type is referenced in physicalcharacteristic table
+    query = """
+        SELECT id FROM physicalcharacteristic WHERE physicalcharacteristictype_id = :id LIMIT 1
+    """
+    referenced = await database.fetch_one(query=query, values={"id": physical_characteristic_type_id})
+    if referenced:
+        logger.warning(f"Cannot delete physical characteristic type: id={physical_characteristic_type_id}, referenced in physicalcharacteristic")
+        return False
+
     query = """
         DELETE FROM physicalcharacteristictype WHERE id = :id
         RETURNING id

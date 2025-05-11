@@ -13,6 +13,7 @@ from app.controllers.income_range import router as income_range_router
 from app.controllers.physical_characteristic_type import router as physical_characteristic_type_router
 from app.controllers.person_name_type import router as person_name_type_router
 from app.controllers.country import router as country_router
+from app.controllers.party_type import router as party_type_router
 
 # โหลด .env ก่อน import อื่นๆ
 load_dotenv()
@@ -40,6 +41,7 @@ app.include_router(income_range_router)
 app.include_router(physical_characteristic_type_router)
 app.include_router(person_name_type_router)
 app.include_router(country_router)
+app.include_router(party_type_router)
 
 # รวม routers อื่นๆ ที่มีใน controllers
 
