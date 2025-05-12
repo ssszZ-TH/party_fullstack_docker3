@@ -14,6 +14,12 @@ from app.controllers.physical_characteristic_type import router as physical_char
 from app.controllers.person_name_type import router as person_name_type_router
 from app.controllers.country import router as country_router
 from app.controllers.party_type import router as party_type_router
+from app.controllers.person import router as person_router
+from app.controllers.passport import router as passport_router
+from app.controllers.citizenship import router as citizenship_router
+from app.controllers.person_name import router as person_name_router
+from app.controllers.marital_status import router as marital_status_router
+from app.controllers.physical_characteristic import router as physical_characteristic_router
 
 # โหลด .env ก่อน import อื่นๆ
 load_dotenv()
@@ -42,6 +48,14 @@ app.include_router(physical_characteristic_type_router)
 app.include_router(person_name_type_router)
 app.include_router(country_router)
 app.include_router(party_type_router)
+app.include_router(person_router)
+app.include_router(passport_router)
+app.include_router(citizenship_router)
+app.include_router(person_name_router)
+app.include_router(marital_status_router)
+app.include_router(physical_characteristic_router)
+
+
 
 # รวม routers อื่นๆ ที่มีใน controllers
 
