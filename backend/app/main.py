@@ -20,6 +20,8 @@ from app.controllers.citizenship import router as citizenship_router
 from app.controllers.person_name import router as person_name_router
 from app.controllers.marital_status import router as marital_status_router
 from app.controllers.physical_characteristic import router as physical_characteristic_router
+from app.controllers.informal_organization import router as informal_organization_router
+from app.controllers.legal_organization import router as legal_organization_router
 
 # โหลด .env ก่อน import อื่นๆ
 load_dotenv()
@@ -54,6 +56,8 @@ app.include_router(citizenship_router)
 app.include_router(person_name_router)
 app.include_router(marital_status_router)
 app.include_router(physical_characteristic_router)
+app.include_router(informal_organization_router)
+app.include_router(legal_organization_router)
 
 
 
