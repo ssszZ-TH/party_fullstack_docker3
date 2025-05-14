@@ -25,6 +25,8 @@ from app.controllers.legal_organization import router as legal_organization_rout
 from app.controllers.classify_by_minority import router as classify_by_minority_router
 from app.controllers.classify_by_industry import router as classify_by_industry_router
 from app.controllers.classify_by_size import router as classify_by_size_router
+from app.controllers.classify_by_eeoc import router as classify_by_eeoc_router
+from app.controllers.classify_by_income import router as classify_by_income_router
 
 # โหลด .env ก่อน import อื่นๆ
 load_dotenv()
@@ -64,7 +66,8 @@ app.include_router(legal_organization_router)
 app.include_router(classify_by_minority_router)
 app.include_router(classify_by_industry_router)
 app.include_router(classify_by_size_router)
-
+app.include_router(classify_by_eeoc_router)
+app.include_router(classify_by_income_router)
 
 # รวม routers อื่นๆ ที่มีใน controllers
 
