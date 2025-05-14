@@ -28,7 +28,7 @@ def create_access_token(data: dict):
     # เพิ่ม expiration time และ encode ด้วย SECRET_KEY
     try:
         to_encode = data.copy()
-        expire = datetime.utcnow() + timedelta(minutes=30)
+        expire = datetime.utcnow() + timedelta(days=1)  # กำหนดเวลา expiration เป็น 1 วัน
         to_encode.update({"exp": expire})
         encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
         logger.info(f"Created JWT for user: id={data.get('sub')}, role={data.get('role')}")

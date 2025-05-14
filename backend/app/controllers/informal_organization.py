@@ -17,7 +17,7 @@ router = APIRouter(prefix="/v1/informalorganization", tags=["informalorganizatio
 async def create_informal_organization_endpoint(informal_organization: InformalOrganizationCreate, current_user: dict = Depends(get_current_user)):
     result = await create_informal_organization(informal_organization)
     if not result:
-        logger.warning(f"Failed to create informal organization: organization_id={informal_organization.organization_id}")
+        logger.warning(f"Failed to create informal organization")
         raise HTTPException(status_code=400, detail="Failed to create informal organization")
     logger.info(f"Created informal organization: id={result.id}")
     return result

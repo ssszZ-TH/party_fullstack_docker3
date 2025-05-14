@@ -60,7 +60,6 @@ app.include_router(informal_organization_router)
 app.include_router(legal_organization_router)
 
 
-
 # รวม routers อื่นๆ ที่มีใน controllers
 
 @app.on_event("startup")
