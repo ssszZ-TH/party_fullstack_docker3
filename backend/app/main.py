@@ -22,6 +22,9 @@ from app.controllers.marital_status import router as marital_status_router
 from app.controllers.physical_characteristic import router as physical_characteristic_router
 from app.controllers.informal_organization import router as informal_organization_router
 from app.controllers.legal_organization import router as legal_organization_router
+from app.controllers.classify_by_minority import router as classify_by_minority_router
+from app.controllers.classify_by_industry import router as classify_by_industry_router
+from app.controllers.classify_by_size import router as classify_by_size_router
 
 # โหลด .env ก่อน import อื่นๆ
 load_dotenv()
@@ -58,6 +61,9 @@ app.include_router(marital_status_router)
 app.include_router(physical_characteristic_router)
 app.include_router(informal_organization_router)
 app.include_router(legal_organization_router)
+app.include_router(classify_by_minority_router)
+app.include_router(classify_by_industry_router)
+app.include_router(classify_by_size_router)
 
 
 # รวม routers อื่นๆ ที่มีใน controllers
