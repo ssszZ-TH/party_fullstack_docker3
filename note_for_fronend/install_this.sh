@@ -6,3 +6,4 @@ npm install @mui/x-data-grid
 npm install react-router-dom
 npm install axios
 npm install @mui/x-date-pickers dayjs
+npm install js-cookie

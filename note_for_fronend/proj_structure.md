@@ -12,7 +12,7 @@ my-react-app/
 │   ├── components/     # คอมโพเนนต์ที่ใช้ซ้ำ
 │   ├── pages/          # หน้าแต่ละหน้าในแอปพลิเคชัน
 │   ├── hooks/          # Custom hooks
-│   ├── context/        # Context API สำหรับ state management
+│   ├── contexts/        # Context API สำหรับ state management
 │   ├── services/       # ฟังก์ชันช่วยเหลือหรือ API calls
 │   ├── styles/         # สไตล์ CSS หรือ SCSS
 │   ├── utils/          # ฟังก์ชันช่วยเหลือทั่วไป
@@ -31,7 +31,7 @@ my-react-app/
   - **components/**: คอมโพเนนต์ที่ใช้ซ้ำในหลาย ๆ หน้า 🔄.
   - **pages/**: สำหรับหน้าแต่ละหน้าในแอปพลิเคชัน เช่น หน้า Home, About, Contact 📄.
   - **hooks/**: สำหรับ custom hooks ที่สามารถนำกลับมาใช้ใหม่ได้ 🔧.
-  - **context/**: สำหรับ Context API เพื่อจัดการสถานะทั่วทั้งแอปพลิเคชัน 🏗️.
+  - **contexts/**: สำหรับ Context API เพื่อจัดการสถานะทั่วทั้งแอปพลิเคชัน 🏗️.
   - **services/**: สำหรับการเรียกใช้งาน API หรือฟังก์ชันช่วยเหลืออื่น ๆ 🌐.
   - **styles/**: เก็บไฟล์ CSS หรือ SCSS เพื่อจัดการสไตล์ของแอปพลิเคชัน 🎨.
   - **utils/**: ฟังก์ชันช่วยเหลือทั่วไปที่สามารถใช้ในหลาย ๆ ที่ 🛠️.

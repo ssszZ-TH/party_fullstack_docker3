@@ -55,11 +55,11 @@ const services = [
 
 // Navigation items
 const navItems = [
-  { name: "Profile", icon: <PersonIcon />, path: "/profile" },
-  { name: "Settings", icon: <SettingsIcon />, path: "/settings" },
-  { name: "About", icon: <AboutIcon />, path: "/about" },
-  { name: "Database", icon: <DatabaseIcon />, path: "/database" },
-  { name: "Tutorial", icon: <TutorialIcon />, path: "/tutorial" },
+  { name: "Profile", icon: <PersonIcon />, path: "/v1/profile" },
+  { name: "Settings", icon: <SettingsIcon />, path: "/v1/settings" },
+  { name: "About", icon: <AboutIcon />, path: "/v1/about" },
+  { name: "Database", icon: <DatabaseIcon />, path: "/v1/database" },
+  { name: "Tutorial", icon: <TutorialIcon />, path: "/v1/tutorial" },
 ];
 
 export default function Home() {

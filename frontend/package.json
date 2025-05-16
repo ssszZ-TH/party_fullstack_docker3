@@ -18,6 +18,7 @@
     "@mui/x-date-pickers": "^8.2.0",
     "axios": "^1.9.0",
     "dayjs": "^1.11.13",
+    "js-cookie": "^3.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.5.3"
