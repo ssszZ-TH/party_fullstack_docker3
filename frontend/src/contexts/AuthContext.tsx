@@ -30,10 +30,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = (token: string) => {
     try {
+      // ตั้งค่า cookie ชื่อ 'access_token' โดยใช้ js-cookie
+      // และกำหนดอายุ cookie เป็น 7 วัน
+      // จำกัดให้ cookie ส่งผ่านการเชื่อมต่อ HTTPS เท่านั้นเพื่อความปลอดภัย
+      // ป้องกันการส่ง cookie ใน cross-site requests (เช่น CSRF) เพื่อเพิ่มความปลอดภัย
+      // Cookies.set(name, value, options)
       Cookies.set('access_token', token, { expires: 7, secure: true, sameSite: 'strict' });
       setIsAuthenticated(true);
     } catch (error) {
-      console.error('Error setting cookie:', error);
+      console.error('Error when setting cookie:', error);
     }
   };
 
@@ -42,7 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       Cookies.remove('access_token');
       setIsAuthenticated(false);
     } catch (error) {
-      console.error('Error removing cookie:', error);
+      console.error('Error when removing cookie:', error);
     }
   };
 
