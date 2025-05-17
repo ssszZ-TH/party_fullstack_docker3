@@ -1,5 +1,20 @@
 # Full-Stack Development Based on Reference Data Model
 
+![database diagram](./mockup/party_model.png)
+database
+
+![](./image/front/Screenshot%202025-04-14%20002035.png)
+ได้คำปรึกษาจาก อาจารย์สาขาออกเเบบ
+
+![](./image/front/Screenshot%202025-04-25%20123734.png)
+หน้าเว็บกำลังอยู่ในขั้นพัฒณา
+
+![](./image/auth/Screenshot%202025-05-16%20114936.png)
+สามารถดู profile ตัวเองได้
+
+![](./image/auth/Screenshot%202025-05-16%20115230.png)
+มีหน้า login ที่เเจ้งเตือน error ได้
+
 โปรเจกต์จบสำหรับการพัฒนาระบบ Full-Stack โดยใช้ **FastAPI (Python)**, **React + TypeScript**, และ **PostgreSQL** รองรับการจัดการข้อมูลผู้ใช้ด้วย role-based authentication (เฉพาะ admin) และ deploy ด้วย **Docker Compose** โปรเจกต์นี้เน้น data integrity, performance optimization และ scalability สำหรับ dataset ขนาดใหญ่ (>100,000 records).
 
 **ผู้พัฒนา**: Sithipong Chamratritthirong (รหัสนักศึกษา 64...19) สถาบันเทคโนโลยีจิตรลดา Chitralada Institute of Technology
