@@ -14,31 +14,26 @@ export const AuthContext = createContext<AuthContextType>({
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    const token = Cookies.get('access_token');
+    console.log('AuthContext: Initial token check:', token ? 'Token exists' : 'No token');
+    return !!token;
+  });
 
   useEffect(() => {
-    // ตรวจสอบ token จาก cookie ตอนโหลดหน้า
-    try {
-      const token = Cookies.get('access_token');
-      if (token) {
-        setIsAuthenticated(true);
-      }
-    } catch (error) {
-      console.error('Error accessing cookies:', error);
-    }
+    console.log('AuthContext: Running useEffect');
+    const token = Cookies.get('access_token');
+    setIsAuthenticated(!!token);
   }, []);
 
   const login = (token: string) => {
     try {
-      // ตั้งค่า cookie ชื่อ 'access_token' โดยใช้ js-cookie
-      // และกำหนดอายุ cookie เป็น 1 วัน
-      // จำกัดให้ cookie ส่งผ่านการเชื่อมต่อ HTTPS เท่านั้นเพื่อความปลอดภัย
-      // ป้องกันการส่ง cookie ใน cross-site requests (เช่น CSRF) เพื่อเพิ่มความปลอดภัย
-      // Cookies.set(name, value, options)
       Cookies.set('access_token', token, { expires: 1, secure: true, sameSite: 'strict' });
       setIsAuthenticated(true);
+      console.log('AuthContext: Login successful, token set');
     } catch (error) {
-      console.error('Error when setting cookie:', error);
+      console.error('AuthContext: Error when setting cookie:', error);
+      setIsAuthenticated(false);
     }
   };
 
@@ -46,8 +41,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       Cookies.remove('access_token');
       setIsAuthenticated(false);
+      console.log('AuthContext: Logout successful, token removed');
     } catch (error) {
-      console.error('Error when removing cookie:', error);
+      console.error('AuthContext: Error when removing cookie:', error);
+      setIsAuthenticated(false);
     }
   };
 

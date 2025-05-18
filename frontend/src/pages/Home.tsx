@@ -1,5 +1,5 @@
-import React from "react";
-import { Link as RouterLink } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import {
   Box,
   Container,
@@ -23,6 +23,10 @@ import {
 } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 
+// to check authentication
+import { AuthContext } from "../contexts/AuthContext";
+import { getProfile } from "../services/profile";
+
 // Services data array
 // อาร์เรย์ของ services
 const services = [
@@ -30,7 +34,10 @@ const services = [
   { name: "Marital Status Type", path: "/v1/maritalstatustype" },
   { name: "Marital Status", path: "/v1/maritalstatus" },
   { name: "Person Name Type", path: "/v1/personnametype" },
-  { name: "Physical Characteristic Type", path: "/v1/physicalcharacteristictype" },
+  {
+    name: "Physical Characteristic Type",
+    path: "/v1/physicalcharacteristictype",
+  },
   { name: "Country", path: "/v1/country" },
   { name: "Person Name", path: "/v1/personname" },
   { name: "Citizenship", path: "/v1/citizenship" },
@@ -63,6 +70,32 @@ const navItems = [
 ];
 
 export default function Home() {
+  //do about authentication
+  const { isAuthenticated, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkTokenValidity = async () => {
+      console.log("Home: isAuthenticated =", isAuthenticated);
+      if (!isAuthenticated) {
+        console.log("Home: No authentication, redirecting to /login");
+        navigate("/login", { replace: true });
+        return;
+      }
+      try {
+        console.log("Home: Checking token with getProfile");
+        await getProfile({});
+        console.log("Home: Token is valid");
+      } catch (err: any) {
+        console.log("Home: Token check error:", err);
+        logout();
+        navigate("/login", { replace: true });
+      }
+    };
+
+    checkTokenValidity();
+  }, [logout, navigate]); // ลบ isAuthenticated ออกจาก dependencies
+
   const theme = useTheme();
 
   return (
@@ -80,13 +113,13 @@ export default function Home() {
       >
         {/* Logo */}
         <Box sx={{ p: 2, textAlign: "center" }}>
-          <img 
-            src="/sphere_wire_frame.svg" 
-            alt="Logo" 
-            style={{ 
+          <img
+            src="/sphere_wire_frame.svg"
+            alt="Logo"
+            style={{
               width: "100%",
-              objectFit: "contain" 
-            }} 
+              objectFit: "contain",
+            }}
           />
         </Box>
 
@@ -96,18 +129,16 @@ export default function Home() {
         <List>
           {navItems.map((item) => (
             <ListItem key={item.name} disablePadding>
-              <ListItemButton 
-                component={RouterLink} 
+              <ListItemButton
+                component={RouterLink}
                 to={item.path}
                 sx={{
                   "&:hover": {
                     bgcolor: theme.palette.action.hover,
-                  }
+                  },
                 }}
               >
-                <ListItemIcon sx={{ minWidth: 40 }}>
-                  {item.icon}
-                </ListItemIcon>
+                <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.name} />
               </ListItemButton>
             </ListItem>
@@ -155,10 +186,10 @@ export default function Home() {
           {/* Services Grid */}
           <Box
             sx={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '12px', // Reduced gap between items
-              justifyContent: 'flex-start',
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "12px", // Reduced gap between items
+              justifyContent: "flex-start",
             }}
           >
             {services.map((service) => (
@@ -167,20 +198,22 @@ export default function Home() {
                 component={RouterLink}
                 to={service.path}
                 sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  width: '110px', // Compact width
-                  height: '110px', // Compact height
-                  textDecoration: 'none',
-                  transition: 'transform 0.2s',
-                  '&:hover': {
-                    transform: 'scale(1.05)',
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  width: "110px", // Compact width
+                  height: "110px", // Compact height
+                  textDecoration: "none",
+                  transition: "transform 0.2s",
+                  "&:hover": {
+                    transform: "scale(1.05)",
                   },
                 }}
               >
                 <Avatar
-                  src={`/home_thumbnail/${service.name.toLowerCase().replace(/\s+/g, '-')}/thumbnail.jpg`}
+                  src={`/home_thumbnail/${service.name
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}/thumbnail.jpg`}
                   sx={{
                     width: 80, // Smaller thumbnail
                     height: 80,
@@ -193,15 +226,15 @@ export default function Home() {
                   color="text.primary"
                   sx={{
                     fontWeight: 500,
-                    fontSize: '0.75rem', // Smaller text
+                    fontSize: "0.75rem", // Smaller text
                     lineHeight: 1.2,
-                    height: '28px', // Fixed height for text
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '100%',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
+                    height: "28px", // Fixed height for text
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
                   }}
                 >
                   {service.name}

@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import Cookies from "js-cookie";
 const BASE_URL = "http://localhost:8080/v1/maritalstatustype";
 
 // ฟังก์ชันสำหรับ log error (สามารถปรับแต่งได้)
