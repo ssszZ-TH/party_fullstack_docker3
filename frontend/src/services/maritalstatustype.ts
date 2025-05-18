@@ -12,9 +12,21 @@ const logError = (method: string, error: any) => {
   });
 };
 
+// ฟังก์ชันดึง access_token จาก cookie
+const getAuthHeaders = () => {
+  const token = Cookies.get('access_token');
+  if (!token) {
+    throw new Error('No access token found');
+  }
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
+  };
+};
+
 export async function list() {
   try {
-    const res = await axios.get(BASE_URL);
+    const res = await axios.get(BASE_URL, { headers: getAuthHeaders() });
     return res.data;
   } catch (error: any) {
     logError("list", error);
@@ -24,7 +36,7 @@ export async function list() {
 
 export async function get({ id }: { id: number }) {
   try {
-    const res = await axios.get(`${BASE_URL}/${id}`);
+    const res = await axios.get(`${BASE_URL}/${id}`, { headers: getAuthHeaders() });
     return res.data;
   } catch (error: any) {
     logError("get", error);
@@ -34,9 +46,7 @@ export async function get({ id }: { id: number }) {
 
 export async function create(data: any) {
   try {
-    const res = await axios.post(BASE_URL, data, {
-      headers: { "Content-Type": "application/json" }, // เพิ่ม header เพื่อความชัดเจน
-    });
+    const res = await axios.post(BASE_URL, data, {headers: getAuthHeaders()});
     return res.data;
   } catch (error: any) {
     logError("create", error);
@@ -47,7 +57,7 @@ export async function create(data: any) {
 export async function update(data: any) {
   try {
     const res = await axios.put(`${BASE_URL}/${data.id}`, data, {
-      headers: { "Content-Type": "application/json" },
+      headers: getAuthHeaders(),
     });
     return res.data;
   } catch (error: any) {
@@ -58,7 +68,7 @@ export async function update(data: any) {
 
 export async function deleteById({ id }: { id: number }) {
   try {
-    const res = await axios.delete(`${BASE_URL}/${id}`);
+    const res = await axios.delete(`${BASE_URL}/${id}`, { headers: getAuthHeaders() });
     return res.data;
   } catch (error: any) {
     logError("deleteById", error);

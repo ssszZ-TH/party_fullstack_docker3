@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8080/v1/person";
+const BASE_URL = "http://localhost:8080/users";
 
 // ฟังก์ชันสำหรับ log error (สามารถปรับแต่งได้)
 const logError = (method: string, error: any) => {
