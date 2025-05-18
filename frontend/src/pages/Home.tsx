@@ -213,11 +213,12 @@ export default function Home() {
                 <Avatar
                   src={`/home_thumbnail/${service.name
                     .toLowerCase()
-                    .replace(/\s+/g, "-")}/thumbnail.jpg`}
+                    .replace(/\s+/g, "_")}.png`}
                   sx={{
                     width: 80, // Smaller thumbnail
                     height: 80,
                     mb: 0.5, // Reduced margin
+                    borderRadius: "10%",
                   }}
                 />
                 <Typography
