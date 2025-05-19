@@ -30,7 +30,7 @@ import { getProfile } from "../services/profile";
 // Services data array
 // อาร์เรย์ของ services
 const services = [
-  { name: "Users", path: "/users" },
+  // { name: "Users", path: "/users" },
   { name: "Marital Status Type", path: "/v1/maritalstatustype" },
   { name: "Marital Status", path: "/v1/maritalstatus" },
   { name: "Person Name Type", path: "/v1/personnametype" },
@@ -215,8 +215,8 @@ export default function Home() {
                     .toLowerCase()
                     .replace(/\s+/g, "_")}.png`}
                   sx={{
-                    width: 80, // Smaller thumbnail
-                    height: 80,
+                    width: 60, // Smaller thumbnail
+                    height: 60,
                     mb: 0.5, // Reduced margin
                     borderRadius: "10%",
                   }}
