@@ -6,13 +6,7 @@ import DataTable from "../components/DataTable";
 import PersonNameModal from "../components/PersonNameModal";
 import Loading from "../components/Loading";
 import { AuthContext } from "../contexts/AuthContext";
-import {
-  create,
-  get,
-  list,
-  update,
-  deleteById,
-} from "../services/personname";
+import { create, get, list, update, deleteById } from "../services/personname";
 import { list as listPerson } from "../services/person";
 import { list as listPersonNameType } from "../services/personnametype";
 import UpdateButton from "../components/buttons/UpdateButton";
@@ -33,17 +27,37 @@ export default function PersonName() {
     { field: "id", headerName: "ID", width: 70 },
     { field: "fromdate", headerName: "From Date", width: 120 },
     { field: "thrudate", headerName: "Thru Date", width: 120 },
-    { field: "person_id", headerName: "Person ID", width: 100, type: "number" },
-    { field: "personnametype_id", headerName: "Name Type ID", width: 100, type: "number" },
+    { field: "person_id", headerName: "Person ID", width: 100 },
+    {
+      field: "person", // Column name in the table
+      headerName: "Person Details", // Title shown at the top of the column
+      width: 200, // How wide the column is (in pixels)
+      renderCell: (params) => {
+        // Function to show custom content in the cell
+        const obj = personDD.find((item) => item.id === params.row.person_id); // Find person data by matching person_id
+        return <>{obj ? obj.text : "N/A"}</>;
+      },
+    },
+    { field: "personnametype_id", headerName: "Name Type ID", width: 120 },
+    {
+      field: "nametype", // Column name in the table
+      headerName: "Name Type", // Title shown at the top of the column
+      width: 200, // How wide the column is (in pixels)
+      renderCell: (params) => {
+        // Function to show custom content in the cell
+        const obj = personNameTypeDD.find(
+          (item) => item.id === params.row.personnametype_id
+        ); // Find person name type data by matching personnametype_id
+        return <>{obj ? obj.text : "N/A"}</>;
+      },
+    },
     { field: "name", headerName: "Name", width: 150 },
     {
       field: "update",
       headerName: "",
       width: 100,
       renderCell: (params) => (
-        <UpdateButton
-          onClick={() => handleUpdateButton(params.row)}
-        />
+        <UpdateButton onClick={() => handleUpdateButton(params.row)} />
       ),
     },
     {
@@ -51,9 +65,7 @@ export default function PersonName() {
       headerName: "",
       width: 100,
       renderCell: (params) => (
-        <DeleteButton
-          onClick={() => handleDeleteButton(params.row.id)}
-        />
+        <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
       ),
     },
   ];
@@ -118,10 +130,16 @@ export default function PersonName() {
       const personRes = await listPerson();
       const personNameTypeRes = await listPersonNameType();
       setPersonDD(
-        personRes.map((p: any) => ({ id: p.id, text: p.comment || `Person ${p.id}` }))
+        personRes.map((item) => ({
+          id: item.id,
+          text: item.socialsecuritynumber + " " + item.comment,
+        }))
       );
       setPersonNameTypeDD(
-        personNameTypeRes.map((t: any) => ({ id: t.id, text: t.description || `Type ${t.id}` }))
+        personNameTypeRes.map((t: any) => ({
+          id: t.id,
+          text: t.description || `Type ${t.id}`,
+        }))
       );
     } catch (err: any) {
       handleError(err);
@@ -129,12 +147,15 @@ export default function PersonName() {
   };
 
   const handleError = (err: any) => {
-    if (err.message === 'No access token found' || err.response?.status === 401) {
-      setError('กรุณาเข้าสู่ระบบหรือ token หมดอายุ');
+    if (
+      err.message === "No access token found" ||
+      err.response?.status === 401
+    ) {
+      setError("กรุณาเข้าสู่ระบบหรือ token หมดอายุ");
       logout();
-      navigate('/login');
+      navigate("/login");
     } else {
-      setError(err.message || 'ไม่สามารถโหลดข้อมูลได้');
+      setError(err.message || "ไม่สามารถโหลดข้อมูลได้");
     }
   };
 
@@ -199,11 +220,7 @@ export default function PersonName() {
           {error}
         </Alert>
       ) : (
-        <DataTable
-          columns={columns}
-          rows={rows}
-          getRowId={(row) => row.id}
-        />
+        <DataTable columns={columns} rows={rows} getRowId={(row) => row.id} />
       )}
       <AddButton
         onClick={() => {
