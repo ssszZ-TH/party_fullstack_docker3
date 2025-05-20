@@ -1,8 +1,8 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-// กำหนด BASE_URL สำหรับ API endpoint ของ maritalstatus
-const BASE_URL = 'http://localhost:8080/v1/maritalstatus';
+// กำหนด BASE_URL สำหรับ API endpoint ของ legal organization
+const BASE_URL = 'http://localhost:8080/v1/legalorganization';
 
 // ฟังก์ชันสำหรับ log error เพื่อแสดงรายละเอียดข้อผิดพลาดใน console
 const logError = (method: string, error: any, token?: string) => {

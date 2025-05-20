@@ -36,7 +36,6 @@ const routes = [
   { path: '/v1/legalorganization', component: lazy(() => import('./pages/LegalOrganization')) },
   { path: '/v1/classifybyminority', component: lazy(() => import('./pages/ClassifyByMinority')) },
   { path: '/v1/classifybyindustry', component: lazy(() => import('./pages/ClassifyByIndustry')) },
-  { path: '/v1/partyclassification', component: lazy(() => import('./pages/PartyClassification')) },
   { path: '/v1/employeecountrange', component: lazy(() => import('./pages/EmployeeCountRange')) },
   { path: '/v1/informalorganization', component: lazy(() => import('./pages/InformalOrganization')) },
   { path: '/v1/maritalstatustype', component: lazy(() => import('./pages/MaritalStatusType')) },

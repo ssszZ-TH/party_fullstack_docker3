@@ -39,7 +39,7 @@ export default function MaritalStatus() {
     },
     {
       field: "person", // Column name in the table
-      headerName: "Person Comment", // Title shown at the top of the column
+      headerName: "Person Details", // Title shown at the top of the column
       width: 300, // How wide the column is (in pixels)
       renderCell: (params) => {
         // Function to show custom content in the cell
@@ -167,7 +167,7 @@ export default function MaritalStatus() {
 
   const fetchpersonDD = async () => {
     const res: Array<TypeOfPerson> = await listPerson();
-    const DD = res.map((item) => ({ id: item.id, text: item.comment }));
+    const DD = res.map((item) => ({ id: item.id, text: item.socialsecuritynumber+' '+item.comment }));
     setPersonDD(DD);
   };
 
