@@ -131,9 +131,14 @@ export default function Modal_maritalstatus({
           <Select
             labelId="person-select-label"
             name="person_id"
-            value={formData.person_id ?? ""}
+            value={formData.person_id || ""}
             onChange={handleChange}
+            disabled={openModalFor === "read"}
+            required
           >
+            <MenuItem value="">
+              <em>Select Person</em>
+            </MenuItem>
             {personDD.map((item) => (
               <MenuItem key={item.id} value={item.id}>
                 {item.text}
@@ -143,13 +148,20 @@ export default function Modal_maritalstatus({
         </FormControl>
 
         <FormControl fullWidth margin="normal">
-          <InputLabel id="country-select-label">Marital Status Type</InputLabel>
+          <InputLabel id="marital-status-type">
+            Marital Status Type
+          </InputLabel>
           <Select
-            labelId="country-select-label"
+            labelId="marital-status-type"
             name="maritalstatustype_id"
-            value={formData.maritalstatustype_id ?? ""}
+            value={formData.maritalstatustype_id || ""}
             onChange={handleChange}
+            disabled={openModalFor === "read"}
+            required
           >
+            <MenuItem value="">
+              <em>Select Marital Status Type</em>
+            </MenuItem>
             {maritalstatustypeDD.map((item) => (
               <MenuItem key={item.id} value={item.id}>
                 {item.text}
