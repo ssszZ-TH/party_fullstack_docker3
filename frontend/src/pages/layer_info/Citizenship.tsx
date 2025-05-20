@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import AppBarCustom from "../../components/AppBarCustom";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../../components/DataTable";
-import Modal from "../../components/Modal_citizenship"; // เเก้ modal ด้วย
+import Modal from "../../components/Modal/Modal_citizenship"; // เเก้ modal ด้วย
 import { Button, Typography } from "@mui/material";
 import Loading from "../../components/Loading";
 import { create, get, list, update, deleteById } from "../../services/citizenship"; // เเก้ service ด้วย

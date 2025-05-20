@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import AppBarCustom from "../../components/AppBarCustom";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../../components/DataTable";
-import MaritalStatusTypeModal from "../../components/Modal_id_des";
+import MaritalStatusTypeModal from "../../components/Modal/Modal_id_des";
 import Loading from "../../components/Loading"; // สมมุติว่ามีคอมโพเนนต์สำหรับแสดงสถานะการโหลด
 import {
   create,

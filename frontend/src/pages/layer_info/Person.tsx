@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AppBarCustom from "../../components/AppBarCustom";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../../components/DataTable";
-import PersonModal from "../../components/PersonModal";
+import PersonModal from "../../components/Modal/PersonModal";
 import Loading from "../../components/Loading";
 import { AuthContext } from "../../contexts/AuthContext";
 import {

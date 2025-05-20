@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import AppBarCustom from "../../components/AppBarCustom";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../../components/DataTable";
-import Modal_physicalcharacteristic from "../../components/Modal_physicalcharacteristic"; // Modal สำหรับจัดการฟอร์ม
+import Modal_physicalcharacteristic from "../../components/Modal/Modal_physicalcharacteristic"; // Modal สำหรับจัดการฟอร์ม
 import { Button, Typography } from "@mui/material";
 import Loading from "../../components/Loading";
 import {
