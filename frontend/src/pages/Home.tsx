@@ -29,35 +29,46 @@ import { getProfile } from "../services/profile";
 
 // Services data array
 // อาร์เรย์ของ services
-const services = [
-  // { name: "Users", path: "/users" },
+const services_layer_type = [
   { name: "Marital Status Type", path: "/v1/maritalstatustype" },
-  { name: "Marital Status", path: "/v1/maritalstatus" },
+
   { name: "Person Name Type", path: "/v1/personnametype" },
   {
     name: "Physical Characteristic Type",
     path: "/v1/physicalcharacteristictype",
   },
   { name: "Country", path: "/v1/country" },
-  { name: "Person Name", path: "/v1/personname" },
-  { name: "Citizenship", path: "/v1/citizenship" },
-  { name: "Passport", path: "/v1/passport" },
-  { name: "Person", path: "/v1/person" },
+  
+  
   { name: "Party Type", path: "/v1/partytype" },
 
   { name: "Legal Organization", path: "/v1/legalorganization" },
-  { name: "Physical Characteristic", path: "/v1/physicalcharacteristic" },
   { name: "Informal Organization", path: "/v1/informalorganization" },
   { name: "Ethnicity", path: "/v1/ethnicity" },
   { name: "Income Range", path: "/v1/incomerange" },
   { name: "Industry Type", path: "/v1/industrytype" },
   { name: "Employee Count Range", path: "/v1/employeecountrange" },
   { name: "Minority Type", path: "/v1/minoritytype" },
+];
+
+const services_layer_info = [
+  { name: "Marital Status", path: "/v1/maritalstatus" },
+  { name: "Person Name", path: "/v1/personname" },
+  { name: "Citizenship", path: "/v1/citizenship" },
+  { name: "Passport", path: "/v1/passport" },
+  { name: "Person", path: "/v1/person" },
+  { name: "Physical Characteristic", path: "/v1/physicalcharacteristic" },
   { name: "Classify by EEOC", path: "/v1/classifybyeeoc" },
   { name: "Classify by Income", path: "/v1/classifybyincome" },
   { name: "Classify by Industry", path: "/v1/classifybyindustry" },
   { name: "Classify by Size", path: "/v1/classifybysize" },
   { name: "Classify by Minority", path: "/v1/classifybyminority" },
+  
+];
+
+const services_layer_relation = [
+  { name: "Classify by Minority", path: "/v1/classifybyminority" },
+
 ];
 
 // Navigation items
@@ -192,7 +203,133 @@ export default function Home() {
               justifyContent: "flex-start",
             }}
           >
-            {services.map((service) => (
+            {services_layer_type.map((service) => (
+              <Box
+                key={service.path}
+                component={RouterLink}
+                to={service.path}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  width: "110px", // Compact width
+                  height: "110px", // Compact height
+                  textDecoration: "none",
+                  transition: "transform 0.2s",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                  },
+                }}
+              >
+                <Avatar
+                  src={`/home_thumbnail/${service.name
+                    .toLowerCase()
+                    .replace(/\s+/g, "_")}.png`}
+                  sx={{
+                    width: 60, // Smaller thumbnail
+                    height: 60,
+                    mb: 0.5, // Reduced margin
+                    borderRadius: "10%",
+                  }}
+                />
+                <Typography
+                  variant="body2"
+                  align="center"
+                  color="text.primary"
+                  sx={{
+                    fontWeight: 500,
+                    fontSize: "0.75rem", // Smaller text
+                    lineHeight: 1.2,
+                    height: "28px", // Fixed height for text
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {service.name}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+
+          <hr style={{ margin: "20px 0" }} />
+
+          {/* Services Grid */}
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "12px", // Reduced gap between items
+              justifyContent: "flex-start",
+            }}
+          >
+            {services_layer_info.map((service) => (
+              <Box
+                key={service.path}
+                component={RouterLink}
+                to={service.path}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  width: "110px", // Compact width
+                  height: "110px", // Compact height
+                  textDecoration: "none",
+                  transition: "transform 0.2s",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                  },
+                }}
+              >
+                <Avatar
+                  src={`/home_thumbnail/${service.name
+                    .toLowerCase()
+                    .replace(/\s+/g, "_")}.png`}
+                  sx={{
+                    width: 60, // Smaller thumbnail
+                    height: 60,
+                    mb: 0.5, // Reduced margin
+                    borderRadius: "10%",
+                  }}
+                />
+                <Typography
+                  variant="body2"
+                  align="center"
+                  color="text.primary"
+                  sx={{
+                    fontWeight: 500,
+                    fontSize: "0.75rem", // Smaller text
+                    lineHeight: 1.2,
+                    height: "28px", // Fixed height for text
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {service.name}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+          
+          <hr style={{ margin: "20px 0" }} />
+
+          {/* Services Grid */}
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "12px", // Reduced gap between items
+              justifyContent: "flex-start",
+            }}
+          >
+            {services_layer_relation.map((service) => (
               <Box
                 key={service.path}
                 component={RouterLink}
