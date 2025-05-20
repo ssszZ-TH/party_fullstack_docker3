@@ -44,7 +44,7 @@ const services = [
   { name: "Passport", path: "/v1/passport" },
   { name: "Person", path: "/v1/person" },
   { name: "Party Type", path: "/v1/partytype" },
-  { name: "Party Classification", path: "/v1/partyclassification" },
+
   { name: "Legal Organization", path: "/v1/legalorganization" },
   { name: "Physical Characteristic", path: "/v1/physicalcharacteristic" },
   { name: "Informal Organization", path: "/v1/informalorganization" },
@@ -94,7 +94,7 @@ export default function Home() {
     };
 
     checkTokenValidity();
-  }, [logout, navigate]); // ลบ isAuthenticated ออกจาก dependencies
+  }, [logout, navigate]); // ถ้าม logout หรือ navigate เปลี่ยนแปลง จะเรียก useEffect ใหม่
 
   const theme = useTheme();
 

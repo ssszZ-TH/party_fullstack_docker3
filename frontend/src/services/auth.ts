@@ -47,6 +47,7 @@ export async function login({ email, password }: { email: string; password: stri
   } catch (error: any) {
     // เรียก logError เพื่อบันทึกข้อผิดพลาด
     logError('login', error);
+
     // โยน error ต่อให้ caller (เช่น Login.tsx) จัดการ
     throw new Error(error.response?.data?.message || 'Login failed');
   }
