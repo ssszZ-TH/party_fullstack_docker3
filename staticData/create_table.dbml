@@ -1,0 +1,307 @@
+// Super-type table to define different types of parties (e.g., person, organization)
+Table party_type {
+  id SERIAL [pk, increment] // Unique identifier for party types
+  description VARCHAR(128) // Description of the party type (e.g., "Person", "Organization")
+}
+
+// Super-type table representing a generic party (could be a person or organization)
+Table party {
+  id SERIAL [pk, increment] // Unique identifier for each party
+}
+
+// Junction table to classify a party into one or more types over time
+Table party_classification {
+  id SERIAL [pk, increment] // Unique identifier for each classification
+  fromdate DATE // Start date of the classification
+  thrudate DATE // End date of the classification (NULL if still active)
+  party_id INT // Foreign key linking to the party
+  party_type_id INT // Foreign key linking to the party type
+}
+
+// Super-type table for organization-specific classifications
+Table organization_classification {
+  id SERIAL [pk, increment, ref: > party_classification.id] // Unique identifier for organization classifications
+}
+
+// Lookup table for minority types (e.g., "Women-Owned", "Veteran-Owned")
+Table minority_type {
+  id SERIAL [pk, increment] // Unique identifier for minority types
+  name_en VARCHAR(128) // English name of the minority type
+  name_th VARCHAR(128) // Thai name of the minority type
+}
+
+// Lookup table for industry types based on NAICS codes
+Table industry_type {
+  id SERIAL [pk, increment] // Unique identifier for industry types
+  naics_code VARCHAR(64) // NAICS code (e.g., "541511" for custom software development)
+  description VARCHAR(128) // Description of the industry
+}
+
+// Lookup table for employee count ranges (e.g., "1-10", "11-50")
+Table employee_count_range {
+  id SERIAL [pk, increment] // Unique identifier for employee count ranges
+  description VARCHAR(128) // Description of the range
+}
+
+// Subtype of organization_classification: Classifies organizations by minority type
+Table classify_by_minority {
+  id SERIAL [pk, increment, ref: > organization_classification.id] // Links to organization_classification
+  minority_type_id INT // Foreign key to minority_type
+}
+
+// Subtype of organization_classification: Classifies organizations by industry
+Table classify_by_industry {
+  id SERIAL [pk, increment, ref: > organization_classification.id] // Links to organization_classification
+  industry_type_id INT // Foreign key to industry_type
+}
+
+// Subtype of organization_classification: Classifies organizations by size
+Table classify_by_size {
+  id SERIAL [pk, increment, ref: > organization_classification.id] // Links to organization_classification
+  employee_count_range_id INT // Foreign key to employee_count_range
+}
+
+// Subtype of party: Represents individuals
+Table person {
+  id SERIAL [pk, increment, ref: > party.id] // Links to the party table
+  socialsecuritynumber VARCHAR(64) // Social security number (or equivalent ID)
+  birthdate DATE // Date of birth
+  mothermaidenname VARCHAR(128) // Mother's maiden name
+  totalyearworkexperience INT // Total years of work experience
+  comment VARCHAR(128) // Additional comments about the person
+}
+
+// Super-type table for person-specific classifications
+Table person_classification {
+  id SERIAL [pk, increment, ref: > party_classification.id] // Links to organization_classification (seems incorrect; see note)
+}
+
+// Lookup table for ethnicity (e.g., "Asian", "Caucasian")
+Table ethnicity {
+  id SERIAL [pk, increment] // Unique identifier for ethnicity
+  name_en VARCHAR(128) // English name of the ethnicity
+  name_th VARCHAR(128) // Thai name of the ethnicity
+}
+
+// Lookup table for income ranges (e.g., "$0-$50K", "$50K-$100K")
+Table income_range {
+  id SERIAL [pk, increment] // Unique identifier for income ranges
+  description VARCHAR(128) // Description of the income range
+}
+
+// Subtype of person_classification: Classifies people by ethnicity
+Table classify_by_eeoc {
+  id SERIAL [pk, increment, ref: > person_classification.id] // Links to person_classification
+  ethnicity_id INT // Foreign key to ethnicity
+}
+
+// Subtype of person_classification: Classifies people by income
+Table classify_by_income {
+  id SERIAL [pk, increment, ref: > person_classification.id] // Links to person_classification
+  income_range_id INT // Foreign key to income_range
+}
+
+// Lookup table for marital status types (e.g., "Single", "Married")
+Table maritalstatustype {
+  id SERIAL [pk, increment] // Unique identifier for marital status types
+  description VARCHAR(128) // Description of the marital status
+}
+
+// Table to track a person's marital status over time
+Table maritalstatus {
+  id SERIAL [pk, increment] // Unique identifier for each marital status record
+  fromdate DATE // Start date of the marital status
+  thrudate DATE // End date of the marital status (NULL if still active)
+  person_id INT // Foreign key linking to person
+  maritalstatustype_id INT // Foreign key to marital status type
+}
+
+// Lookup table for physical characteristic types (e.g., "Height", "Weight")
+Table physicalcharacteristictype {
+  id SERIAL [pk, increment] // Unique identifier for physical characteristic types
+  description VARCHAR(128) // Description of the characteristic
+}
+
+// Table to track a person's physical characteristics over time
+Table physicalcharacteristic {
+  id SERIAL [pk, increment] // Unique identifier for each characteristic record
+  fromdate DATE // Start date of the characteristic
+  thrudate DATE // End date of the characteristic (NULL if still active)
+  val INT // value of the characteristic
+  person_id INT // Foreign key linking to person
+  physicalcharacteristictype_id INT // Foreign key to characteristic type
+}
+
+// Lookup table for person name types (e.g., "Legal Name", "Nickname")
+Table personnametype {
+  id SERIAL [pk, increment] // Unique identifier for name types
+  description VARCHAR(128) // Description of the name type
+}
+
+// Table to track a person's names over time
+Table personname {
+  id SERIAL [pk, increment] // Unique identifier for each name record
+  fromdate DATE // Start date of the name
+  thrudate DATE // End date of the name (NULL if still active)
+  person_id INT // Foreign key linking to person
+  personnametype_id INT // Foreign key to name type
+  name VARCHAR(128) // The name
+}
+
+// Lookup table for countries
+Table country {
+  id SERIAL [pk, increment] // Unique identifier for countries
+  isocode VARCHAR(2) // ISO 3166-1 alpha-2 code (e.g., "US", "TH")
+  name_en VARCHAR(128) // English name of the country
+  name_th VARCHAR(128) // Thai name of the country
+}
+
+// Table to track a person's citizenship over time
+Table citizenship {
+  id SERIAL [pk, increment] // Unique identifier for each citizenship record
+  fromdate DATE // Start date of citizenship
+  thrudate DATE // End date of citizenship (NULL if still active)
+  person_id INT // Foreign key linking to person
+  country_id INT // Foreign key to country
+}
+
+// Table to track passports linked to citizenship
+Table passport {
+  id SERIAL [pk, increment] // Unique identifier for each passport
+  passportnumber VARCHAR(64) // Passport number
+  fromdate DATE // Issuance date of the passport
+  thrudate DATE // Expiry date of the passport
+  citizenship_id INT // Foreign key linking to citizenship
+}
+
+// Subtype of party: Represents organizations
+Table organization {
+  id SERIAL [pk, increment, ref: > party.id] // Links to the party table
+  name_en VARCHAR(128) // English name of the organization
+  name_th VARCHAR(128) // Thai name of the organization (Note: "varchat" was corrected to "varchar")
+}
+
+// Subtype of organization: Represents legal organizations
+Table legal_organization {
+  id SERIAL [pk, increment, ref: > organization.id] // Links to organization
+  federal_tax_id_number VARCHAR(64) // Federal tax ID (e.g., EIN in the US)
+}
+
+// Subtype of organization: Represents informal organizations (e.g., clubs, groups)
+Table informal_organization {
+  id SERIAL [pk, increment, ref: > organization.id] // Links to organization
+}
+
+//------------------------------------------------------------------------------------------------------------------
+
+// Lookup table for role types (e.g., "Employee", "Customer", "Supplier")
+Table role_type {
+  id SERIAL [pk, increment] // Unique identifier for role types
+  description VARCHAR(128) // Description of the role type
+}
+
+// Junction table to link a party to a role over time
+Table party_role {
+  id SERIAL [pk, increment] // Unique identifier for each party-role association
+  fromdate DATE // Start date of the role
+  thrudate DATE // End date of the role (NULL if still active)
+  party_id INT // Foreign key linking to the party
+  role_type_id INT // Foreign key linking to the role type
+}
+
+// Lookup table for party relationship types (e.g., "Parent-Child", "Employer-Employee")
+Table party_relationship_type {
+  id SERIAL [pk, increment] // Unique identifier for relationship types
+  description VARCHAR(128) // Description of the relationship type
+}
+
+// Lookup table for priority types (e.g., "High", "Medium", "Low")
+Table priority_type {
+  id SERIAL [pk, increment] // Unique identifier for priority types
+  description VARCHAR(128) // Description of the priority type
+}
+
+// Lookup table for party relationship status types (e.g., "Active", "Inactive")
+Table party_relationship_status_type {
+  id SERIAL [pk, increment] // Unique identifier for relationship status types
+  description VARCHAR(128) // Description of the status type
+}
+
+// Table to represent relationships between two party roles
+Table party_relationship {
+  id SERIAL [pk, increment] // Unique identifier for each relationship
+  from_date DATE // Start date of the relationship
+  thru_date DATE // End date of the relationship (NULL if still active)
+  comment VARCHAR(128) // Additional comments about the relationship
+  from_party_role_id INT // Foreign key linking to the "from" party role
+  to_party_role_id INT // Foreign key linking to the "to" party role
+  party_relationship_type_id INT // Foreign key linking to relationship type
+  priority_type_id INT // Foreign key linking to priority type
+  party_relationship_status_type_id INT // Foreign key linking to status type
+}
+
+// Lookup table for contact mechanism types (e.g., "Email", "Phone", "Address")
+Table contact_mechanism_type {
+  id SERIAL [pk, increment] // Unique identifier for contact mechanism types
+  description VARCHAR(128) // Description of the contact mechanism type
+}
+
+// Lookup table for communication event status types (e.g., "Scheduled", "Completed")
+Table communication_event_status_type {
+  id SERIAL [pk, increment] // Unique identifier for communication event status types
+  description VARCHAR(128) // Description of the status type
+}
+
+// Table to represent communication events (e.g., emails, calls, meetings)
+Table communication_event {
+  id SERIAL [pk, increment] // Unique identifier for each communication event
+  datetime_start TIMESTAMP // Start date and time of the communication event
+  datetime_end TIMESTAMP // End date and time of the communication event
+  note VARCHAR(128) // Additional notes about the event
+  contact_mechanism_type_id INT // Foreign key linking to contact mechanism type
+  communication_event_status_type_id INT // Foreign key linking to status type
+  party_relationship_id INT // Foreign key linking to party relationship
+}
+
+// Lookup table for communication event purpose types (e.g., "Sales", "Support")
+Table communication_event_purpose_type {
+  id SERIAL [pk, increment] // Unique identifier for communication event purpose types
+  description VARCHAR(128) // Description of the purpose type
+}
+
+// Junction table to link communication events to their purposes
+Table communication_event_purpose {
+  id SERIAL [pk, increment] // Unique identifier for each purpose association
+  communication_event_id INT // Foreign key linking to communication event
+  communication_event_purpose_type_id INT // Foreign key linking to purpose type
+}
+
+// Define relationships (foreign keys)
+Ref: party_classification.party_id > party.id
+Ref: party_classification.party_type_id > party_type.id
+Ref: classify_by_minority.minority_type_id > minority_type.id
+Ref: classify_by_industry.industry_type_id > industry_type.id
+Ref: classify_by_size.employee_count_range_id > employee_count_range.id
+Ref: classify_by_eeoc.ethnicity_id > ethnicity.id
+Ref: classify_by_income.income_range_id > income_range.id
+Ref: maritalstatus.person_id > person.id
+Ref: maritalstatus.maritalstatustype_id > maritalstatustype.id
+Ref: physicalcharacteristic.person_id > person.id
+Ref: physicalcharacteristic.physicalcharacteristictype_id > physicalcharacteristictype.id
+Ref: personname.person_id > person.id
+Ref: personname.personnametype_id > personnametype.id
+Ref: citizenship.person_id > person.id
+Ref: citizenship.country_id > country.id
+Ref: passport.citizenship_id > citizenship.id
+Ref: party_role.party_id > party.id
+Ref: party_role.role_type_id > role_type.id
+Ref: party_relationship.from_party_role_id > party_role.id
+Ref: party_relationship.to_party_role_id > party_role.id
+Ref: party_relationship.party_relationship_type_id > party_relationship_type.id
+Ref: party_relationship.priority_type_id > priority_type.id
+Ref: party_relationship.party_relationship_status_type_id > party_relationship_status_type.id
+Ref: communication_event.contact_mechanism_type_id > contact_mechanism_type.id
+Ref: communication_event.communication_event_status_type_id > communication_event_status_type.id
+Ref: communication_event.party_relationship_id > party_relationship.id
+Ref: communication_event_purpose.communication_event_id > communication_event.id
+Ref: communication_event_purpose.communication_event_purpose_type_id > communication_event_purpose_type.id

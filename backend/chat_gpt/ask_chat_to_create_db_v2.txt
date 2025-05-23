@@ -1,0 +1,255 @@
+นี่คือ code sql เก่าที่มีอยู่ 
+
+-- Super-type table to define different types of parties (e.g., person, organization)
+CREATE TABLE party_type (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for party types
+    description VARCHAR(128)            -- Description of the party type (e.g., "Person", "Organization")
+);
+
+-- Super-type table representing a generic party (could be a person or organization)
+CREATE TABLE party (
+    id SERIAL PRIMARY KEY              -- Unique identifier for each party
+);
+
+-- Junction table to classify a party into one or more types over time
+CREATE TABLE party_classification (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for each classification
+    fromdate DATE,                      -- Start date of the classification
+    thrudate DATE,                      -- End date of the classification (NULL if still active)
+    party_id INT REFERENCES party(id),  -- Foreign key linking to the party
+    party_type_id INT REFERENCES party_type(id) -- Foreign key linking to the party type
+);
+
+-- Super-type table for organization-specific classifications
+CREATE TABLE organization_classification (
+    id SERIAL PRIMARY KEY REFERENCES party_classification(id)               -- Unique identifier for organization classifications
+);
+
+-- Lookup table for minority types (e.g., "Women-Owned", "Veteran-Owned")
+CREATE TABLE minority_type (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for minority types
+    name_en VARCHAR(128),               -- English name of the minority type
+    name_th VARCHAR(128)                -- Thai name of the minority type
+);
+
+-- Lookup table for industry types based on NAICS codes
+CREATE TABLE industry_type (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for industry types
+    naics_code VARCHAR(64),             -- NAICS code (e.g., "541511" for custom software development)
+    description VARCHAR(128)            -- Description of the industry
+);
+
+-- Lookup table for employee count ranges (e.g., "1-10", "11-50")
+CREATE TABLE employee_count_range (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for employee count ranges
+    description VARCHAR(128)            -- Description of the range
+);
+
+-- Subtype of organization_classification: Classifies organizations by minority type
+CREATE TABLE classify_by_minority (
+    id SERIAL PRIMARY KEY REFERENCES organization_classification(id), -- Links to organization_classification
+    minority_type_id INT REFERENCES minority_type(id)                 -- Foreign key to minority_type
+);
+
+-- Subtype of organization_classification: Classifies organizations by industry
+CREATE TABLE classify_by_industry (
+    id SERIAL PRIMARY KEY REFERENCES organization_classification(id), -- Links to organization_classification
+    industry_type_id INT REFERENCES industry_type(id)                 -- Foreign key to industry_type
+);
+
+-- Subtype of organization_classification: Classifies organizations by size
+CREATE TABLE classify_by_size (
+    id SERIAL PRIMARY KEY REFERENCES organization_classification(id), -- Links to organization_classification
+    employee_count_range_id INT REFERENCES employee_count_range(id)   -- Foreign key to employee_count_range
+);
+
+-- Subtype of party: Represents individuals
+CREATE TABLE person (
+    id SERIAL PRIMARY KEY REFERENCES party(id), -- Links to the party table
+    socialsecuritynumber VARCHAR(64),           -- Social security number (or equivalent ID)
+    birthdate DATE,                             -- Date of birth
+    mothermaidenname VARCHAR(128),              -- Mother's maiden name
+    totalyearworkexperience INT,                -- Total years of work experience
+    comment VARCHAR(128)                        -- Additional comments about the person
+);
+
+-- Super-type table for person-specific classifications
+CREATE TABLE person_classification (
+    id SERIAL PRIMARY KEY REFERENCES party_classification(id) -- Links to organization_classification (seems incorrect; see note)
+);
+
+-- Lookup table for ethnicity (e.g., "Asian", "Caucasian")
+CREATE TABLE ethnicity (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for ethnicity
+    name_en VARCHAR(128),               -- English name of the ethnicity
+    name_th VARCHAR(128)                -- Thai name of the ethnicity
+);
+
+-- Lookup table for income ranges (e.g., "$0-$50K", "$50K-$100K")
+CREATE TABLE income_range (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for income ranges
+    description VARCHAR(128)            -- Description of the income range
+);
+
+-- Subtype of person_classification: Classifies people by ethnicity
+CREATE TABLE classify_by_eeoc (
+    id SERIAL PRIMARY KEY REFERENCES person_classification(id), -- Links to person_classification
+    ethnicity_id INT REFERENCES ethnicity(id)                   -- Foreign key to ethnicity
+);
+
+-- Subtype of person_classification: Classifies people by income
+CREATE TABLE classify_by_income (
+    id SERIAL PRIMARY KEY REFERENCES person_classification(id), -- Links to person_classification
+    income_range_id INT REFERENCES income_range(id)             -- Foreign key to income_range
+);
+
+-- Lookup table for marital status types (e.g., "Single", "Married")
+CREATE TABLE maritalstatustype (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for marital status types
+    description VARCHAR(128)            -- Description of the marital status
+);
+
+-- Table to track a person's marital status over time
+CREATE TABLE maritalstatus (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for each marital status record
+    fromdate DATE,                      -- Start date of the marital status
+    thrudate DATE,                      -- End date of the marital status (NULL if still active)
+    person_id INT REFERENCES person(id), -- Foreign key linking to person
+    maritalstatustype_id INT REFERENCES maritalstatustype(id) -- Foreign key to marital status type
+);
+
+-- Lookup table for physical characteristic types (e.g., "Height", "Weight")
+CREATE TABLE physicalcharacteristictype (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for physical characteristic types
+    description VARCHAR(128)            -- Description of the characteristic
+);
+
+-- Table to track a person's physical characteristics over time
+CREATE TABLE physicalcharacteristic (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for each characteristic record
+    fromdate DATE,                      -- Start date of the characteristic
+    thrudate DATE,                      -- End date of the characteristic (NULL if still active)
+    val INT,                      -- value of the characteristic
+    person_id INT REFERENCES person(id), -- Foreign key linking to person
+    physicalcharacteristictype_id INT REFERENCES physicalcharacteristictype(id) -- Foreign key to characteristic type
+);
+
+-- Lookup table for person name types (e.g., "Legal Name", "Nickname")
+CREATE TABLE personnametype (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for name types
+    description VARCHAR(128)            -- Description of the name type
+);
+
+-- Table to track a person's names over time
+CREATE TABLE personname (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for each name record
+    fromdate DATE,                      -- Start date of the name
+    thrudate DATE,                      -- End date of the name (NULL if still active)
+    person_id INT REFERENCES person(id), -- Foreign key linking to person
+    personnametype_id INT REFERENCES personnametype(id), -- Foreign key to name type
+    name VARCHAR(128)                   -- The name
+);
+
+-- Lookup table for countries
+CREATE TABLE country (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for countries
+    isocode VARCHAR(2),                 -- ISO 3166-1 alpha-2 code (e.g., "US", "TH")
+    name_en VARCHAR(128),               -- English name of the country
+    name_th VARCHAR(128)                -- Thai name of the country
+);
+
+-- Table to track a person's citizenship over time
+CREATE TABLE citizenship (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for each citizenship record
+    fromdate DATE,                      -- Start date of citizenship
+    thrudate DATE,                      -- End date of citizenship (NULL if still active)
+    person_id INT REFERENCES person(id), -- Foreign key linking to person
+    country_id INT REFERENCES country(id) -- Foreign key to country
+);
+
+-- Table to track passports linked to citizenship
+CREATE TABLE passport (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for each passport
+    passportnumber VARCHAR(64),         -- Passport number
+    fromdate DATE,                      -- Issuance date of the passport
+    thrudate DATE,                      -- Expiry date of the passport
+    citizenship_id INT REFERENCES citizenship(id) -- Foreign key linking to citizenship
+);
+
+-- Subtype of party: Represents organizations
+CREATE TABLE organization (
+    id SERIAL PRIMARY KEY REFERENCES party(id), -- Links to the party table
+    name_en VARCHAR(128),                       -- English name of the organization
+    name_th VARCHAR(128)                        -- Thai name of the organization (Note: "varchat" was corrected to "varchar")
+);
+
+-- Subtype of organization: Represents legal organizations
+CREATE TABLE legal_organization (
+    id SERIAL PRIMARY KEY REFERENCES organization(id), -- Links to organization
+    federal_tax_id_number VARCHAR(64)                  -- Federal tax ID (e.g., EIN in the US)
+);
+
+-- Subtype of organization: Represents informal organizations (e.g., clubs, groups)
+CREATE TABLE informal_organization (
+    id SERIAL PRIMARY KEY REFERENCES organization(id) -- Links to organization
+);
+
+ช่วยเติม table ดังนี้เข้าไปหน่อย เขียนต่อไปด้านล่างเลย code  ข้างบนไม่ต้องไปยุ่งกับมัน เขียนเส้นเเบ่งให้ด้วยว่าอันใหนคืออันใหม่
+
+เวลาตอบ ตอบเป็นภาษาไทย เเต่ว่า comment อธิบายใน code ให้เป็นภาษาอังกฤษ ผมกลัวว่า postgres จะไม่รองรับ comment ภาษาไทย
+
+สร้าง table ชื่อ role_type มันคือประเภทของบทบาทบุคคลเเละองค์กร
+id
+description
+
+สร้าง party_role มันคือ table ที่ไว้เชื่อมประสาร party กับ role เข้าด้วยกัน (party คือประเภทของบุคคลเเละองค์กร)
+id
+fromdate
+thrudate
+party_id
+role_type_id
+
+สร้าง party_relationship_type
+id
+description
+
+สร้าง privority_type
+id
+description
+
+สร้าง party_relationship_status_type
+id
+description
+
+สร้าง party_relationship
+from_date
+thru_date
+comment
+from_party_role_id
+to_party_role_id
+party_relationship_type_id
+privority_type_id
+party_relationship_status_type_id
+
+contact_mechanism_type มันคือประเภทช่องทางการติดต่อสื่อสาร
+id
+description
+
+สร้าง communication_event_status_type
+
+สร้าง communication_event
+id
+datetime_start
+datetime_end
+note
+contact_mechanism_type_id
+communication_event_status_type_id
+
+สร้าง communication_event_purpose_type
+id
+description
+
+สร้าง communication_event_purpose
+id
+communication_event_id
+communication_event_purpose_type_id

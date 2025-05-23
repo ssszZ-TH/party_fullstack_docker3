@@ -191,3 +191,88 @@ CREATE TABLE legal_organization (
 CREATE TABLE informal_organization (
     id SERIAL PRIMARY KEY REFERENCES organization(id) -- Links to organization
 );
+
+
+------------------------------------------------------------------------------------------------------------------
+
+-- Lookup table for role types (e.g., "Employee", "Customer", "Supplier")
+CREATE TABLE role_type (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for role types
+    description VARCHAR(128)            -- Description of the role type
+);
+
+-- Junction table to link a party to a role over time
+CREATE TABLE party_role (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for each party-role association
+    fromdate DATE,                      -- Start date of the role
+    thrudate DATE,                      -- End date of the role (NULL if still active)
+    party_id INT REFERENCES party(id),  -- Foreign key linking to the party
+    role_type_id INT REFERENCES role_type(id) -- Foreign key linking to the role type
+);
+
+-- Lookup table for party relationship types (e.g., "Parent-Child", "Employer-Employee")
+CREATE TABLE party_relationship_type (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for relationship types
+    description VARCHAR(128)            -- Description of the relationship type
+);
+
+-- Lookup table for priority types (e.g., "High", "Medium", "Low")
+CREATE TABLE priority_type (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for priority types
+    description VARCHAR(128)            -- Description of the priority type
+);
+
+-- Lookup table for party relationship status types (e.g., "Active", "Inactive")
+CREATE TABLE party_relationship_status_type (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for relationship status types
+    description VARCHAR(128)            -- Description of the status type
+);
+
+-- Table to represent relationships between two party roles
+CREATE TABLE party_relationship (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for each relationship
+    from_date DATE,                     -- Start date of the relationship
+    thru_date DATE,                     -- End date of the relationship (NULL if still active)
+    comment VARCHAR(128),               -- Additional comments about the relationship
+    from_party_role_id INT REFERENCES party_role(id), -- Foreign key linking to the "from" party role
+    to_party_role_id INT REFERENCES party_role(id),   -- Foreign key linking to the "to" party role
+    party_relationship_type_id INT REFERENCES party_relationship_type(id), -- Foreign key linking to relationship type
+    priority_type_id INT REFERENCES priority_type(id), -- Foreign key linking to priority type
+    party_relationship_status_type_id INT REFERENCES party_relationship_status_type(id) -- Foreign key linking to status type
+);
+
+-- Lookup table for contact mechanism types (e.g., "Email", "Phone", "Address")
+CREATE TABLE contact_mechanism_type (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for contact mechanism types
+    description VARCHAR(128)            -- Description of the contact mechanism type
+);
+
+-- Lookup table for communication event status types (e.g., "Scheduled", "Completed")
+CREATE TABLE communication_event_status_type (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for communication event status types
+    description VARCHAR(128)            -- Description of the status type
+);
+
+-- Table to represent communication events (e.g., emails, calls, meetings)
+CREATE TABLE communication_event (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for each communication event
+    datetime_start TIMESTAMP,           -- Start date and time of the communication event
+    datetime_end TIMESTAMP,             -- End date and time of the communication event
+    note VARCHAR(128),                 -- Additional notes about the event
+    contact_mechanism_type_id INT REFERENCES contact_mechanism_type(id), -- Foreign key linking to contact mechanism type
+    communication_event_status_type_id INT REFERENCES communication_event_status_type(id) -- Foreign key linking to status type
+    party_relationship_id INT REFERENCES party_relationship(id) -- Foreign key linking to party relationship
+);
+
+-- Lookup table for communication event purpose types (e.g., "Sales", "Support")
+CREATE TABLE communication_event_purpose_type (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for communication event purpose types
+    description VARCHAR(128)            -- Description of the purpose type
+);
+
+-- Junction table to link communication events to their purposes
+CREATE TABLE communication_event_purpose (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for each purpose association
+    communication_event_id INT REFERENCES communication_event(id), -- Foreign key linking to communication event
+    communication_event_purpose_type_id INT REFERENCES communication_event_purpose_type(id) -- Foreign key linking to purpose type
+);
