@@ -2,3 +2,68 @@ myapp=# COPY country (id, isocode, name_en, name_th)
 FROM '/staticData/country/static_country.csv'
 DELIMITER ','
 CSV HEADER;
+
+
+D:\scwork\year4_final\proj\crud_from_datamodel\party_fullstack_docker3>docker compose exec db sh
+time="2025-05-27T17:33:21+07:00" level=warning msg="D:\\scwork\\year4_final\\proj\\crud_from_datamodel\\party_fullstack_docker3\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+# psql -U spa -d myapp
+psql (16.8 (Debian 16.8-1.pgdg120+1))
+Type "help" for help.
+
+myapp=# COPY maritalstatustype (id, description)
+FROM '/staticData/marital_status_type/static_marital_status_type.csv'
+DELIMITER ','
+CSV HEADER;
+COPY 5
+myapp=#
+
+
+myapp=# COPY physicalcharacteristictype (id, description)
+FROM '/staticData/physical_characteristic_type/static_physical_characteristic_type.csv'
+DELIMITER ','
+CSV HEADER;
+
+
+myapp=# COPY personnametype (id, description)
+FROM '/staticData/person_name_type/static_person_name_type.csv'
+DELIMITER ','
+CSV HEADER;
+COPY 4
+myapp=#
+
+
+myapp=# COPY ethnicity (id, name_en,name_th)
+FROM '/staticData/ethnicity/ethnicity.csv'
+DELIMITER ','
+CSV HEADER;
+COPY 7
+myapp=#
+
+
+
+myapp=# COPY income_range (id, description)
+FROM '/staticData/income_range/income_range.csv'
+DELIMITER ','
+CSV HEADER;
+COPY 12
+
+
+myapp=# COPY industry_type (id,naics_code, description)
+FROM '/staticData/industry_type/static_industry_type.csv'
+DELIMITER ','
+CSV HEADER;
+COPY 1012
+
+
+myapp=# COPY employee_count_range (id,description)
+FROM '/staticData/employee_count_range/employee_count_range.csv'
+DELIMITER ','
+CSV HEADER;
+COPY 5
+
+
+myapp=# COPY minority_type (id,name_en,name_th)
+FROM '/staticData/minority_type/minority_type.csv'
+DELIMITER ','
+CSV HEADER;
+COPY 8
