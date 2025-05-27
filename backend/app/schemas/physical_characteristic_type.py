@@ -9,7 +9,7 @@ class PhysicalCharacteristicTypeUpdate(BaseModel):
 
 class PhysicalCharacteristicTypeOut(BaseModel):
     id: int
-    description: str
+    description: Optional[str] = None
 
     class Config:
         from_attributes = True

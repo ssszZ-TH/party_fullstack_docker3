@@ -13,8 +13,8 @@ class CountryUpdate(BaseModel):
 
 class CountryOut(BaseModel):
     id: int
-    isocode: str
-    name_en: str
+    isocode: Optional[str] = None
+    name_en: Optional[str] = None
     name_th: Optional[str] = None
 
     class Config:

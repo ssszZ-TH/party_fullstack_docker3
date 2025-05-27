@@ -9,7 +9,7 @@ class IncomeRangeUpdate(BaseModel):
 
 class IncomeRangeOut(BaseModel):
     id: int
-    description: str
+    description: Optional[str] = None
 
     class Config:
         from_attributes = True

@@ -11,8 +11,8 @@ class InformalOrganizationUpdate(BaseModel):
 
 class InformalOrganizationOut(BaseModel):
     id: int
-    name_en: str
-    name_th: str
+    name_en: Optional[str] = None
+    name_th: Optional[str] = None
 
     class Config:
         from_attributes = True

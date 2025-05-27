@@ -11,7 +11,7 @@ class IndustryTypeUpdate(BaseModel):
 
 class IndustryTypeOut(BaseModel):
     id: int
-    naics_code: str
+    naics_code: Optional[str] = None
     description: Optional[str] = None
 
     class Config:

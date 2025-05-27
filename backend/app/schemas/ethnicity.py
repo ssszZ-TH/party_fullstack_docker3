@@ -11,7 +11,7 @@ class EthnicityUpdate(BaseModel):
 
 class EthnicityOut(BaseModel):
     id: int
-    name_en: str
+    name_en: Optional[str] = None
     name_th: Optional[str] = None
 
     class Config:

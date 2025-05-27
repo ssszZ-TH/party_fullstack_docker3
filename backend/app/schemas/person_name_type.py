@@ -9,7 +9,7 @@ class PersonNameTypeUpdate(BaseModel):
 
 class PersonNameTypeOut(BaseModel):
     id: int
-    description: str
+    description: Optional[str] = None
 
     class Config:
         from_attributes = True

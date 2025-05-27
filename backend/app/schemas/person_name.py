@@ -18,11 +18,11 @@ class PersonNameUpdate(BaseModel):
 
 class PersonNameOut(BaseModel):
     id: int
-    fromdate: date
+    fromdate: Optional[date] = None
     thrudate: Optional[date] = None
     person_id: int
     personnametype_id: int
-    name: str
+    name: Optional[str] = None
 
     class Config:
         from_attributes = True

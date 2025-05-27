@@ -16,7 +16,7 @@ class MaritalStatusUpdate(BaseModel):
 
 class MaritalStatusOut(BaseModel):
     id: int
-    fromdate: date
+    fromdate: Optional[date] = None
     thrudate: Optional[date] = None
     person_id: int
     maritalstatustype_id: int

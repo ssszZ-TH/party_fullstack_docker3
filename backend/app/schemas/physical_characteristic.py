@@ -18,9 +18,9 @@ class PhysicalCharacteristicUpdate(BaseModel):
 
 class PhysicalCharacteristicOut(BaseModel):
     id: int
-    fromdate: date
+    fromdate: Optional[date] = None
     thrudate: Optional[date] = None
-    val: int
+    val: Optional[int] = None
     person_id: int
     physicalcharacteristictype_id: int
 

@@ -16,10 +16,10 @@ class PassportUpdate(BaseModel):
 
 class PassportOut(BaseModel):
     id: int
-    passportnumber: str
-    fromdate: date
-    thrudate: date
-    citizenship_id: int
+    passportnumber: Optional[str] = None
+    fromdate: Optional[date] = None
+    thrudate: Optional[date] = None
+    citizenship_id: Optional[int] = None
 
     class Config:
         from_attributes = True

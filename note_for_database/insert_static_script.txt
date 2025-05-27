@@ -1,0 +1,4 @@
+myapp=# COPY country (id, isocode, name_en, name_th)
+FROM '/staticData/country/static_country.csv'
+DELIMITER ','
+CSV HEADER;

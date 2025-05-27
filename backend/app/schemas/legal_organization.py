@@ -13,8 +13,8 @@ class LegalOrganizationUpdate(BaseModel):
 
 class LegalOrganizationOut(BaseModel):
     id: int
-    name_en: str
-    name_th: str
+    name_en: Optional[str] = None
+    name_th: Optional[str] = None
     federal_tax_id_number: Optional[str] = None
 
     class Config:

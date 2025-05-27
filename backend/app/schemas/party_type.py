@@ -9,7 +9,7 @@ class PartyTypeUpdate(BaseModel):
 
 class PartyTypeOut(BaseModel):
     id: int
-    description: str
+    description: Optional[str] = None
 
     class Config:
         from_attributes = True
