@@ -1,0 +1,317 @@
+https://www.naics.com/product/sic-naics-cross-references/
+
+
+เว็บนี้ มีคนเอา link มาเเจก
+https://www.reddit.com/r/datasets/comments/13n2gag/looking_for_a_datasets_containing_naics_sic_and/
+
+Looking for a dataset(s) containing NAICS, SIC, and DUNS codes
+question
+Currently working at a company that wants to build an internal tool to pull these codes for specific client companies we're working with. Does anyone know of any datasets that exist with this information? All I've found thus far are 3rd party products you have to pay for like https://www.naics.com/company-lookup-tool/. But they obviously got their data from somewhere right?
+
+
+Upvote
+11
+
+Downvote
+
+16
+Go to comments
+
+
+Share
+Share
+Join the conversation
+Sort by:
+
+Best
+
+Search Comments
+Expand comment search
+Comments Section
+CruxHub
+•
+2y ago
+You might be looking for the NAICS to SIC crosswalk here (free download): https://www.naics.com/product/sic-naics-cross-references/
+
+Census also has some files that could help: https://www.census.gov/naics/?48967
+
+
+Upvote
+7
+
+Downvote
+
+Reply
+reply
+
+Award
+
+Share
+Share
+
+u/Mcletters avatar
+Mcletters
+•
+2y ago
+I'm pretty sure census has these codes somewhere. If not, try looking at other government sites
+
+
+Upvote
+2
+
+Downvote
+
+Reply
+reply
+
+Award
+
+Share
+Share
+
+noodotcom
+•
+2y ago
+Those 3 are public and originally on gov sites except DUNS which is direct from Dun & Bradstreet.
+
+Direct links:
+
+NAICS - https://www.census.gov/naics/
+
+SIC - https://www.sec.gov/corpfin/division-of-corporation-finance-standard-industrial-classification-sic-code-list
+
+DUNS - https://www.dnb.com/duns.html
+
+
+Upvote
+2
+
+Downvote
+
+Reply
+reply
+
+Award
+
+Share
+Share
+
+u/Neat_Suggestion_4028 avatar
+Neat_Suggestion_4028
+•
+7mo ago
+Did you ever find a list of the databases. I have a client that wants me to pull every charity and non profit from every state and idk how to find such data
+
+
+
+Upvote
+1
+
+Downvote
+
+Reply
+reply
+
+Award
+
+Share
+Share
+
+YnotX
+OP
+•
+7mo ago
+I did not unfortunately
+
+
+Upvote
+1
+
+Downvote
+
+Reply
+reply
+
+Award
+
+Share
+Share
+
+cavedave
+•
+2y ago
+major contributor
+What are those codes used for?
+
+
+
+Upvote
+1
+
+Downvote
+
+Reply
+reply
+
+Award
+
+Share
+Share
+
+u/throwawayrandomvowel avatar
+throwawayrandomvowel
+•
+2y ago
+standardized company industry. Sometimes stuff gets grouped in.... a procrustean manner (think kmeans vs. dbscan), but for the most part it's pretty helpful, especially if you have augmentative data. There are a few industries that are a clusterfuck in there, you'll realize it pretty quickly. I do think there's an opporunity for some automation / ML / classification since the last time i worked with NAICs
+
+
+
+Upvote
+2
+
+Downvote
+
+Reply
+reply
+
+Award
+
+Share
+Share
+
+cavedave
+•
+2y ago
+major contributor
+Naic's?
+
+I am not being smart here. I found someone a whooping cough dataset today once we worked out it was whooping cough not the medical term.
+
+And having the common names helps people searching later. Btw what search terms have you used over r/datasets, as that could trigger some people for datasets they know already?
+
+
+
+Upvote
+3
+
+Downvote
+
+Reply
+reply
+
+Award
+
+Share
+Share
+
+u/throwawayrandomvowel avatar
+throwawayrandomvowel
+•
+2y ago
+idk how else to say it
+
+https://www.census.gov/naics/
+
+
+
+Upvote
+2
+
+Downvote
+
+Reply
+reply
+
+Award
+
+Share
+Share
+
+cavedave
+•
+2y ago
+major contributor
+Could you say "North American Industry Classification System"?
+
+
+
+Upvote
+1
+
+Downvote
+
+Reply
+reply
+
+Award
+
+Share
+Share
+
+u/throwawayrandomvowel avatar
+throwawayrandomvowel
+•
+2y ago
+hm. quite
+
+
+Upvote
+2
+
+Downvote
+
+Reply
+reply
+
+Award
+
+Share
+Share
+
+danlsn
+•
+2y ago
+Could you find me a pertussis dataset please??
+
+
+
+Upvote
+1
+
+Downvote
+
+Reply
+reply
+
+Award
+
+Share
+Share
+
+cavedave
+•
+2y ago
+major contributor
+pertussis
+
+https://www.reddit.com/r/datasets/comments/13mitd6/are_there_any_datasets_containing_pertussis_audio/jkvqt03/?context=3
+
+
+Upvote
+1
+
+Downvote
+
+Reply
+reply
+
+Award
+
+Share
+Share
+
+caprine_chris
+•
+2y ago
+Naics and sic codes should be readily available for free, I think from some government website. It’s the gics industry codes I’ve had a hard time coming by.
+
