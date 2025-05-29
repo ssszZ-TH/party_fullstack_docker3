@@ -22,14 +22,14 @@ async def create_person(person: PersonCreate) -> Optional[PersonOut]:
             query_person = """
                 INSERT INTO person (
                     id, socialsecuritynumber, birthdate, mothermaidenname, 
-                    totalyearworkexperience, comment
+                    totalyearworkexperience, comment, gender_type_id
                 )
                 VALUES (
                     :id, :socialsecuritynumber, :birthdate, :mothermaidenname, 
-                    :totalyearworkexperience, :comment
+                    :totalyearworkexperience, :comment, :gender_type_id
                 )
                 RETURNING id, socialsecuritynumber, birthdate, mothermaidenname, 
-                          totalyearworkexperience, comment
+                          totalyearworkexperience, comment, gender_type_id
             """
             result = await database.fetch_one(query=query_person, values={
                 "id": new_id,
@@ -37,35 +37,36 @@ async def create_person(person: PersonCreate) -> Optional[PersonOut]:
                 "birthdate": person.birthdate,
                 "mothermaidenname": person.mothermaidenname,
                 "totalyearworkexperience": person.totalyearworkexperience,
-                "comment": person.comment
+                "comment": person.comment,
+                "gender_type_id": person.gender_type_id
             })
-            logger.info(f"Created person: id={result['id']}")
+            logger.info(f"สร้างบุคคล: id={result['id']}")
             return PersonOut(**result)
         except Exception as e:
-            logger.error(f"Error creating person: {str(e)}")
+            logger.error(f"ข้อผิดพลาดในการสร้างบุคคล: {str(e)}")
             raise
 
 async def get_person(person_id: int) -> Optional[PersonOut]:
     query = """
         SELECT id, socialsecuritynumber, birthdate, mothermaidenname, 
-               totalyearworkexperience, comment
+               totalyearworkexperience, comment, gender_type_id
         FROM person WHERE id = :id
     """
     result = await database.fetch_one(query=query, values={"id": person_id})
     if not result:
-        logger.warning(f"Person not found: id={person_id}")
+        logger.warning(f"ไม่พบบุคคล: id={person_id}")
         return None
-    logger.info(f"Retrieved person: id={result['id']}")
+    logger.info(f"ดึงข้อมูลบุคคล: id={result['id']}")
     return PersonOut(**result)
 
 async def get_all_persons() -> List[PersonOut]:
     query = """
         SELECT id, socialsecuritynumber, birthdate, mothermaidenname, 
-               totalyearworkexperience, comment
+               totalyearworkexperience, comment, gender_type_id
         FROM person ORDER BY id ASC
     """
     results = await database.fetch_all(query=query)
-    logger.info(f"Retrieved {len(results)} persons")
+    logger.info(f"ดึงข้อมูล {len(results)} บุคคล")
     return [PersonOut(**result) for result in results]
 
 async def update_person(person_id: int, person: PersonUpdate) -> Optional[PersonOut]:
@@ -75,10 +76,11 @@ async def update_person(person_id: int, person: PersonUpdate) -> Optional[Person
             birthdate = COALESCE(:birthdate, birthdate),
             mothermaidenname = COALESCE(:mothermaidenname, mothermaidenname),
             totalyearworkexperience = COALESCE(:totalyearworkexperience, totalyearworkexperience),
-            comment = COALESCE(:comment, comment)
+            comment = COALESCE(:comment, comment),
+            gender_type_id = COALESCE(:gender_type_id, gender_type_id)
         WHERE id = :id
         RETURNING id, socialsecuritynumber, birthdate, mothermaidenname, 
-                  totalyearworkexperience, comment
+                  totalyearworkexperience, comment, gender_type_id
     """
     try:
         result = await database.fetch_one(query=query, values={
@@ -87,19 +89,20 @@ async def update_person(person_id: int, person: PersonUpdate) -> Optional[Person
             "mothermaidenname": person.mothermaidenname,
             "totalyearworkexperience": person.totalyearworkexperience,
             "comment": person.comment,
+            "gender_type_id": person.gender_type_id,
             "id": person_id
         })
         if not result:
-            logger.warning(f"Person not found for update: id={person_id}")
+            logger.warning(f"ไม่พบบุคคลสำหรับอัปเดต: id={person_id}")
             return None
-        logger.info(f"Updated person: id={result['id']}")
+        logger.info(f"อัปเดตบุคคล: id={result['id']}")
         return PersonOut(**result)
     except Exception as e:
-        logger.error(f"Error updating person: {str(e)}")
+        logger.error(f"ข้อผิดพลาดในการอัปเดตบุคคล: {str(e)}")
         raise
 
 async def delete_person(person_id: int) -> bool:
-    # Check if person is referenced in related tables
+    # ตรวจสอบว่าบุคคลถูกอ้างอิงในตารางที่เกี่ยวข้องหรือไม่
     query_check = """
         SELECT id FROM citizenship WHERE person_id = :id
         UNION
@@ -112,30 +115,30 @@ async def delete_person(person_id: int) -> bool:
     """
     referenced = await database.fetch_one(query=query_check, values={"id": person_id})
     if referenced:
-        logger.warning(f"Cannot delete person: id={person_id}, referenced in related tables")
+        logger.warning(f"ไม่สามารถลบบุคคล: id={person_id}, ถูกอ้างอิงในตารางที่เกี่ยวข้อง")
         return False
 
     async with database.transaction():
         try:
-            # Delete from person
+            # ลบจาก person
             query_person = """
                 DELETE FROM person WHERE id = :id
                 RETURNING id
             """
             person_result = await database.fetch_one(query=query_person, values={"id": person_id})
             if not person_result:
-                logger.warning(f"Person not found for deletion: id={person_id}")
+                logger.warning(f"ไม่พบบุคคลสำหรับลบ: id={person_id}")
                 return False
 
-            # Delete from party
+            # ลบจาก party
             query_party = """
                 DELETE FROM party WHERE id = :id
                 RETURNING id
             """
             await database.fetch_one(query=query_party, values={"id": person_id})
 
-            logger.info(f"Deleted person: id={person_id}")
+            logger.info(f"ลบบุคคล: id={person_id}")
             return True
         except Exception as e:
-            logger.error(f"Error deleting person: {str(e)}")
+            logger.error(f"ข้อผิดพลาดในการลบบุคคล: {str(e)}")
             raise

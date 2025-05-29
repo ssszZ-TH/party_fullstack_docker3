@@ -15,7 +15,12 @@ DROP TABLE IF EXISTS classify_by_size CASCADE;
 DROP TABLE IF EXISTS communication_event CASCADE;
 DROP TABLE IF EXISTS party_relationship CASCADE;
 
--- Intermediate tables
+-- Intermediate tables (including new subtype tables)
+DROP TABLE IF EXISTS corporation CASCADE;
+DROP TABLE IF EXISTS government_agency CASCADE;
+DROP TABLE IF EXISTS team CASCADE;
+DROP TABLE IF EXISTS family CASCADE;
+DROP TABLE IF EXISTS other_informal_organization CASCADE;
 DROP TABLE IF EXISTS person_classification CASCADE;
 DROP TABLE IF EXISTS organization_classification CASCADE;
 DROP TABLE IF EXISTS party_role CASCADE;
@@ -42,6 +47,7 @@ DROP TABLE IF EXISTS income_range CASCADE;
 DROP TABLE IF EXISTS minority_type CASCADE;
 DROP TABLE IF EXISTS industry_type CASCADE;
 DROP TABLE IF EXISTS employee_count_range CASCADE;
+DROP TABLE IF EXISTS gender_type CASCADE;
 
 -- Root tables
 DROP TABLE IF EXISTS party_type CASCADE;
@@ -145,6 +151,11 @@ CREATE TABLE employee_count_range (
     description VARCHAR(128)            -- Description of the range
 );
 
+CREATE TABLE gender_type (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for gender types
+    description VARCHAR(128)            -- Description of the gender type (e.g., "Male", "Female", "Non-Binary")
+);
+
 -- Intermediate tables
 CREATE TABLE party_classification (
     id SERIAL PRIMARY KEY,              -- Unique identifier for each classification
@@ -160,7 +171,8 @@ CREATE TABLE person (
     birthdate DATE,                             -- Date of birth
     mothermaidenname VARCHAR(128),              -- Mother's maiden name
     totalyearworkexperience INT,                -- Total years of work experience
-    comment VARCHAR(128)                        -- Additional comments about the person
+    comment VARCHAR(128),                       -- Additional comments about the person
+    gender_type_id INT REFERENCES gender_type(id) ON DELETE CASCADE -- Foreign key linking to gender type
 );
 
 CREATE TABLE organization (
@@ -174,8 +186,28 @@ CREATE TABLE legal_organization (
     federal_tax_id_number VARCHAR(64)                  -- Federal tax ID (e.g., EIN in the US)
 );
 
+CREATE TABLE corporation (
+    id SERIAL PRIMARY KEY REFERENCES legal_organization(id) ON DELETE CASCADE -- Links to legal_organization
+);
+
+CREATE TABLE government_agency (
+    id SERIAL PRIMARY KEY REFERENCES legal_organization(id) ON DELETE CASCADE -- Links to legal_organization
+);
+
 CREATE TABLE informal_organization (
     id SERIAL PRIMARY KEY REFERENCES organization(id) ON DELETE CASCADE -- Links to organization
+);
+
+CREATE TABLE team (
+    id SERIAL PRIMARY KEY REFERENCES informal_organization(id) ON DELETE CASCADE -- Links to informal_organization
+);
+
+CREATE TABLE family (
+    id SERIAL PRIMARY KEY REFERENCES informal_organization(id) ON DELETE CASCADE -- Links to informal_organization
+);
+
+CREATE TABLE other_informal_organization (
+    id SERIAL PRIMARY KEY REFERENCES informal_organization(id) ON DELETE CASCADE -- Links to informal_organization
 );
 
 CREATE TABLE party_role (

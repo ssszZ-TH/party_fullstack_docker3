@@ -27,6 +27,7 @@ from app.controllers.classify_by_industry import router as classify_by_industry_
 from app.controllers.classify_by_size import router as classify_by_size_router
 from app.controllers.classify_by_eeoc import router as classify_by_eeoc_router
 from app.controllers.classify_by_income import router as classify_by_income_router
+from app.controllers.gender_type import router as gender_type_router
 
 # โหลด .env ก่อน import อื่นๆ
 load_dotenv()
@@ -68,6 +69,8 @@ app.include_router(classify_by_industry_router)
 app.include_router(classify_by_size_router)
 app.include_router(classify_by_eeoc_router)
 app.include_router(classify_by_income_router)
+app.include_router(gender_type_router)
+
 
 # รวม routers อื่นๆ ที่มีใน controllers
 
