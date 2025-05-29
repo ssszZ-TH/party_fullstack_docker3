@@ -41,6 +41,12 @@ const routes = [
   { path: '/v1/maritalstatustype', component: lazy(() => import('./pages/layer_type/MaritalStatusType')) },
   { path: '/v1/physicalcharacteristic', component: lazy(() => import('./pages/layer_info/PhysicalCharacteristic')) },
   { path: '/v1/physicalcharacteristictype', component: lazy(() => import('./pages/layer_type/PhysicalCharacteristicType')) },
+
+  { path: '/v1/gendertype', component: lazy(() => import('./pages/layer_type/Gendertype')) },
+  { path: '/v1/team', component: lazy(() => import('./pages/layer_type/Team')) },
+  { path: '/v1/family', component: lazy(() => import('./pages/layer_type/Family')) },
+  { path: '/v1/otherinformalorganization', component: lazy(() => import('./pages/layer_type/OtherInformalOrganization')) },
+
 ];
 
 // สร้าง root element และ render แอปพลิเคชัน

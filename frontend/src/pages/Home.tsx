@@ -49,6 +49,11 @@ const services_layer_type = [
   { name: "Industry Type", path: "/v1/industrytype" },
   { name: "Employee Count Range", path: "/v1/employeecountrange" },
   { name: "Minority Type", path: "/v1/minoritytype" },
+  { name: "Gender Type", path: "/v1/gendertype" },
+  { name: "Other Informal Organization", path: "/v1/otherinformalorganization" },
+  { name: "Team", path: "/v1/team" },
+  { name: "Family", path: "/v1/family" },
+
 ];
 
 const services_layer_info = [
