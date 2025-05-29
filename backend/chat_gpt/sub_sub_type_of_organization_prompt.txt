@@ -1,0 +1,269 @@
+นี่คือ informal organization schema model controller
+
+schema
+
+from pydantic import BaseModel, constr
+from typing import Optional
+
+class InformalOrganizationCreate(BaseModel):
+    name_en: constr(max_length=128)
+    name_th: constr(max_length=128)
+
+class InformalOrganizationUpdate(BaseModel):
+    name_en: Optional[constr(max_length=128)] = None
+    name_th: Optional[constr(max_length=128)] = None
+
+class InformalOrganizationOut(BaseModel):
+    id: int
+    name_en: Optional[str] = None
+    name_th: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+model
+
+from typing import Optional, List
+from app.config.database import database
+import logging
+from app.schemas.informal_organization import InformalOrganizationCreate, InformalOrganizationUpdate, InformalOrganizationOut
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+async def create_informal_organization(informal_organization: InformalOrganizationCreate) -> Optional[InformalOrganizationOut]:
+    async with database.transaction():
+        try:
+            # 1. Insert into party
+            query_party = """
+                INSERT INTO party (id)
+                VALUES (DEFAULT)
+                RETURNING id
+            """
+            party_result = await database.fetch_one(query=query_party)
+            party_id = party_result["id"]
+
+            # 2. Insert into organization
+            query_organization = """
+                INSERT INTO organization (id, name_en, name_th)
+                VALUES (:id, :name_en, :name_th)
+                RETURNING id
+            """
+            await database.fetch_one(query=query_organization, values={
+                "id": party_id,
+                "name_en": informal_organization.name_en,
+                "name_th": informal_organization.name_th
+            })
+
+            # 3. Insert into informal_organization
+            query_informal = """
+                INSERT INTO informal_organization (id)
+                VALUES (:id)
+                RETURNING id
+            """
+            result = await database.fetch_one(query=query_informal, values={"id": party_id})
+            logger.info(f"Created informal organization: id={result['id']}")
+            return InformalOrganizationOut(
+                id=result['id'],
+                name_en=informal_organization.name_en,
+                name_th=informal_organization.name_th
+            )
+        except Exception as e:
+            logger.error(f"Error creating informal organization: {str(e)}")
+            raise
+
+async def get_informal_organization(informal_organization_id: int) -> Optional[InformalOrganizationOut]:
+    query = """
+        SELECT io.id, o.name_en, o.name_th
+        FROM informal_organization io
+        JOIN organization o ON io.id = o.id
+        JOIN party p ON o.id = p.id
+        WHERE io.id = :id
+    """
+    result = await database.fetch_one(query=query, values={"id": informal_organization_id})
+    if not result:
+        logger.warning(f"Informal organization not found: id={informal_organization_id}")
+        return None
+    logger.info(f"Retrieved informal organization: id={result['id']}")
+    return InformalOrganizationOut(**result)
+
+async def get_all_informal_organizations() -> List[InformalOrganizationOut]:
+    query = """
+        SELECT io.id, o.name_en, o.name_th
+        FROM informal_organization io
+        JOIN organization o ON io.id = o.id
+        JOIN party p ON o.id = p.id
+        ORDER BY io.id ASC
+    """
+    results = await database.fetch_all(query=query)
+    logger.info(f"Retrieved {len(results)} informal organizations")
+    return [InformalOrganizationOut(**result) for result in results]
+
+async def update_informal_organization(informal_organization_id: int, informal_organization: InformalOrganizationUpdate) -> Optional[InformalOrganizationOut]:
+    async with database.transaction():
+        try:
+            # Update organization
+            query_organization = """
+                UPDATE organization
+                SET name_en = COALESCE(:name_en, name_en),
+                    name_th = COALESCE(:name_th, name_th)
+                WHERE id = :id
+                RETURNING id, name_en, name_th
+            """
+            result = await database.fetch_one(query=query_organization, values={
+                "name_en": informal_organization.name_en,
+                "name_th": informal_organization.name_th,
+                "id": informal_organization_id
+            })
+            if not result:
+                logger.warning(f"Informal organization not found for update: id={informal_organization_id}")
+                return None
+            logger.info(f"Updated informal organization: id={result['id']}")
+            return InformalOrganizationOut(**result)
+        except Exception as e:
+            logger.error(f"Error updating informal organization: {str(e)}")
+            raise
+
+async def delete_informal_organization(informal_organization_id: int) -> bool:
+    async with database.transaction():
+        try:
+            # Delete from informal_organization
+            query_informal = """
+                DELETE FROM informal_organization WHERE id = :id
+                RETURNING id
+            """
+            informal_result = await database.fetch_one(query=query_informal, values={"id": informal_organization_id})
+            if not informal_result:
+                logger.warning(f"Informal organization not found for deletion: id={informal_organization_id}")
+                return False
+
+            # Delete from organization
+            query_organization = """
+                DELETE FROM organization WHERE id = :id
+                RETURNING id
+            """
+            await database.fetch_one(query=query_organization, values={"id": informal_organization_id})
+
+            # Delete from party
+            query_party = """
+                DELETE FROM party WHERE id = :id
+                RETURNING id
+            """
+            await database.fetch_one(query=query_party, values={"id": informal_organization_id})
+
+            logger.info(f"Deleted informal organization: id={informal_organization_id}")
+            return True
+        except Exception as e:
+            logger.error(f"Error deleting informal organization: {str(e)}")
+            raise
+
+controller
+
+from fastapi import APIRouter, HTTPException, Depends
+from typing import List
+from app.models.informal_organization import (
+    create_informal_organization, get_informal_organization, get_all_informal_organizations,
+    update_informal_organization, delete_informal_organization
+)
+from app.schemas.informal_organization import InformalOrganizationCreate, InformalOrganizationUpdate, InformalOrganizationOut
+from app.controllers.users.user import get_current_user
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+router = APIRouter(prefix="/v1/informalorganization", tags=["informalorganization"])
+
+@router.post("/", response_model=InformalOrganizationOut)
+async def create_informal_organization_endpoint(informal_organization: InformalOrganizationCreate, current_user: dict = Depends(get_current_user)):
+    result = await create_informal_organization(informal_organization)
+    if not result:
+        logger.warning(f"Failed to create informal organization")
+        raise HTTPException(status_code=400, detail="Failed to create informal organization")
+    logger.info(f"Created informal organization: id={result.id}")
+    return result
+
+@router.get("/{informal_organization_id}", response_model=InformalOrganizationOut)
+async def get_informal_organization_endpoint(informal_organization_id: int, current_user: dict = Depends(get_current_user)):
+    result = await get_informal_organization(informal_organization_id)
+    if not result:
+        logger.warning(f"Informal organization not found: id={informal_organization_id}")
+        raise HTTPException(status_code=404, detail="Informal organization not found")
+    logger.info(f"Retrieved informal organization: id={result.id}")
+    return result
+
+@router.get("/", response_model=List[InformalOrganizationOut])
+async def get_all_informal_organizations_endpoint(current_user: dict = Depends(get_current_user)):
+    results = await get_all_informal_organizations()
+    logger.info(f"Retrieved {len(results)} informal organizations")
+    return results
+
+@router.put("/{informal_organization_id}", response_model=InformalOrganizationOut)
+async def update_informal_organization_endpoint(informal_organization_id: int, informal_organization: InformalOrganizationUpdate, current_user: dict = Depends(get_current_user)):
+    result = await update_informal_organization(informal_organization_id, informal_organization)
+    if not result:
+        logger.warning(f"Failed to update informal organization: id={informal_organization_id}")
+        raise HTTPException(status_code=404, detail="Informal organization not found")
+    logger.info(f"Updated informal organization: id={result.id}")
+    return result
+
+@router.delete("/{informal_organization_id}")
+async def delete_informal_organization_endpoint(informal_organization_id: int, current_user: dict = Depends(get_current_user)):
+    result = await delete_informal_organization(informal_organization_id)
+    if not result:
+        logger.warning(f"Informal organization not found for deletion: id={informal_organization_id}")
+        raise HTTPException(status_code=404, detail="Informal organization not found")
+    logger.info(f"Deleted informal organization: id={informal_organization_id}")
+    return {"message": "Informal organization deleted"}
+
+ตอนนี้ database ผมมี table เพิ่มเข้ามา
+
+-- Root tables
+CREATE TABLE party (
+    id SERIAL PRIMARY KEY              -- Unique identifier for each party
+);
+
+CREATE TABLE organization (
+    id SERIAL PRIMARY KEY REFERENCES party(id) ON DELETE CASCADE, -- Links to the party table
+    name_en VARCHAR(128),                       -- English name of the organization
+    name_th VARCHAR(128)                        -- Thai name of the organization
+);
+
+CREATE TABLE legal_organization (
+    id SERIAL PRIMARY KEY REFERENCES organization(id) ON DELETE CASCADE, -- Links to organization
+    federal_tax_id_number VARCHAR(64)                  -- Federal tax ID (e.g., EIN in the US)
+);
+
+CREATE TABLE corporation (
+    id SERIAL PRIMARY KEY REFERENCES legal_organization(id) ON DELETE CASCADE -- Links to legal_organization
+);
+
+CREATE TABLE government_agency (
+    id SERIAL PRIMARY KEY REFERENCES legal_organization(id) ON DELETE CASCADE -- Links to legal_organization
+);
+
+CREATE TABLE informal_organization (
+    id SERIAL PRIMARY KEY REFERENCES organization(id) ON DELETE CASCADE -- Links to organization
+);
+
+CREATE TABLE team (
+    id SERIAL PRIMARY KEY REFERENCES informal_organization(id) ON DELETE CASCADE -- Links to informal_organization
+);
+
+CREATE TABLE family (
+    id SERIAL PRIMARY KEY REFERENCES informal_organization(id) ON DELETE CASCADE -- Links to informal_organization
+);
+
+CREATE TABLE other_informal_organization (
+    id SERIAL PRIMARY KEY REFERENCES informal_organization(id) ON DELETE CASCADE -- Links to informal_organization
+);
+
+ช่วยเขียน schema model controller ของ table
+corporation 
+government_agency
+
+team
+family
+other_informal_organization
+
+เวลาจะเขียน sql crud script ต้องระวังให้ดีๆ เขียนจาก supper type table ไปหา subtype table ใช้ begin transaction เเบบที่ทำให้นี่เเหละดีมาก ชอบ เวลาตอบ ตอบมาเเต่ code อย่างเดียว จะได้ไม่เปลือง token
