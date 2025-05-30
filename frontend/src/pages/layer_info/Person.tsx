@@ -3,17 +3,11 @@ import { useNavigate } from "react-router-dom";
 import AppBarCustom from "../../components/AppBarCustom";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../../components/DataTable";
-import PersonModal from "../../components/Modal/PersonModal";
+import PersonModal from "../../components/modal/PersonModal";
 import Loading from "../../components/Loading";
 import { AuthContext } from "../../contexts/AuthContext";
-import {
-  create,
-  get,
-  list,
-  update,
-  deleteById,
-} from "../../services/person";
-
+import { create, get, list, update, deleteById } from "../../services/person";
+import { list as listGenderTypes } from "../../services/gendertype";
 import UpdateButton from "../../components/buttons/UpdateButton";
 import DeleteButton from "../../components/buttons/DeleteButton";
 import AddButton from "../../components/buttons/AddButton";
@@ -23,12 +17,23 @@ export default function Person() {
   const navigate = useNavigate();
   const { logout } = useContext(AuthContext);
 
+  const [genderTypes, setGenderTypes] = useState<{ id: number; description: string }[]>([]);
+
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 70 },
     { field: "socialsecuritynumber", headerName: "Social Security Number", width: 150 },
     { field: "birthdate", headerName: "Birth Date", width: 120 },
     { field: "mothermaidenname", headerName: "Mother's Maiden Name", width: 150 },
     { field: "totalyearworkexperience", headerName: "Work Experience (Years)", width: 150, type: 'number' },
+    {
+      field: "gender_type_id",
+      headerName: "Gender",
+      width: 120,
+      renderCell: (params) => {
+        const gender = genderTypes.find(g => g.id === params.row.gender_type_id);
+        return gender ? gender.description : 'None';
+      }
+    },
     { field: "comment", headerName: "Comment", width: 200 },
     {
       field: "update",
@@ -63,6 +68,7 @@ export default function Person() {
     mothermaidenname: "",
     totalyearworkexperience: 0,
     comment: "",
+    gender_type_id: undefined,
   });
   const [openModalFor, setOpenModalFor] = useState("");
 
@@ -73,6 +79,7 @@ export default function Person() {
     mothermaidenname: string;
     totalyearworkexperience: number;
     comment: string;
+    gender_type_id?: number;
   }
 
   const handleUpdateButton = async (row: PersonRow) => {
@@ -96,12 +103,23 @@ export default function Person() {
     setLoading(true);
     try {
       const res = await list();
+      // console.log("Fetched person data:", res);
       setRows(res);
       setError(null);
     } catch (err: any) {
       handleError(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchGenderTypes = async () => {
+    try {
+      const data = await listGenderTypes();
+      setGenderTypes(data);
+    } catch (error) {
+      console.error("Failed to fetch gender types:", error);
+      setError("ไม่สามารถโหลดข้อมูลประเภทเพศได้");
     }
   };
 
@@ -117,6 +135,7 @@ export default function Person() {
 
   useEffect(() => {
     fetchPerson();
+    fetchGenderTypes();
   }, []);
 
   const openModal = (reason?: string) => {
@@ -133,6 +152,7 @@ export default function Person() {
       mothermaidenname: "",
       totalyearworkexperience: 0,
       comment: "",
+      gender_type_id: undefined,
     });
     setOpenModalFor("");
   };
@@ -144,6 +164,7 @@ export default function Person() {
     mothermaidenname: string;
     totalyearworkexperience: number;
     comment: string;
+    gender_type_id: number;
   }
 
   const handleSubmit = async (payload: Payload) => {
@@ -192,6 +213,7 @@ export default function Person() {
         initialDetail={initialDetail}
         onSubmit={handleSubmit}
         openModalFor={openModalFor}
+        genderTypes={genderTypes}
       />
     </>
   );
