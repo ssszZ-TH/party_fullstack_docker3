@@ -33,11 +33,11 @@ const routes = [
   { path: '/v1/classifybysize', component: lazy(() => import('./pages/layer_info/ClassifyBySize')) },
   { path: '/v1/personnametype', component: lazy(() => import('./pages/layer_type/PersonNameType')) },
   { path: '/v1/classifybyincome', component: lazy(() => import('./pages/layer_info/ClassifyByIncome')) },
-  { path: '/v1/legalorganization', component: lazy(() => import('./pages/layer_type/LegalOrganization')) },
+  // { path: '/v1/legalorganization', component: lazy(() => import('./pages/layer_type/LegalOrganization')) },
   { path: '/v1/classifybyminority', component: lazy(() => import('./pages/layer_info/ClassifyByMinority')) },
   { path: '/v1/classifybyindustry', component: lazy(() => import('./pages/layer_info/ClassifyByIndustry')) },
   { path: '/v1/employeecountrange', component: lazy(() => import('./pages/layer_type/EmployeeCountRange')) },
-  { path: '/v1/informalorganization', component: lazy(() => import('./pages/layer_type/InformalOrganization')) },
+  // { path: '/v1/informalorganization', component: lazy(() => import('./pages/layer_type/InformalOrganization')) },
   { path: '/v1/maritalstatustype', component: lazy(() => import('./pages/layer_type/MaritalStatusType')) },
   { path: '/v1/physicalcharacteristic', component: lazy(() => import('./pages/layer_info/PhysicalCharacteristic')) },
   { path: '/v1/physicalcharacteristictype', component: lazy(() => import('./pages/layer_type/PhysicalCharacteristicType')) },
@@ -46,6 +46,9 @@ const routes = [
   { path: '/v1/team', component: lazy(() => import('./pages/layer_type/Team')) },
   { path: '/v1/family', component: lazy(() => import('./pages/layer_type/Family')) },
   { path: '/v1/otherinformalorganization', component: lazy(() => import('./pages/layer_type/OtherInformalOrganization')) },
+
+  { path: '/v1/governmentagency', component: lazy(() => import('./pages/layer_type/GovernmentAgency')) },
+  { path: '/v1/corporation', component: lazy(() => import('./pages/layer_type/Corporation')) },
 
 ];
 

@@ -157,7 +157,7 @@ export default function Team() {
   // JSX สำหรับ UI ของหน้า
   return (
     <>
-      <AppBarCustom title="other informal organization" /> {/* แถบด้านบน */}
+      <AppBarCustom title="Other Informal Organization บริษัทไม่เป็นทางการอื่นๆ" /> {/* แถบด้านบน */}
       {loading ? (
         <Loading /> // แสดง Loading component ถ้ากำลังโหลด
       ) : (

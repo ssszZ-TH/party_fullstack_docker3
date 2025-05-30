@@ -157,7 +157,7 @@ export default function Team() {
   // JSX สำหรับ UI ของหน้า
   return (
     <>
-      <AppBarCustom title="Team ทีม" /> {/* แถบด้านบน */}
+      <AppBarCustom title="Family ครอบครัว" /> {/* แถบด้านบน */}
       {loading ? (
         <Loading /> // แสดง Loading component ถ้ากำลังโหลด
       ) : (

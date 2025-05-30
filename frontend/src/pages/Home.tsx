@@ -42,8 +42,8 @@ const services_layer_type = [
   
   { name: "Party Type", path: "/v1/partytype" },
 
-  { name: "Legal Organization", path: "/v1/legalorganization" },
-  { name: "Informal Organization", path: "/v1/informalorganization" },
+  // { name: "Legal Organization", path: "/v1/legalorganization" },
+  // { name: "Informal Organization", path: "/v1/informalorganization" },
   { name: "Ethnicity", path: "/v1/ethnicity" },
   { name: "Income Range", path: "/v1/incomerange" },
   { name: "Industry Type", path: "/v1/industrytype" },
@@ -53,6 +53,9 @@ const services_layer_type = [
   { name: "Other Informal Organization", path: "/v1/otherinformalorganization" },
   { name: "Team", path: "/v1/team" },
   { name: "Family", path: "/v1/family" },
+
+  { name: "Government Agency", path: "/v1/governmentagency" },
+  { name: "Corporation", path: "/v1/corporation" },
 
 ];
 
