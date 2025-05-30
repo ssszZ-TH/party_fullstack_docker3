@@ -1,0 +1,16 @@
+สำนักงานบริหารและงบประมาณแห่งสหรัฐอเมริกา (U.S. Office of Management and Budget - OMB) 
+ภายใต้ OMB Directive 15 (Standards for Maintaining, Collecting, and Presenting Federal Data on Race and Ethnicity) 
+ซึ่งได้รับการปรับปรุงล่าสุดในปี 1997 และมีการแก้ไขเพิ่มเติมในภายหลัง
+
+หมวดหมู่ที่ปรากฏใน dataset ได้แก่:
+
+White
+Black or African American
+Asian
+American Indian or Alaska Native
+Native Hawaiian or Other Pacific Islander
+Hispanic or Latino (ถือเป็นชาติพันธุ์ ไม่ใช่เชื้อชาติ)
+Multiracial or Other
+
+
+https://www.govinfo.gov/content/pkg/FR-1997-10-30/pdf/97-28653.pdf
