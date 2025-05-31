@@ -1,3 +1,13 @@
+
+```sh
+docker compose exec db sh
+```
+
+```sh
+psql -U spa -d myapp
+```
+
+
 myapp=# COPY country (id, isocode, name_en, name_th)
 FROM '/staticData/country/static_country.csv'
 DELIMITER ','
