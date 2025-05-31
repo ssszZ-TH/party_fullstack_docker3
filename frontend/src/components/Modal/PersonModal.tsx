@@ -8,7 +8,7 @@ import SaveButton from "../buttons/SaveButton";
 
 interface FormData {
   id: number | null;
-  socialsecuritynumber: string;
+  personal_id_number: string;
   birthdate: string;
   mothermaidenname: string;
   totalyearworkexperience: number;
@@ -46,7 +46,7 @@ export default function PersonModal({
 }: ModalProps) {
   const [formData, setFormData] = useState<FormData>({
     id: null,
-    socialsecuritynumber: "",
+    personal_id_number: "",
     birthdate: "",
     mothermaidenname: "",
     totalyearworkexperience: 0,
@@ -92,13 +92,11 @@ export default function PersonModal({
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Modal open={open} onClose={onClose}>
         <Box sx={style}>
-          <Typography variant="h6" component="h2">
-            Person Details
-          </Typography>
+          
           <TextField
-            label="Social Security Number"
-            name="socialsecuritynumber"
-            value={formData.socialsecuritynumber}
+            label="Personal ID Number"
+            name="personal_id_number"
+            value={formData.personal_id_number}
             onChange={handleChange}
             fullWidth
             margin="normal"

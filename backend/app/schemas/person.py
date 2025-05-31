@@ -3,7 +3,7 @@ from typing import Optional
 from datetime import date
 
 class PersonCreate(BaseModel):
-    socialsecuritynumber: Optional[constr(max_length=64)] = None
+    personal_id_number: Optional[constr(max_length=64)] = None
     birthdate: Optional[date] = None
     mothermaidenname: Optional[constr(max_length=128)] = None
     totalyearworkexperience: Optional[int] = None
@@ -11,7 +11,7 @@ class PersonCreate(BaseModel):
     gender_type_id: Optional[int] = None  # เพิ่ม gender_type_id
 
 class PersonUpdate(BaseModel):
-    socialsecuritynumber: Optional[constr(max_length=64)] = None
+    personal_id_number: Optional[constr(max_length=64)] = None
     birthdate: Optional[date] = None
     mothermaidenname: Optional[constr(max_length=128)] = None
     totalyearworkexperience: Optional[int] = None
@@ -20,7 +20,7 @@ class PersonUpdate(BaseModel):
 
 class PersonOut(BaseModel):
     id: int
-    socialsecuritynumber: Optional[str] = None
+    personal_id_number: Optional[str] = None
     birthdate: Optional[date] = None
     mothermaidenname: Optional[str] = None
     totalyearworkexperience: Optional[int] = None

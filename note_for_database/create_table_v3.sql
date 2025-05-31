@@ -167,7 +167,7 @@ CREATE TABLE party_classification (
 
 CREATE TABLE person (
     id SERIAL PRIMARY KEY REFERENCES party(id) ON DELETE CASCADE, -- Links to the party table
-    socialsecuritynumber VARCHAR(64),           -- Social security number (or equivalent ID)
+    personal_id_number VARCHAR(64),           -- Personal ID number
     birthdate DATE,                             -- Date of birth
     mothermaidenname VARCHAR(128),              -- Mother's maiden name
     totalyearworkexperience INT,                -- Total years of work experience

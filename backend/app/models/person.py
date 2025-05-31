@@ -21,19 +21,19 @@ async def create_person(person: PersonCreate) -> Optional[PersonOut]:
             # 2. Insert into person with the new id
             query_person = """
                 INSERT INTO person (
-                    id, socialsecuritynumber, birthdate, mothermaidenname, 
+                    id, personal_id_number, birthdate, mothermaidenname, 
                     totalyearworkexperience, comment, gender_type_id
                 )
                 VALUES (
-                    :id, :socialsecuritynumber, :birthdate, :mothermaidenname, 
+                    :id, :personal_id_number, :birthdate, :mothermaidenname, 
                     :totalyearworkexperience, :comment, :gender_type_id
                 )
-                RETURNING id, socialsecuritynumber, birthdate, mothermaidenname, 
+                RETURNING id, personal_id_number, birthdate, mothermaidenname, 
                           totalyearworkexperience, comment, gender_type_id
             """
             result = await database.fetch_one(query=query_person, values={
                 "id": new_id,
-                "socialsecuritynumber": person.socialsecuritynumber,
+                "personal_id_number": person.personal_id_number,
                 "birthdate": person.birthdate,
                 "mothermaidenname": person.mothermaidenname,
                 "totalyearworkexperience": person.totalyearworkexperience,
@@ -48,7 +48,7 @@ async def create_person(person: PersonCreate) -> Optional[PersonOut]:
 
 async def get_person(person_id: int) -> Optional[PersonOut]:
     query = """
-        SELECT id, socialsecuritynumber, birthdate, mothermaidenname, 
+        SELECT id, personal_id_number, birthdate, mothermaidenname, 
                totalyearworkexperience, comment, gender_type_id
         FROM person WHERE id = :id
     """
@@ -61,7 +61,7 @@ async def get_person(person_id: int) -> Optional[PersonOut]:
 
 async def get_all_persons() -> List[PersonOut]:
     query = """
-        SELECT id, socialsecuritynumber, birthdate, mothermaidenname, 
+        SELECT id, personal_id_number, birthdate, mothermaidenname, 
                totalyearworkexperience, comment, gender_type_id
         FROM person ORDER BY id ASC
     """
@@ -72,19 +72,19 @@ async def get_all_persons() -> List[PersonOut]:
 async def update_person(person_id: int, person: PersonUpdate) -> Optional[PersonOut]:
     query = """
         UPDATE person
-        SET socialsecuritynumber = COALESCE(:socialsecuritynumber, socialsecuritynumber),
+        SET personal_id_number = COALESCE(:personal_id_number, personal_id_number),
             birthdate = COALESCE(:birthdate, birthdate),
             mothermaidenname = COALESCE(:mothermaidenname, mothermaidenname),
             totalyearworkexperience = COALESCE(:totalyearworkexperience, totalyearworkexperience),
             comment = COALESCE(:comment, comment),
             gender_type_id = COALESCE(:gender_type_id, gender_type_id)
         WHERE id = :id
-        RETURNING id, socialsecuritynumber, birthdate, mothermaidenname, 
+        RETURNING id, personal_id_number, birthdate, mothermaidenname, 
                   totalyearworkexperience, comment, gender_type_id
     """
     try:
         result = await database.fetch_one(query=query, values={
-            "socialsecuritynumber": person.socialsecuritynumber,
+            "personal_id_number": person.personal_id_number,
             "birthdate": person.birthdate,
             "mothermaidenname": person.mothermaidenname,
             "totalyearworkexperience": person.totalyearworkexperience,

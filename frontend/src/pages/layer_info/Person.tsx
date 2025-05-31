@@ -21,7 +21,7 @@ export default function Person() {
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 70 },
-    { field: "socialsecuritynumber", headerName: "Social Security Number", width: 150 },
+    { field: "personal_id_number", headerName: "Personal ID Number", width: 150 },
     { field: "birthdate", headerName: "Birth Date", width: 120 },
     { field: "mothermaidenname", headerName: "Mother's Maiden Name", width: 150 },
     { field: "totalyearworkexperience", headerName: "Work Experience (Years)", width: 150, type: 'number' },
@@ -63,7 +63,7 @@ export default function Person() {
   const [open, setOpen] = useState(false);
   const [initialDetail, setInitialDetail] = useState({
     id: null,
-    socialsecuritynumber: "",
+    personal_id_number: "",
     birthdate: "",
     mothermaidenname: "",
     totalyearworkexperience: 0,
@@ -74,7 +74,7 @@ export default function Person() {
 
   interface PersonRow {
     id: number | null;
-    socialsecuritynumber: string;
+    personal_id_number: string;
     birthdate: string;
     mothermaidenname: string;
     totalyearworkexperience: number;
@@ -147,7 +147,7 @@ export default function Person() {
     setOpen(false);
     setInitialDetail({
       id: null,
-      socialsecuritynumber: "",
+      personal_id_number: "",
       birthdate: "",
       mothermaidenname: "",
       totalyearworkexperience: 0,
@@ -159,7 +159,7 @@ export default function Person() {
 
   interface Payload {
     id: number | null;
-    socialsecuritynumber: string;
+    personal_id_number: string;
     birthdate: string;
     mothermaidenname: string;
     totalyearworkexperience: number;
