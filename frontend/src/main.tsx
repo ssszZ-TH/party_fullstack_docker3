@@ -5,6 +5,8 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Loading from './components/Loading';
+import PersonDetail from './pages/layer_info/PersonDetail';
+
 
 // Lazy load pages เพื่อเพิ่มประสิทธิภาพโดยโหลดเฉพาะหน้าเมื่อจำเป็น
 const Home = lazy(() => import('./pages/Home'));
@@ -49,6 +51,7 @@ const routes = [
 
   { path: '/v1/governmentagency', component: lazy(() => import('./pages/layer_type/GovernmentAgency')) },
   { path: '/v1/corporation', component: lazy(() => import('./pages/layer_type/Corporation')) },
+  { path: '/v1/persondetail', component: lazy(() => import('./pages/layer_info/PersonDetail')) },
 
 ];
 
@@ -92,6 +95,16 @@ createRoot(document.getElementById('root')!).render(
                   }
                 />
               ))}
+
+              {/* เส้นทางสำหรับ PersonDetail ด้วย dynamic parameter :id */}
+              <Route
+                path="/v1/person/:paramId"
+                element={
+                  <ProtectedRoute>
+                    <PersonDetail />
+                  </ProtectedRoute>
+                }
+              />
 
               {/* เส้นทางสำหรับหน้า 404 เมื่อ URL ไม่ตรงกับ route ใด ๆ */}
               <Route path="*" element={<h1>404 Not Found</h1>} />
