@@ -54,7 +54,14 @@ export async function get({ id }: { id: number }) {
   }
 }
 
-export async function create(data: { socialsecuritynumber: string; birthdate: string; mothermaidenname: string; totalyearworkexperience: number; comment: string; gender_id?: number }) {
+export async function create(data: {
+  personal_id_number?: string;
+  birthdate?: string;
+  mothermaidenname?: string;
+  totalyearworkexperience?: number;
+  comment?: string;
+  gender_type_id?: number;
+}) {
   try {
     const res = await axios.post(BASE_URL, data, {
       headers: getAuthHeaders(),
@@ -69,7 +76,15 @@ export async function create(data: { socialsecuritynumber: string; birthdate: st
   }
 }
 
-export async function update(data: { id: number; socialsecuritynumber: string; birthdate: string; mothermaidenname: string; totalyearworkexperience: number; comment: string; gender_id?: number }) {
+export async function update(data: {
+  id: number;
+  personal_id_number?: string;
+  birthdate?: string;
+  mothermaidenname?: string;
+  totalyearworkexperience?: number;
+  comment?: string;
+  gender_type_id?: number;
+}) {
   try {
     const res = await axios.put(`${BASE_URL}/${data.id}`, data, {
       headers: getAuthHeaders(),

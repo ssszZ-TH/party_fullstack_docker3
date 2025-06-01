@@ -77,3 +77,4 @@ FROM '/staticData/minority_type/minority_type.csv'
 DELIMITER ','
 CSV HEADER;
 COPY 8
+
