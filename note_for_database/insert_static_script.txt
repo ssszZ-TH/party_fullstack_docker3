@@ -39,6 +39,7 @@ CSV HEADER;
 COPY physicalcharacteristictype (id, description)
 FROM '/staticData/physical_characteristic_type/static_physical_characteristic_type.csv'
 DELIMITER ','
+CSV HEADER;
 
 COPY personnametype (id, description)
 FROM '/staticData/person_name_type/static_person_name_type.csv'
@@ -97,7 +98,7 @@ FROM '/staticData/party/static_party.csv'
 DELIMITER ','
 CSV HEADER;
 
-COPY person (id, personal_id_number, birthdate, mothermaidenname, totalyearworkexperience, comment)
+COPY person (id, personal_id_number, birthdate, mothermaidenname, totalyearworkexperience, comment,gender_type_id)
 FROM '/staticData/person/static_person.csv'
 DELIMITER ','
 CSV HEADER;
