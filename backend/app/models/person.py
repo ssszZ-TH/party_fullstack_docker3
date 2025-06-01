@@ -45,95 +45,81 @@ async def create_person(person: PersonCreate) -> Optional[PersonOut]:
 async def get_person(person_id: int) -> Optional[PersonOut]:
     query = """
         SELECT 
-            p.id, p.personal_id_number, p.birthdate, p.mothermaidenname, 
-            p.totalyearworkexperience, p.comment, p.gender_type_id,
+            p.id, 
+            p.personal_id_number, 
+            p.birthdate, 
+            p.mothermaidenname, 
+            p.totalyearworkexperience, 
+            p.comment, 
+            p.gender_type_id,
             gt.description AS gender_description,
-            (SELECT jsonb_build_object(
-                'id', pn1.id,
-                'name', pn1.name,
-                'fromdate', pn1.fromdate,
-                'thrudate', pn1.thrudate,
-                'personnametype_id', pn1.personnametype_id,
-                'personnametype_description', pnt1.description
-            ) FROM personname pn1
-            JOIN personnametype pnt1 ON pn1.personnametype_id = pnt1.id
-            WHERE pn1.person_id = p.id AND pnt1.description = 'FirstName'
-            AND (pn1.thrudate IS NULL OR pn1.thrudate > CURRENT_DATE)
-            ORDER BY pn1.fromdate DESC LIMIT 1) AS firstname,
-            (SELECT jsonb_build_object(
-                'id', pn2.id,
-                'name', pn2.name,
-                'fromdate', pn2.fromdate,
-                'thrudate', pn2.thrudate,
-                'personnametype_id', pn2.personnametype_id,
-                'personnametype_description', pnt2.description
-            ) FROM personname pn2
-            JOIN personnametype pnt2 ON pn2.personnametype_id = pnt2.id
-            WHERE pn2.person_id = p.id AND pnt2.description = 'MiddleName'
-            AND (pn2.thrudate IS NULL OR pn2.thrudate > CURRENT_DATE)
-            ORDER BY pn2.fromdate DESC LIMIT 1) AS middlename,
-            (SELECT jsonb_build_object(
-                'id', pn3.id,
-                'name', pn3.name,
-                'fromdate', pn3.fromdate,
-                'thrudate', pn3.thrudate,
-                'personnametype_id', pn3.personnametype_id,
-                'personnametype_description', pnt3.description
-            ) FROM personname pn3
-            JOIN personnametype pnt3 ON pn3.personnametype_id = pnt3.id
-            WHERE pn3.person_id = p.id AND pnt3.description = 'LastName'
-            AND (pn3.thrudate IS NULL OR pn3.thrudate > CURRENT_DATE)
-            ORDER BY pn3.fromdate DESC LIMIT 1) AS lastname,
-            (SELECT jsonb_build_object(
-                'id', ms.id,
-                'fromdate', ms.fromdate,
-                'thrudate', ms.thrudate,
-                'maritalstatustype_id', ms.maritalstatustype_id,
-                'maritalstatustype_description', mst.description
-            ) FROM maritalstatus ms
-            JOIN maritalstatustype mst ON ms.maritalstatustype_id = mst.id
-            WHERE ms.person_id = p.id
-            AND (ms.thrudate IS NULL OR ms.thrudate > CURRENT_DATE)
-            ORDER BY ms.fromdate DESC LIMIT 1) AS marital_status,
-            (SELECT jsonb_build_object(
-                'id', pc1.id,
-                'val', pc1.val,
-                'fromdate', pc1.fromdate,
-                'thrudate', pc1.thrudate,
-                'physicalcharacteristictype_id', pc1.physicalcharacteristictype_id,
-                'physicalcharacteristictype_description', pct1.description
-            ) FROM physicalcharacteristic pc1
-            JOIN physicalcharacteristictype pct1 ON pc1.physicalcharacteristictype_id = pct1.id
-            WHERE pc1.person_id = p.id AND pct1.description = 'Height'
-            AND (pc1.thrudate IS NULL OR pc1.thrudate > CURRENT_DATE)
-            ORDER BY pc1.fromdate DESC LIMIT 1) AS height,
-            (SELECT jsonb_build_object(
-                'id', pc2.id,
-                'val', pc2.val,
-                'fromdate', pc2.fromdate,
-                'thrudate', pc2.thrudate,
-                'physicalcharacteristictype_id', pc2.physicalcharacteristictype_id,
-                'physicalcharacteristictype_description', pct2.description
-            ) FROM physicalcharacteristic pc2
-            JOIN physicalcharacteristictype pct2 ON pc2.physicalcharacteristictype_id = pct2.id
-            WHERE pc2.person_id = p.id AND pct2.description = 'Weight'
-            AND (pc2.thrudate IS NULL OR pc2.thrudate > CURRENT_DATE)
-            ORDER BY pc2.fromdate DESC LIMIT 1) AS weight,
-            (SELECT jsonb_build_object(
-                'id', c.id,
-                'fromdate', c.fromdate,
-                'thrudate', c.thrudate,
-                'country_id', c.country_id,
-                'country_isocode', co.isocode,
-                'country_name_en', co.name_en,
-                'country_name_th', co.name_th
-            ) FROM citizenship c
-            JOIN country co ON c.country_id = co.id
-            WHERE c.person_id = p.id
-            AND (c.thrudate IS NULL OR c.thrudate > CURRENT_DATE)
-            ORDER BY c.fromdate DESC LIMIT 1) AS citizenship
+            pn1.id AS fname_id,
+            pn1.name AS fname,
+            pn1.fromdate AS fname_fromdate,
+            pn1.thrudate AS fname_thrudate,
+            pn1.personnametype_id AS fname_personnametype_id,
+            pnt1.description AS fname_personnametype_description,
+            pn2.id AS mname_id,
+            pn2.name AS mname,
+            pn2.fromdate AS mname_fromdate,
+            pn2.thrudate AS mname_thrudate,
+            pn2.personnametype_id AS mname_personnametype_id,
+            pnt2.description AS mname_personnametype_description,
+            pn3.id AS lname_id,
+            pn3.name AS lname,
+            pn3.fromdate AS lname_fromdate,
+            pn3.thrudate AS lname_thrudate,
+            pn3.personnametype_id AS lname_personnametype_id,
+            pnt3.description AS lname_personnametype_description,
+            ms.id AS marital_status_id,
+            ms.fromdate AS marital_status_fromdate,
+            ms.thrudate AS marital_status_thrudate,
+            ms.maritalstatustype_id AS marital_status_type_id,
+            mst.description AS marital_status_type_description,
+            pc1.id AS height_id,
+            pc1.val AS height_val,
+            pc1.fromdate AS height_fromdate,
+            pc1.thrudate AS height_thrudate,
+            pc1.physicalcharacteristictype_id AS height_type_id,
+            pct1.description AS height_type_description,
+            pc2.id AS weight_id,
+            pc2.val AS weight_val,
+            pc2.fromdate AS weight_fromdate,
+            pc2.thrudate AS weight_thrudate,
+            pc2.physicalcharacteristictype_id AS weight_type_id,
+            pct2.description AS weight_type_description,
+            c.id AS citizenship_id,
+            c.fromdate AS citizenship_fromdate,
+            c.thrudate AS citizenship_thrudate,
+            c.country_id AS country_id,
+            co.isocode AS country_isocode,
+            co.name_en AS country_name_en,
+            co.name_th AS country_name_th
         FROM person p
         LEFT JOIN gender_type gt ON p.gender_type_id = gt.id
+        LEFT JOIN personname pn1 ON pn1.person_id = p.id 
+            AND pn1.personnametype_id = (SELECT id FROM personnametype WHERE description = 'FirstName')
+        LEFT JOIN personnametype pnt1 ON pn1.personnametype_id = pnt1.id
+        LEFT JOIN personname pn2 ON pn2.person_id = p.id 
+            AND pn2.personnametype_id = (SELECT id FROM personnametype WHERE description = 'MiddleName')
+        LEFT JOIN personnametype pnt2 ON pn2.personnametype_id = pnt2.id
+        LEFT JOIN personname pn3 ON pn3.person_id = p.id 
+            AND pn3.personnametype_id = (SELECT id FROM personnametype WHERE description = 'LastName')
+        LEFT JOIN personnametype pnt3 ON pn3.personnametype_id = pnt3.id
+        LEFT JOIN maritalstatus ms ON ms.person_id = p.id
+        LEFT JOIN maritalstatustype mst ON ms.maritalstatustype_id = mst.id
+        LEFT JOIN physicalcharacteristic pc1 ON pc1.person_id = p.id 
+            AND pc1.physicalcharacteristictype_id = (SELECT id FROM physicalcharacteristictype WHERE description = 'Height')
+        LEFT JOIN physicalcharacteristictype pct1 ON pc1.physicalcharacteristictype_id = pct1.id
+        LEFT JOIN physicalcharacteristic pc2 ON pc2.person_id = p.id 
+            AND pc2.physicalcharacteristictype_id = (SELECT id FROM physicalcharacteristictype WHERE description = 'Weight')
+        LEFT JOIN physicalcharacteristictype pct2 ON pc2.physicalcharacteristictype_id = pct2.id
+        LEFT JOIN (
+            SELECT c.* 
+            FROM citizenship c
+            ORDER BY c.fromdate DESC LIMIT 1
+        ) c ON c.person_id = p.id
+        LEFT JOIN country co ON c.country_id = co.id
         WHERE p.id = :id
     """
     result = await database.fetch_one(query=query, values={"id": person_id})
@@ -146,95 +132,81 @@ async def get_person(person_id: int) -> Optional[PersonOut]:
 async def get_all_persons() -> List[PersonOut]:
     query = """
         SELECT 
-            p.id, p.personal_id_number, p.birthdate, p.mothermaidenname, 
-            p.totalyearworkexperience, p.comment, p.gender_type_id,
+            p.id, 
+            p.personal_id_number, 
+            p.birthdate, 
+            p.mothermaidenname, 
+            p.totalyearworkexperience, 
+            p.comment, 
+            p.gender_type_id,
             gt.description AS gender_description,
-            (SELECT jsonb_build_object(
-                'id', pn1.id,
-                'name', pn1.name,
-                'fromdate', pn1.fromdate,
-                'thrudate', pn1.thrudate,
-                'personnametype_id', pn1.personnametype_id,
-                'personnametype_description', pnt1.description
-            ) FROM personname pn1
-            JOIN personnametype pnt1 ON pn1.personnametype_id = pnt1.id
-            WHERE pn1.person_id = p.id AND pnt1.description = 'FirstName'
-            AND (pn1.thrudate IS NULL OR pn1.thrudate > CURRENT_DATE)
-            ORDER BY pn1.fromdate DESC LIMIT 1) AS firstname,
-            (SELECT jsonb_build_object(
-                'id', pn2.id,
-                'name', pn2.name,
-                'fromdate', pn2.fromdate,
-                'thrudate', pn2.thrudate,
-                'personnametype_id', pn2.personnametype_id,
-                'personnametype_description', pnt2.description
-            ) FROM personname pn2
-            JOIN personnametype pnt2 ON pn2.personnametype_id = pnt2.id
-            WHERE pn2.person_id = p.id AND pnt2.description = 'MiddleName'
-            AND (pn2.thrudate IS NULL OR pn2.thrudate > CURRENT_DATE)
-            ORDER BY pn2.fromdate DESC LIMIT 1) AS middlename,
-            (SELECT jsonb_build_object(
-                'id', pn3.id,
-                'name', pn3.name,
-                'fromdate', pn3.fromdate,
-                'thrudate', pn3.thrudate,
-                'personnametype_id', pn3.personnametype_id,
-                'personnametype_description', pnt3.description
-            ) FROM personname pn3
-            JOIN personnametype pnt3 ON pn3.personnametype_id = pnt3.id
-            WHERE pn3.person_id = p.id AND pnt3.description = 'LastName'
-            AND (pn3.thrudate IS NULL OR pn3.thrudate > CURRENT_DATE)
-            ORDER BY pn3.fromdate DESC LIMIT 1) AS lastname,
-            (SELECT jsonb_build_object(
-                'id', ms.id,
-                'fromdate', ms.fromdate,
-                'thrudate', ms.thrudate,
-                'maritalstatustype_id', ms.maritalstatustype_id,
-                'maritalstatustype_description', mst.description
-            ) FROM maritalstatus ms
-            JOIN maritalstatustype mst ON ms.maritalstatustype_id = mst.id
-            WHERE ms.person_id = p.id
-            AND (ms.thrudate IS NULL OR ms.thrudate > CURRENT_DATE)
-            ORDER BY ms.fromdate DESC LIMIT 1) AS marital_status,
-            (SELECT jsonb_build_object(
-                'id', pc1.id,
-                'val', pc1.val,
-                'fromdate', pc1.fromdate,
-                'thrudate', pc1.thrudate,
-                'physicalcharacteristictype_id', pc1.physicalcharacteristictype_id,
-                'physicalcharacteristictype_description', pct1.description
-            ) FROM physicalcharacteristic pc1
-            JOIN physicalcharacteristictype pct1 ON pc1.physicalcharacteristictype_id = pct1.id
-            WHERE pc1.person_id = p.id AND pct1.description = 'Height'
-            AND (pc1.thrudate IS NULL OR pc1.thrudate > CURRENT_DATE)
-            ORDER BY pc1.fromdate DESC LIMIT 1) AS height,
-            (SELECT jsonb_build_object(
-                'id', pc2.id,
-                'val', pc2.val,
-                'fromdate', pc2.fromdate,
-                'thrudate', pc2.thrudate,
-                'physicalcharacteristictype_id', pc2.physicalcharacteristictype_id,
-                'physicalcharacteristictype_description', pct2.description
-            ) FROM physicalcharacteristic pc2
-            JOIN physicalcharacteristictype pct2 ON pc2.physicalcharacteristictype_id = pct2.id
-            WHERE pc2.person_id = p.id AND pct2.description = 'Weight'
-            AND (pc2.thrudate IS NULL OR pc2.thrudate > CURRENT_DATE)
-            ORDER BY pc2.fromdate DESC LIMIT 1) AS weight,
-            (SELECT jsonb_build_object(
-                'id', c.id,
-                'fromdate', c.fromdate,
-                'thrudate', c.thrudate,
-                'country_id', c.country_id,
-                'country_isocode', co.isocode,
-                'country_name_en', co.name_en,
-                'country_name_th', co.name_th
-            ) FROM citizenship c
-            JOIN country co ON c.country_id = co.id
-            WHERE c.person_id = p.id
-            AND (c.thrudate IS NULL OR c.thrudate > CURRENT_DATE)
-            ORDER BY c.fromdate DESC LIMIT 1) AS citizenship
+            pn1.id AS fname_id,
+            pn1.name AS fname,
+            pn1.fromdate AS fname_fromdate,
+            pn1.thrudate AS fname_thrudate,
+            pn1.personnametype_id AS fname_personnametype_id,
+            pnt1.description AS fname_personnametype_description,
+            pn2.id AS mname_id,
+            pn2.name AS mname,
+            pn2.fromdate AS mname_fromdate,
+            pn2.thrudate AS mname_thrudate,
+            pn2.personnametype_id AS mname_personnametype_id,
+            pnt2.description AS mname_personnametype_description,
+            pn3.id AS lname_id,
+            pn3.name AS lname,
+            pn3.fromdate AS lname_fromdate,
+            pn3.thrudate AS lname_thrudate,
+            pn3.personnametype_id AS lname_personnametype_id,
+            pnt3.description AS lname_personnametype_description,
+            ms.id AS marital_status_id,
+            ms.fromdate AS marital_status_fromdate,
+            ms.thrudate AS marital_status_thrudate,
+            ms.maritalstatustype_id AS marital_status_type_id,
+            mst.description AS marital_status_type_description,
+            pc1.id AS height_id,
+            pc1.val AS height_val,
+            pc1.fromdate AS height_fromdate,
+            pc1.thrudate AS height_thrudate,
+            pc1.physicalcharacteristictype_id AS height_type_id,
+            pct1.description AS height_type_description,
+            pc2.id AS weight_id,
+            pc2.val AS weight_val,
+            pc2.fromdate AS weight_fromdate,
+            pc2.thrudate AS weight_thrudate,
+            pc2.physicalcharacteristictype_id AS weight_type_id,
+            pct2.description AS weight_type_description,
+            c.id AS citizenship_id,
+            c.fromdate AS citizenship_fromdate,
+            c.thrudate AS citizenship_thrudate,
+            c.country_id AS country_id,
+            co.isocode AS country_isocode,
+            co.name_en AS country_name_en,
+            co.name_th AS country_name_th
         FROM person p
         LEFT JOIN gender_type gt ON p.gender_type_id = gt.id
+        LEFT JOIN personname pn1 ON pn1.person_id = p.id 
+            AND pn1.personnametype_id = (SELECT id FROM personnametype WHERE description = 'FirstName')
+        LEFT JOIN personnametype pnt1 ON pn1.personnametype_id = pnt1.id
+        LEFT JOIN personname pn2 ON pn2.person_id = p.id 
+            AND pn2.personnametype_id = (SELECT id FROM personnametype WHERE description = 'MiddleName')
+        LEFT JOIN personnametype pnt2 ON pn2.personnametype_id = pnt2.id
+        LEFT JOIN personname pn3 ON pn3.person_id = p.id 
+            AND pn3.personnametype_id = (SELECT id FROM personnametype WHERE description = 'LastName')
+        LEFT JOIN personnametype pnt3 ON pn3.personnametype_id = pnt3.id
+        LEFT JOIN maritalstatus ms ON ms.person_id = p.id
+        LEFT JOIN maritalstatustype mst ON ms.maritalstatustype_id = mst.id
+        LEFT JOIN physicalcharacteristic pc1 ON pc1.person_id = p.id 
+            AND pc1.physicalcharacteristictype_id = (SELECT id FROM physicalcharacteristictype WHERE description = 'Height')
+        LEFT JOIN physicalcharacteristictype pct1 ON pc1.physicalcharacteristictype_id = pct1.id
+        LEFT JOIN physicalcharacteristic pc2 ON pc2.person_id = p.id 
+            AND pc2.physicalcharacteristictype_id = (SELECT id FROM physicalcharacteristictype WHERE description = 'Weight')
+        LEFT JOIN physicalcharacteristictype pct2 ON pc2.physicalcharacteristictype_id = pct2.id
+        LEFT JOIN (
+            SELECT c.* 
+            FROM citizenship c
+            ORDER BY c.fromdate DESC LIMIT 1
+        ) c ON c.person_id = p.id
+        LEFT JOIN country co ON c.country_id = co.id
         ORDER BY p.id ASC
     """
     results = await database.fetch_all(query=query)

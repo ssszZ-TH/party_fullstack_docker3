@@ -1,80 +1,140 @@
+file นี้คือ
+note ที่ทรงพลังมากๆ เเค่ copy เเล้ววางก็ใช้ได้เลย
 
-```sh
+คำเตือน 
+copy ไปวางทีละคำสั่ง อย่า copy ทีเดียวทั้งหมด
+start docker compose ก่อนเสมอ ไม่งั้นมันก็จะ error ไม่มีอะไรให้ connect
+clear ข้อมูลก่อนจะ insert ข้อมูล static ด้วยหละ ไม่งั้น id จะชนกัน
+ทำเสร็จอย่าลืม reset max id sequence เพราะว่าการ insert เเบบนี้มีการ lock id ทำให้ id seq ไม่ยอมเปลี่ยนตาม
+ถ้า insert ผ่าน api มันก็จะเอา id 1 อยู่ทั้งๆ ที่ id 1 เคย insert 
+
+--------------
+connect to db console in docker
+
+
 docker compose exec db sh
-```
 
-```sh
+
+
 psql -U spa -d myapp
-```
 
 
-myapp=# COPY country (id, isocode, name_en, name_th)
+-----------------------
+copy layer type
+
+
+COPY country (id, isocode, name_en, name_th)
 FROM '/staticData/country/static_country.csv'
 DELIMITER ','
 CSV HEADER;
 
 
-D:\scwork\year4_final\proj\crud_from_datamodel\party_fullstack_docker3>docker compose exec db sh
-time="2025-05-27T17:33:21+07:00" level=warning msg="D:\\scwork\\year4_final\\proj\\crud_from_datamodel\\party_fullstack_docker3\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
-# psql -U spa -d myapp
-psql (16.8 (Debian 16.8-1.pgdg120+1))
-Type "help" for help.
-
-myapp=# COPY maritalstatustype (id, description)
+COPY maritalstatustype (id, description)
 FROM '/staticData/marital_status_type/static_marital_status_type.csv'
 DELIMITER ','
 CSV HEADER;
-COPY 5
-myapp=#
 
 
-myapp=# COPY physicalcharacteristictype (id, description)
+
+COPY physicalcharacteristictype (id, description)
 FROM '/staticData/physical_characteristic_type/static_physical_characteristic_type.csv'
 DELIMITER ','
-CSV HEADER;
 
-
-myapp=# COPY personnametype (id, description)
+COPY personnametype (id, description)
 FROM '/staticData/person_name_type/static_person_name_type.csv'
 DELIMITER ','
 CSV HEADER;
-COPY 4
-myapp=#
+
+COPY gender_type (id, description)
+FROM '/staticData/gender_type/gender_type.csv'
+DELIMITER ','
+CSV HEADER;
 
 
-myapp=# COPY ethnicity (id, name_en,name_th)
+
+
+COPY ethnicity (id, name_en,name_th)
 FROM '/staticData/ethnicity/ethnicity.csv'
 DELIMITER ','
 CSV HEADER;
-COPY 7
-myapp=#
 
 
 
-myapp=# COPY income_range (id, description)
+
+COPY income_range (id, description)
 FROM '/staticData/income_range/income_range.csv'
 DELIMITER ','
 CSV HEADER;
-COPY 12
 
 
-myapp=# COPY industry_type (id,naics_code, description)
+
+COPY industry_type (id,naics_code, description)
 FROM '/staticData/industry_type/static_industry_type.csv'
 DELIMITER ','
 CSV HEADER;
-COPY 1012
 
 
-myapp=# COPY employee_count_range (id,description)
+
+COPY employee_count_range (id,description)
 FROM '/staticData/employee_count_range/employee_count_range.csv'
 DELIMITER ','
 CSV HEADER;
-COPY 5
 
 
-myapp=# COPY minority_type (id,name_en,name_th)
+
+COPY minority_type (id,name_en,name_th)
 FROM '/staticData/minority_type/minority_type.csv'
 DELIMITER ','
 CSV HEADER;
-COPY 8
 
+
+--------- 
+copy layer info mock
+
+
+COPY party (id)
+FROM '/staticData/party/static_party.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY person (id, personal_id_number, birthdate, mothermaidenname, totalyearworkexperience, comment)
+FROM '/staticData/person/static_person.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY maritalstatus (id,fromdate,thrudate,person_id,maritalstatustype_id)
+FROM '/staticData/maritalstatus/maritalstatus.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY physicalcharacteristic (id,fromdate, thrudate, val, person_id, physicalcharacteristictype_id)
+FROM '/staticData/physicalcharacteristic/physicalcharacteristic.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY personname (id,fromdate,thrudate,person_id,personnametype_id,name)
+FROM '/staticData/personname/personname.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY citizenship (id,fromdate,thrudate,person_id,country_id)
+FROM '/staticData/citizenship/citizenship.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY passport (id,passportnumber,fromdate,thrudate,citizenship_id)
+FROM '/staticData/passport/passport.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY  ()
+FROM '/staticData/'
+DELIMITER ','
+CSV HEADER;
+
+
+----------template
+COPY  ()
+FROM '/staticData/'
+DELIMITER ','
+CSV HEADER;

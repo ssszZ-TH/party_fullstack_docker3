@@ -1,4 +1,4 @@
-"id","socialsecuritynumber","birthdate","mothermaidenname","totalyearworkexperience","comment"
+"id","personal_id_number","birthdate","mothermaidenname","totalyearworkexperience","comment"
 1,"123-45-6789","1995-03-15","Smith",5,"Software Developer (USA)"
 2,"987654321012","1988-07-22","Yamada",10,"Project Manager (Japan)"
 3,"123456789012","1992-01-10","Patel",7,"Data Analyst (India)"
