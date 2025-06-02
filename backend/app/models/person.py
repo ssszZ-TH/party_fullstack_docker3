@@ -44,6 +44,30 @@ async def create_person(person: PersonCreate) -> Optional[PersonOut]:
 
 async def get_person(person_id: int) -> Optional[PersonOut]:
     query = """
+        WITH ranked_names AS (
+            SELECT 
+                pn.*, 
+                ROW_NUMBER() OVER (PARTITION BY pn.person_id, pn.personnametype_id ORDER BY pn.fromdate DESC) AS rn
+            FROM personname pn
+        ),
+        ranked_marital AS (
+            SELECT 
+                ms.*, 
+                ROW_NUMBER() OVER (PARTITION BY ms.person_id ORDER BY ms.fromdate DESC, ms.id DESC) AS rn
+            FROM maritalstatus ms
+        ),
+        ranked_physical AS (
+            SELECT 
+                pc.*, 
+                ROW_NUMBER() OVER (PARTITION BY pc.person_id, pc.physicalcharacteristictype_id ORDER BY pc.fromdate DESC) AS rn
+            FROM physicalcharacteristic pc
+        ),
+        ranked_citizenship AS (
+            SELECT 
+                c.*, 
+                ROW_NUMBER() OVER (PARTITION BY c.person_id ORDER BY c.fromdate DESC) AS rn
+            FROM citizenship c
+        )
         SELECT 
             p.id, 
             p.personal_id_number, 
@@ -71,6 +95,12 @@ async def get_person(person_id: int) -> Optional[PersonOut]:
             pn3.thrudate AS lname_thrudate,
             pn3.personnametype_id AS lname_personnametype_id,
             pnt3.description AS lname_personnametype_description,
+            pn4.id AS nickname_id,
+            pn4.name AS nickname,
+            pn4.fromdate AS nickname_fromdate,
+            pn4.thrudate AS nickname_thrudate,
+            pn4.personnametype_id AS nickname_personnametype_id,
+            pnt4.description AS nickname_personnametype_description,
             ms.id AS marital_status_id,
             ms.fromdate AS marital_status_fromdate,
             ms.thrudate AS marital_status_thrudate,
@@ -97,28 +127,43 @@ async def get_person(person_id: int) -> Optional[PersonOut]:
             co.name_th AS country_name_th
         FROM person p
         LEFT JOIN gender_type gt ON p.gender_type_id = gt.id
-        LEFT JOIN personname pn1 ON pn1.person_id = p.id 
+        LEFT JOIN ranked_names pn1 
+            ON pn1.person_id = p.id 
+            AND pn1.rn = 1 
             AND pn1.personnametype_id = (SELECT id FROM personnametype WHERE description = 'FirstName')
         LEFT JOIN personnametype pnt1 ON pn1.personnametype_id = pnt1.id
-        LEFT JOIN personname pn2 ON pn2.person_id = p.id 
+        LEFT JOIN ranked_names pn2 
+            ON pn2.person_id = p.id 
+            AND pn2.rn = 1 
             AND pn2.personnametype_id = (SELECT id FROM personnametype WHERE description = 'MiddleName')
         LEFT JOIN personnametype pnt2 ON pn2.personnametype_id = pnt2.id
-        LEFT JOIN personname pn3 ON pn3.person_id = p.id 
+        LEFT JOIN ranked_names pn3 
+            ON pn3.person_id = p.id 
+            AND pn3.rn = 1 
             AND pn3.personnametype_id = (SELECT id FROM personnametype WHERE description = 'LastName')
         LEFT JOIN personnametype pnt3 ON pn3.personnametype_id = pnt3.id
-        LEFT JOIN maritalstatus ms ON ms.person_id = p.id
+        LEFT JOIN ranked_names pn4 
+            ON pn4.person_id = p.id 
+            AND pn4.rn = 1 
+            AND pn4.personnametype_id = (SELECT id FROM personnametype WHERE description = 'Nickname')
+        LEFT JOIN personnametype pnt4 ON pn4.personnametype_id = pnt4.id
+        LEFT JOIN ranked_marital ms 
+            ON ms.person_id = p.id 
+            AND ms.rn = 1
         LEFT JOIN maritalstatustype mst ON ms.maritalstatustype_id = mst.id
-        LEFT JOIN physicalcharacteristic pc1 ON pc1.person_id = p.id 
+        LEFT JOIN ranked_physical pc1 
+            ON pc1.person_id = p.id 
+            AND pc1.rn = 1 
             AND pc1.physicalcharacteristictype_id = (SELECT id FROM physicalcharacteristictype WHERE description = 'Height')
         LEFT JOIN physicalcharacteristictype pct1 ON pc1.physicalcharacteristictype_id = pct1.id
-        LEFT JOIN physicalcharacteristic pc2 ON pc2.person_id = p.id 
+        LEFT JOIN ranked_physical pc2 
+            ON pc2.person_id = p.id 
+            AND pc2.rn = 1 
             AND pc2.physicalcharacteristictype_id = (SELECT id FROM physicalcharacteristictype WHERE description = 'Weight')
         LEFT JOIN physicalcharacteristictype pct2 ON pc2.physicalcharacteristictype_id = pct2.id
-        LEFT JOIN (
-            SELECT c.* 
-            FROM citizenship c
-            ORDER BY c.fromdate DESC LIMIT 1
-        ) c ON c.person_id = p.id
+        LEFT JOIN ranked_citizenship c 
+            ON c.person_id = p.id 
+            AND c.rn = 1
         LEFT JOIN country co ON c.country_id = co.id
         WHERE p.id = :id
     """
@@ -131,6 +176,30 @@ async def get_person(person_id: int) -> Optional[PersonOut]:
 
 async def get_all_persons() -> List[PersonOut]:
     query = """
+        WITH ranked_names AS (
+            SELECT 
+                pn.*, 
+                ROW_NUMBER() OVER (PARTITION BY pn.person_id, pn.personnametype_id ORDER BY pn.fromdate DESC) AS rn
+            FROM personname pn
+        ),
+        ranked_marital AS (
+            SELECT 
+                ms.*, 
+                ROW_NUMBER() OVER (PARTITION BY ms.person_id ORDER BY ms.fromdate DESC, ms.id DESC) AS rn
+            FROM maritalstatus ms
+        ),
+        ranked_physical AS (
+            SELECT 
+                pc.*, 
+                ROW_NUMBER() OVER (PARTITION BY pc.person_id, pc.physicalcharacteristictype_id ORDER BY pc.fromdate DESC) AS rn
+            FROM physicalcharacteristic pc
+        ),
+        ranked_citizenship AS (
+            SELECT 
+                c.*, 
+                ROW_NUMBER() OVER (PARTITION BY c.person_id ORDER BY c.fromdate DESC) AS rn
+            FROM citizenship c
+        )
         SELECT 
             p.id, 
             p.personal_id_number, 
@@ -158,6 +227,12 @@ async def get_all_persons() -> List[PersonOut]:
             pn3.thrudate AS lname_thrudate,
             pn3.personnametype_id AS lname_personnametype_id,
             pnt3.description AS lname_personnametype_description,
+            pn4.id AS nickname_id,
+            pn4.name AS nickname,
+            pn4.fromdate AS nickname_fromdate,
+            pn4.thrudate AS nickname_thrudate,
+            pn4.personnametype_id AS nickname_personnametype_id,
+            pnt4.description AS nickname_personnametype_description,
             ms.id AS marital_status_id,
             ms.fromdate AS marital_status_fromdate,
             ms.thrudate AS marital_status_thrudate,
@@ -184,28 +259,43 @@ async def get_all_persons() -> List[PersonOut]:
             co.name_th AS country_name_th
         FROM person p
         LEFT JOIN gender_type gt ON p.gender_type_id = gt.id
-        LEFT JOIN personname pn1 ON pn1.person_id = p.id 
+        LEFT JOIN ranked_names pn1 
+            ON pn1.person_id = p.id 
+            AND pn1.rn = 1 
             AND pn1.personnametype_id = (SELECT id FROM personnametype WHERE description = 'FirstName')
         LEFT JOIN personnametype pnt1 ON pn1.personnametype_id = pnt1.id
-        LEFT JOIN personname pn2 ON pn2.person_id = p.id 
+        LEFT JOIN ranked_names pn2 
+            ON pn2.person_id = p.id 
+            AND pn2.rn = 1 
             AND pn2.personnametype_id = (SELECT id FROM personnametype WHERE description = 'MiddleName')
         LEFT JOIN personnametype pnt2 ON pn2.personnametype_id = pnt2.id
-        LEFT JOIN personname pn3 ON pn3.person_id = p.id 
+        LEFT JOIN ranked_names pn3 
+            ON pn3.person_id = p.id 
+            AND pn3.rn = 1 
             AND pn3.personnametype_id = (SELECT id FROM personnametype WHERE description = 'LastName')
         LEFT JOIN personnametype pnt3 ON pn3.personnametype_id = pnt3.id
-        LEFT JOIN maritalstatus ms ON ms.person_id = p.id
+        LEFT JOIN ranked_names pn4 
+            ON pn4.person_id = p.id 
+            AND pn4.rn = 1 
+            AND pn4.personnametype_id = (SELECT id FROM personnametype WHERE description = 'Nickname')
+        LEFT JOIN personnametype pnt4 ON pn4.personnametype_id = pnt4.id
+        LEFT JOIN ranked_marital ms 
+            ON ms.person_id = p.id 
+            AND ms.rn = 1
         LEFT JOIN maritalstatustype mst ON ms.maritalstatustype_id = mst.id
-        LEFT JOIN physicalcharacteristic pc1 ON pc1.person_id = p.id 
+        LEFT JOIN ranked_physical pc1 
+            ON pc1.person_id = p.id 
+            AND pc1.rn = 1 
             AND pc1.physicalcharacteristictype_id = (SELECT id FROM physicalcharacteristictype WHERE description = 'Height')
         LEFT JOIN physicalcharacteristictype pct1 ON pc1.physicalcharacteristictype_id = pct1.id
-        LEFT JOIN physicalcharacteristic pc2 ON pc2.person_id = p.id 
+        LEFT JOIN ranked_physical pc2 
+            ON pc2.person_id = p.id 
+            AND pc2.rn = 1 
             AND pc2.physicalcharacteristictype_id = (SELECT id FROM physicalcharacteristictype WHERE description = 'Weight')
         LEFT JOIN physicalcharacteristictype pct2 ON pc2.physicalcharacteristictype_id = pct2.id
-        LEFT JOIN (
-            SELECT c.* 
-            FROM citizenship c
-            ORDER BY c.fromdate DESC LIMIT 1
-        ) c ON c.person_id = p.id
+        LEFT JOIN ranked_citizenship c 
+            ON c.person_id = p.id 
+            AND c.rn = 1
         LEFT JOIN country co ON c.country_id = co.id
         ORDER BY p.id ASC
     """

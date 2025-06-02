@@ -20,55 +20,61 @@ class PersonUpdate(BaseModel):
 
 class PersonOut(BaseModel):
     id: int
-    personal_id_number: Optional[str] = None
-    birthdate: Optional[date] = None
-    mothermaidenname: Optional[str] = None
-    totalyearworkexperience: Optional[int] = None
-    comment: Optional[str] = None
-    gender_type_id: Optional[int] = None
-    gender_description: Optional[str] = None
-    fname: Optional[str] = None
-    fname_id: Optional[int] = None
-    fname_fromdate: Optional[date] = None
-    fname_thrudate: Optional[date] = None
-    fname_personnametype_id: Optional[int] = None
-    fname_personnametype_description: Optional[str] = None
-    mname: Optional[str] = None
-    mname_id: Optional[int] = None
-    mname_fromdate: Optional[date] = None
-    mname_thrudate: Optional[date] = None
-    mname_personnametype_id: Optional[int] = None
-    mname_personnametype_description: Optional[str] = None
-    lname: Optional[str] = None
-    lname_id: Optional[int] = None
-    lname_fromdate: Optional[date] = None
-    lname_thrudate: Optional[date] = None
-    lname_personnametype_id: Optional[int] = None
-    lname_personnametype_description: Optional[str] = None
-    marital_status_id: Optional[int] = None
-    marital_status_fromdate: Optional[date] = None
-    marital_status_thrudate: Optional[date] = None
-    marital_status_type_id: Optional[int] = None
-    marital_status_type_description: Optional[str] = None
-    height_id: Optional[int] = None
-    height_val: Optional[int] = None
-    height_fromdate: Optional[date] = None
-    height_thrudate: Optional[date] = None
-    height_type_id: Optional[int] = None
-    height_type_description: Optional[str] = None
-    weight_id: Optional[int] = None
-    weight_val: Optional[int] = None
-    weight_fromdate: Optional[date] = None
-    weight_thrudate: Optional[date] = None
-    weight_type_id: Optional[int] = None
-    weight_type_description: Optional[str] = None
-    citizenship_id: Optional[int] = None
-    citizenship_fromdate: Optional[date] = None
-    citizenship_thrudate: Optional[date] = None
-    country_id: Optional[int] = None
-    country_isocode: Optional[str] = None
-    country_name_en: Optional[str] = None
-    country_name_th: Optional[str] = None
+    personal_id_number: Optional[str]
+    birthdate: Optional[date]
+    mothermaidenname: Optional[str]
+    totalyearworkexperience: Optional[int]
+    comment: Optional[str]
+    gender_type_id: Optional[int]
+    gender_description: Optional[str]
+    fname_id: Optional[int]
+    fname: Optional[str]
+    fname_fromdate: Optional[date]
+    fname_thrudate: Optional[date]
+    fname_personnametype_id: Optional[int]
+    fname_personnametype_description: Optional[str]
+    mname_id: Optional[int]
+    mname: Optional[str]
+    mname_fromdate: Optional[date]
+    mname_thrudate: Optional[date]
+    mname_personnametype_id: Optional[int]
+    mname_personnametype_description: Optional[str]
+    lname_id: Optional[int]
+    lname: Optional[str]
+    lname_fromdate: Optional[date]
+    lname_thrudate: Optional[date]
+    lname_personnametype_id: Optional[int]
+    lname_personnametype_description: Optional[str]
+    nickname_id: Optional[int]  # เพิ่ม
+    nickname: Optional[str]  # เพิ่ม
+    nickname_fromdate: Optional[date]  # เพิ่ม
+    nickname_thrudate: Optional[date]  # เพิ่ม
+    nickname_personnametype_id: Optional[int]  # เพิ่ม
+    nickname_personnametype_description: Optional[str]  # เพิ่ม
+    marital_status_id: Optional[int]
+    marital_status_fromdate: Optional[date]
+    marital_status_thrudate: Optional[date]
+    marital_status_type_id: Optional[int]
+    marital_status_type_description: Optional[str]
+    height_id: Optional[int]
+    height_val: Optional[float]
+    height_fromdate: Optional[date]
+    height_thrudate: Optional[date]
+    height_type_id: Optional[int]
+    height_type_description: Optional[str]
+    weight_id: Optional[int]
+    weight_val: Optional[float]
+    weight_fromdate: Optional[date]
+    weight_thrudate: Optional[date]
+    weight_type_id: Optional[int]
+    weight_type_description: Optional[str]
+    citizenship_id: Optional[int]
+    citizenship_fromdate: Optional[date]
+    citizenship_thrudate: Optional[date]
+    country_id: Optional[int]
+    country_isocode: Optional[str]
+    country_name_en: Optional[str]
+    country_name_th: Optional[str]
 
     class Config:
-        from_attributes = True
+        orm_mode = True
