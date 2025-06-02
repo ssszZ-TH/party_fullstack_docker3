@@ -116,6 +116,11 @@ CREATE TABLE personnametype (
     description VARCHAR(128)            -- Description of the name type
 );
 
+-- Create indexes to make lookups faster
+CREATE INDEX maritalstatustype_description_hash ON maritalstatustype USING HASH (description);
+CREATE INDEX physicalcharacteristictype_description_hash ON physicalcharacteristictype USING HASH (description);
+CREATE INDEX personnametype_description_hash ON personnametype USING HASH (description);
+
 CREATE TABLE country (
     id SERIAL PRIMARY KEY,              -- Unique identifier for countries
     isocode VARCHAR(2),                 -- ISO 3166-1 alpha-2 code (e.g., "US", "TH")
