@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 async def create_person(person: PersonCreate) -> Optional[PersonOut]:
     async with database.transaction():
         try:
+            # Insert into party
             query_party = """
                 INSERT INTO party (id)
                 VALUES (DEFAULT)
@@ -17,6 +18,7 @@ async def create_person(person: PersonCreate) -> Optional[PersonOut]:
             party_result = await database.fetch_one(query=query_party)
             new_id = party_result["id"]
 
+            # Insert into person
             query_person = """
                 INSERT INTO person (
                     id, personal_id_number, birthdate, mothermaidenname, 
@@ -37,6 +39,71 @@ async def create_person(person: PersonCreate) -> Optional[PersonOut]:
                 "comment": person.comment,
                 "gender_type_id": person.gender_type_id
             })
+
+            # Insert into personname for fname, mname, lname, nickname
+            if person.fname:
+                query_fname = """
+                    INSERT INTO personname (person_id, name, personnametype_id, fromdate)
+                    VALUES (:person_id, :name, (SELECT id FROM personnametype WHERE description = 'FirstName'), CURRENT_DATE)
+                """
+                await database.execute(query_fname, values={"person_id": new_id, "name": person.fname})
+
+            if person.mname:
+                query_mname = """
+                    INSERT INTO personname (person_id, name, personnametype_id, fromdate)
+                    VALUES (:person_id, :name, (SELECT id FROM personnametype WHERE description = 'MiddleName'), CURRENT_DATE)
+                """
+                await database.execute(query_mname, values={"person_id": new_id, "name": person.mname})
+
+            if person.lname:
+                query_lname = """
+                    INSERT INTO personname (person_id, name, personnametype_id, fromdate)
+                    VALUES (:person_id, :name, (SELECT id FROM personnametype WHERE description = 'LastName'), CURRENT_DATE)
+                """
+                await database.execute(query_lname, values={"person_id": new_id, "name": person.lname})
+
+            if person.nickname:
+                query_nickname = """
+                    INSERT INTO personname (person_id, name, personnametype_id, fromdate)
+                    VALUES (:person_id, :name, (SELECT id FROM personnametype WHERE description = 'Nickname'), CURRENT_DATE)
+                """
+                await database.execute(query_nickname, values={"person_id": new_id, "name": person.nickname})
+
+            # Insert into maritalstatus
+            if person.marital_status_type_id:
+                query_marital = """
+                    INSERT INTO maritalstatus (person_id, maritalstatustype_id, fromdate)
+                    VALUES (:person_id, :maritalstatustype_id, CURRENT_DATE)
+                """
+                await database.execute(query_marital, values={
+                    "person_id": new_id,
+                    "maritalstatustype_id": person.marital_status_type_id
+                })
+
+            # Insert into physicalcharacteristic for height
+            if person.height_val:
+                query_height = """
+                    INSERT INTO physicalcharacteristic (person_id, val, physicalcharacteristictype_id, fromdate)
+                    VALUES (:person_id, :val, (SELECT id FROM physicalcharacteristictype WHERE description = 'Height'), CURRENT_DATE)
+                """
+                await database.execute(query_height, values={"person_id": new_id, "val": person.height_val})
+
+            # Insert into physicalcharacteristic for weight
+            if person.weight_val:
+                query_weight = """
+                    INSERT INTO physicalcharacteristic (person_id, val, physicalcharacteristictype_id, fromdate)
+                    VALUES (:person_id, :val, (SELECT id FROM physicalcharacteristictype WHERE description = 'Weight'), CURRENT_DATE)
+                """
+                await database.execute(query_weight, values={"person_id": new_id, "val": person.weight_val})
+
+            # Insert into citizenship
+            if person.country_id:
+                query_citizenship = """
+                    INSERT INTO citizenship (person_id, country_id, fromdate)
+                    VALUES (:person_id, :country_id, CURRENT_DATE)
+                """
+                await database.execute(query_citizenship, values={"person_id": new_id, "country_id": person.country_id})
+
             return await get_person(new_id)
         except Exception as e:
             logger.error(f"Error creating person: {str(e)}")
@@ -304,34 +371,104 @@ async def get_all_persons() -> List[PersonOut]:
     return [PersonOut(**result) for result in results]
 
 async def update_person(person_id: int, person: PersonUpdate) -> Optional[PersonOut]:
-    query = """
-        UPDATE person
-        SET personal_id_number = COALESCE(:personal_id_number, personal_id_number),
-            birthdate = COALESCE(:birthdate, birthdate),
-            mothermaidenname = COALESCE(:mothermaidenname, mothermaidenname),
-            totalyearworkexperience = COALESCE(:totalyearworkexperience, totalyearworkexperience),
-            comment = COALESCE(:comment, comment),
-            gender_type_id = COALESCE(:gender_type_id, gender_type_id)
-        WHERE id = :id
-        RETURNING id
-    """
-    try:
-        result = await database.fetch_one(query=query, values={
-            "personal_id_number": person.personal_id_number,
-            "birthdate": person.birthdate,
-            "mothermaidenname": person.mothermaidenname,
-            "totalyearworkexperience": person.totalyearworkexperience,
-            "comment": person.comment,
-            "gender_type_id": person.gender_type_id,
-            "id": person_id
-        })
-        if not result:
-            logger.warning(f"Person not found for update: id={person_id}")
-            return None
-        return await get_person(person_id)
-    except Exception as e:
-        logger.error(f"Error updating person: {str(e)}")
-        raise
+    async with database.transaction():
+        try:
+            # Update person table
+            query_person = """
+                UPDATE person
+                SET personal_id_number = COALESCE(:personal_id_number, personal_id_number),
+                    birthdate = COALESCE(:birthdate, birthdate),
+                    mothermaidenname = COALESCE(:mothermaidenname, mothermaidenname),
+                    totalyearworkexperience = COALESCE(:totalyearworkexperience, totalyearworkexperience),
+                    comment = COALESCE(:comment, comment),
+                    gender_type_id = COALESCE(:gender_type_id, gender_type_id)
+                WHERE id = :id
+                RETURNING id
+            """
+            result = await database.fetch_one(query=query_person, values={
+                "personal_id_number": person.personal_id_number,
+                "birthdate": person.birthdate,
+                "mothermaidenname": person.mothermaidenname,
+                "totalyearworkexperience": person.totalyearworkexperience,
+                "comment": person.comment,
+                "gender_type_id": person.gender_type_id,
+                "id": person_id
+            })
+            if not result:
+                logger.warning(f"Person not found for update: id={person_id}")
+                return None
+
+            # Update personname for fname
+            if person.fname:
+                query_fname = """
+                    INSERT INTO personname (person_id, name, personnametype_id, fromdate)
+                    VALUES (:person_id, :name, (SELECT id FROM personnametype WHERE description = 'FirstName'), CURRENT_DATE)
+                """
+                await database.execute(query_fname, values={"person_id": person_id, "name": person.fname})
+
+            # Update personname for mname
+            if person.mname:
+                query_mname = """
+                    INSERT INTO personname (person_id, name, personnametype_id, fromdate)
+                    VALUES (:person_id, :name, (SELECT id FROM personnametype WHERE description = 'MiddleName'), CURRENT_DATE)
+                """
+                await database.execute(query_mname, values={"person_id": person_id, "name": person.mname})
+
+            # Update personname for lname
+            if person.lname:
+                query_lname = """
+                    INSERT INTO personname (person_id, name, personnametype_id, fromdate)
+                    VALUES (:person_id, :name, (SELECT id FROM personnametype WHERE description = 'LastName'), CURRENT_DATE)
+                """
+                await database.execute(query_lname, values={"person_id": person_id, "name": person.lname})
+
+            # Update personname for nickname
+            if person.nickname:
+                query_nickname = """
+                    INSERT INTO personname (person_id, name, personnametype_id, fromdate)
+                    VALUES (:person_id, :name, (SELECT id FROM personnametype WHERE description = 'Nickname'), CURRENT_DATE)
+                """
+                await database.execute(query_nickname, values={"person_id": person_id, "name": person.nickname})
+
+            # Update maritalstatus
+            if person.marital_status_type_id:
+                query_marital = """
+                    INSERT INTO maritalstatus (person_id, maritalstatustype_id, fromdate)
+                    VALUES (:person_id, :maritalstatustype_id, CURRENT_DATE)
+                """
+                await database.execute(query_marital, values={
+                    "person_id": person_id,
+                    "maritalstatustype_id": person.marital_status_type_id
+                })
+
+            # Update physicalcharacteristic for height
+            if person.height_val:
+                query_height = """
+                    INSERT INTO physicalcharacteristic (person_id, val, physicalcharacteristictype_id, fromdate)
+                    VALUES (:person_id, :val, (SELECT id FROM physicalcharacteristictype WHERE description = 'Height'), CURRENT_DATE)
+                """
+                await database.execute(query_height, values={"person_id": person_id, "val": person.height_val})
+
+            # Update physicalcharacteristic for weight
+            if person.weight_val:
+                query_weight = """
+                    INSERT INTO physicalcharacteristic (person_id, val, physicalcharacteristictype_id, fromdate)
+                    VALUES (:person_id, :val, (SELECT id FROM physicalcharacteristictype WHERE description = 'Weight'), CURRENT_DATE)
+                """
+                await database.execute(query_weight, values={"person_id": person_id, "val": person.weight_val})
+
+            # Update citizenship
+            if person.country_id:
+                query_citizenship = """
+                    INSERT INTO citizenship (person_id, country_id, fromdate)
+                    VALUES (:person_id, :country_id, CURRENT_DATE)
+                """
+                await database.execute(query_citizenship, values={"person_id": person_id, "country_id": person.country_id})
+
+            return await get_person(person_id)
+        except Exception as e:
+            logger.error(f"Error updating person: {str(e)}")
+            raise
 
 async def delete_person(person_id: int) -> bool:
     query_check = """

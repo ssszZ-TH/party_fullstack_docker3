@@ -1,0 +1,167 @@
+นี่คือ payload ที่ frontend จะส่งมาให้ อันนี้คือ person service
+
+id?: number;
+  personal_id_number?: string;
+  mothermaidenname?: string;
+  totalyearworkexperience?: number;
+  comment?: string;
+  gender_type_id?: number;
+  fname?: string;
+  mname?: string;
+  lname?: string;
+  nickname?: string;
+  marital_status_type_id?: number;
+  height_val?: number;
+  weight_val?: number;
+  country_id?: number;
+
+นี่คือ model person ตรง function ที่จะให้เเก้ใข
+
+async def create_person(person: PersonCreate) -> Optional[PersonOut]:
+    async with database.transaction():
+        try:
+            query_party = """
+                INSERT INTO party (id)
+                VALUES (DEFAULT)
+                RETURNING id
+            """
+            party_result = await database.fetch_one(query=query_party)
+            new_id = party_result["id"]
+
+            query_person = """
+                INSERT INTO person (
+                    id, personal_id_number, birthdate, mothermaidenname, 
+                    totalyearworkexperience, comment, gender_type_id
+                )
+                VALUES (
+                    :id, :personal_id_number, :birthdate, :mothermaidenname, 
+                    :totalyearworkexperience, :comment, :gender_type_id
+                )
+                RETURNING id
+            """
+            await database.fetch_one(query=query_person, values={
+                "id": new_id,
+                "personal_id_number": person.personal_id_number,
+                "birthdate": person.birthdate,
+                "mothermaidenname": person.mothermaidenname,
+                "totalyearworkexperience": person.totalyearworkexperience,
+                "comment": person.comment,
+                "gender_type_id": person.gender_type_id
+            })
+            return await get_person(new_id)
+        except Exception as e:
+            logger.error(f"Error creating person: {str(e)}")
+            raise
+
+อีกตัวที่จะให้เเก้
+
+async def update_person(person_id: int, person: PersonUpdate) -> Optional[PersonOut]:
+    query = """
+        UPDATE person
+        SET personal_id_number = COALESCE(:personal_id_number, personal_id_number),
+            birthdate = COALESCE(:birthdate, birthdate),
+            mothermaidenname = COALESCE(:mothermaidenname, mothermaidenname),
+            totalyearworkexperience = COALESCE(:totalyearworkexperience, totalyearworkexperience),
+            comment = COALESCE(:comment, comment),
+            gender_type_id = COALESCE(:gender_type_id, gender_type_id)
+        WHERE id = :id
+        RETURNING id
+    """
+    try:
+        result = await database.fetch_one(query=query, values={
+            "personal_id_number": person.personal_id_number,
+            "birthdate": person.birthdate,
+            "mothermaidenname": person.mothermaidenname,
+            "totalyearworkexperience": person.totalyearworkexperience,
+            "comment": person.comment,
+            "gender_type_id": person.gender_type_id,
+            "id": person_id
+        })
+        if not result:
+            logger.warning(f"Person not found for update: id={person_id}")
+            return None
+        return await get_person(person_id)
+    except Exception as e:
+        logger.error(f"Error updating person: {str(e)}")
+        raise
+
+นี่คือ table ที่เกี่ยวข้องที่จะต้อง insert
+
+-- Root tables
+CREATE TABLE party (
+    id SERIAL PRIMARY KEY              -- Unique identifier for each party
+);
+
+
+CREATE TABLE maritalstatustype (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for marital status types
+    description VARCHAR(128)            -- Description of the marital status
+);
+
+CREATE TABLE physicalcharacteristictype (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for physical characteristic types
+    description VARCHAR(128)            -- Description of the characteristic
+);
+
+CREATE TABLE personnametype (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for name types
+    description VARCHAR(128)            -- Description of the name type
+);
+
+CREATE TABLE country (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for countries
+    isocode VARCHAR(2),                 -- ISO 3166-1 alpha-2 code (e.g., "US", "TH")
+    name_en VARCHAR(128),               -- English name of the country
+    name_th VARCHAR(128)                -- Thai name of the country
+);
+
+CREATE TABLE gender_type (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for gender types
+    description VARCHAR(128)            -- Description of the gender type (e.g., "Male", "Female", "Non-Binary")
+);
+
+CREATE TABLE person (
+    id SERIAL PRIMARY KEY REFERENCES party(id) ON DELETE CASCADE, -- Links to the party table
+    personal_id_number VARCHAR(64),           -- Personal ID number
+    birthdate DATE,                             -- Date of birth
+    mothermaidenname VARCHAR(128),              -- Mother's maiden name
+    totalyearworkexperience INT,                -- Total years of work experience
+    comment VARCHAR(128),                       -- Additional comments about the person
+    gender_type_id INT REFERENCES gender_type(id) ON DELETE CASCADE -- Foreign key linking to gender type
+);
+
+CREATE TABLE citizenship (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for each citizenship record
+    fromdate DATE,                      -- Start date of citizenship
+    thrudate DATE,                      -- End date of citizenship (NULL if still active)
+    person_id INT REFERENCES person(id) ON DELETE CASCADE, -- Foreign key linking to person
+    country_id INT REFERENCES country(id) ON DELETE CASCADE -- Foreign key to country
+);
+
+CREATE TABLE personname (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for each name record
+    fromdate DATE,                      -- Start date of the name
+    thrudate DATE,                      -- End date of the name (NULL if still active)
+    person_id INT REFERENCES person(id) ON DELETE CASCADE, -- Foreign key linking to person
+    personnametype_id INT REFERENCES personnametype(id) ON DELETE CASCADE, -- Foreign key to name type
+    name VARCHAR(128)                   -- The name
+);
+
+CREATE TABLE physicalcharacteristic (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for each characteristic record
+    fromdate DATE,                      -- Start date of the characteristic
+    thrudate DATE,                      -- End date of the characteristic (NULL if still active)
+    val INT,                            -- Value of the characteristic
+    person_id INT REFERENCES person(id) ON DELETE CASCADE, -- Foreign key linking to person
+    physicalcharacteristictype_id INT REFERENCES physicalcharacteristictype(id) ON DELETE CASCADE -- Foreign key to characteristic type
+);
+
+CREATE TABLE maritalstatus (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for each marital status record
+    fromdate DATE,                      -- Start date of the marital status
+    thrudate DATE,                      -- End date of the marital status (NULL if still active)
+    person_id INT REFERENCES person(id) ON DELETE CASCADE, -- Foreign key linking to person
+    maritalstatustype_id INT REFERENCES maritalstatustype(id) ON DELETE CASCADE -- Foreign key to marital status type
+);
+
+ตอบมาเเต่ code เขียนมาเเค่ function ที่ถามไป อยากให้ใช้ begin transaction ในการ insert ลง person เเละ junction table ของ person
