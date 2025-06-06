@@ -56,6 +56,7 @@ export async function get({ id }: { id: number }) {
 
 export async function create(data: {
   personal_id_number?: string;
+  birthdate?: string;
   mothermaidenname?: string;
   totalyearworkexperience?: number;
   comment?: string;
@@ -86,6 +87,7 @@ export async function create(data: {
 export async function update(data: {
   id: number;
   personal_id_number?: string;
+  birthdate?: string;
   mothermaidenname?: string;
   totalyearworkexperience?: number;
   comment?: string;

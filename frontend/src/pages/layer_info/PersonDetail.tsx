@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AppBarCustom from "../../components/AppBarCustom";
 import Loading from "../../components/Loading";
-import { get, update, create } from "../../services/person";
+import { get, update, create, deleteById } from "../../services/person";
 import { list as listGenderTypes } from "../../services/gendertype";
 import { list as listMaritalStatusTypes } from "../../services/maritalstatustype";
 import { list as listCountries } from "../../services/country";
@@ -14,10 +14,13 @@ import {
   TextField,
   MenuItem,
 } from "@mui/material";
+import DeleteButton from "../../components/buttons/DeleteButton";
+import SaveButton from "../../components/buttons/SaveButton";
 
 interface Person {
   id: number;
   personal_id_number: string;
+  birthdate?: string;
   mothermaidenname: string;
   totalyearworkexperience: number;
   comment: string;
@@ -59,6 +62,7 @@ export default function PersonDetail() {
         setFormData({
           id: 0,
           personal_id_number: "",
+          birthdate: "",
           mothermaidenname: "",
           totalyearworkexperience: 0,
           comment: "",
@@ -140,6 +144,7 @@ export default function PersonDetail() {
       const payload = {
         id: currentId || 0,
         personal_id_number: formData.personal_id_number,
+        birthdate: formData.birthdate || undefined,
         mothermaidenname: formData.mothermaidenname,
         totalyearworkexperience: Number(formData.totalyearworkexperience),
         comment: formData.comment,
@@ -154,17 +159,32 @@ export default function PersonDetail() {
         country_id: formData.country_id ? Number(formData.country_id) : undefined,
       };
       if (payload.id === 0) {
-        await create(payload);
         console.log('Created person with payload:', payload);
+        await create(payload);
       } else {
-        await update(payload);
         console.log('Updated person with payload:', payload);
+        await update(payload);
       }
       navigate('/v1/person');
     } catch (err: any) {
-      const errorMessage = payload.id === 0 ? 'Failed to create person' : 'Failed to update person';
+      const errorMessage = (formData.id === 0) ? 'Failed to create person' : 'Failed to update person';
       setError(errorMessage);
       console.error(`${errorMessage}:`, err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!currentId) return;
+    setLoading(true);
+    try {
+      await deleteById({ id: currentId });
+      console.log(`Deleted person with id: ${currentId}`);
+      navigate('/v1/person');
+    } catch (err: any) {
+      setError('Failed to delete person');
+      console.error('Failed to delete person:', err);
     } finally {
       setLoading(false);
     }
@@ -200,12 +220,13 @@ export default function PersonDetail() {
           sx={{
             display: "grid",
             gridTemplateColumns: {
-              xs: "1fr", // 1 column on mobile
-              sm: "repeat(2, 1fr)", // 2 columns on tablet
-              md: "repeat(3, 1fr)", // 3 columns on desktop
+              xs: "1fr",
+              sm: "repeat(2, 1fr)",
+              md: "repeat(3, 1fr)",
             },
-            gap: 2, // spacing between grid items
+            gap: 2,
             mt: 2,
+            px: 2,
           }}
         >
           <TextField
@@ -215,6 +236,15 @@ export default function PersonDetail() {
             onChange={handleChange}
             fullWidth
             required
+          />
+          <TextField
+            label="Birthdate"
+            name="birthdate"
+            type="date"
+            value={formData.birthdate || ""}
+            onChange={handleChange}
+            fullWidth
+            InputLabelProps={{ shrink: true }}
           />
           <TextField
             label="First Name"
@@ -280,7 +310,6 @@ export default function PersonDetail() {
               </MenuItem>
             ))}
           </TextField>
-
           <TextField
             select
             label="Marital Status"
@@ -328,13 +357,14 @@ export default function PersonDetail() {
             ))}
           </TextField>
         </Box>
-        <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
-          <Button variant="contained" type="submit">
-            Save
-          </Button>
+        <Box sx={{ mt: 3, display: "flex", gap: 2, px: 2 }}>
+          <SaveButton onClick={handleSubmit} />
           <Button variant="outlined" onClick={() => navigate("/v1/person")}>
             Cancel
           </Button>
+          {currentId && currentId > 0 && (
+            <DeleteButton onClick={handleDelete} />
+          )}
         </Box>
       </form>
     </Box>

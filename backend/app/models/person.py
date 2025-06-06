@@ -400,70 +400,172 @@ async def update_person(person_id: int, person: PersonUpdate) -> Optional[Person
 
             # Update personname for fname
             if person.fname:
-                query_fname = """
+                query_fname_update = """
+                    WITH ranked_names AS (
+                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id, personnametype_id ORDER BY fromdate DESC) AS rn
+                        FROM personname
+                        WHERE person_id = :person_id
+                        AND personnametype_id = (SELECT id FROM personnametype WHERE description = 'FirstName')
+                        AND thrudate IS NULL
+                    )
+                    UPDATE personname
+                    SET thrudate = CURRENT_DATE
+                    WHERE id IN (SELECT id FROM ranked_names WHERE rn = 1)
+                """
+                await database.execute(query_fname_update, values={"person_id": person_id})
+                query_fname_insert = """
                     INSERT INTO personname (person_id, name, personnametype_id, fromdate)
                     VALUES (:person_id, :name, (SELECT id FROM personnametype WHERE description = 'FirstName'), CURRENT_DATE)
                 """
-                await database.execute(query_fname, values={"person_id": person_id, "name": person.fname})
+                await database.execute(query_fname_insert, values={"person_id": person_id, "name": person.fname})
 
             # Update personname for mname
             if person.mname:
-                query_mname = """
+                query_mname_update = """
+                    WITH ranked_names AS (
+                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id, personnametype_id ORDER BY fromdate DESC) AS rn
+                        FROM personname
+                        WHERE person_id = :person_id
+                        AND personnametype_id = (SELECT id FROM personnametype WHERE description = 'MiddleName')
+                        AND thrudate IS NULL
+                    )
+                    UPDATE personname
+                    SET thrudate = CURRENT_DATE
+                    WHERE id IN (SELECT id FROM ranked_names WHERE rn = 1)
+                """
+                await database.execute(query_mname_update, values={"person_id": person_id})
+                query_mname_insert = """
                     INSERT INTO personname (person_id, name, personnametype_id, fromdate)
                     VALUES (:person_id, :name, (SELECT id FROM personnametype WHERE description = 'MiddleName'), CURRENT_DATE)
                 """
-                await database.execute(query_mname, values={"person_id": person_id, "name": person.mname})
+                await database.execute(query_mname_insert, values={"person_id": person_id, "name": person.mname})
 
             # Update personname for lname
             if person.lname:
-                query_lname = """
+                query_lname_update = """
+                    WITH ranked_names AS (
+                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id, personnametype_id ORDER BY fromdate DESC) AS rn
+                        FROM personname
+                        WHERE person_id = :person_id
+                        AND personnametype_id = (SELECT id FROM personnametype WHERE description = 'LastName')
+                        AND thrudate IS NULL
+                    )
+                    UPDATE personname
+                    SET thrudate = CURRENT_DATE
+                    WHERE id IN (SELECT id FROM ranked_names WHERE rn = 1)
+                """
+                await database.execute(query_lname_update, values={"person_id": person_id})
+                query_lname_insert = """
                     INSERT INTO personname (person_id, name, personnametype_id, fromdate)
                     VALUES (:person_id, :name, (SELECT id FROM personnametype WHERE description = 'LastName'), CURRENT_DATE)
                 """
-                await database.execute(query_lname, values={"person_id": person_id, "name": person.lname})
+                await database.execute(query_lname_insert, values={"person_id": person_id, "name": person.lname})
 
             # Update personname for nickname
             if person.nickname:
-                query_nickname = """
+                query_nickname_update = """
+                    WITH ranked_names AS (
+                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id, personnametype_id ORDER BY fromdate DESC) AS rn
+                        FROM personname
+                        WHERE person_id = :person_id
+                        AND personnametype_id = (SELECT id FROM personnametype WHERE description = 'Nickname')
+                        AND thrudate IS NULL
+                    )
+                    UPDATE personname
+                    SET thrudate = CURRENT_DATE
+                    WHERE id IN (SELECT id FROM ranked_names WHERE rn = 1)
+                """
+                await database.execute(query_nickname_update, values={"person_id": person_id})
+                query_nickname_insert = """
                     INSERT INTO personname (person_id, name, personnametype_id, fromdate)
                     VALUES (:person_id, :name, (SELECT id FROM personnametype WHERE description = 'Nickname'), CURRENT_DATE)
                 """
-                await database.execute(query_nickname, values={"person_id": person_id, "name": person.nickname})
+                await database.execute(query_nickname_insert, values={"person_id": person_id, "name": person.nickname})
 
             # Update maritalstatus
             if person.marital_status_type_id:
-                query_marital = """
+                query_marital_update = """
+                    WITH ranked_marital AS (
+                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id ORDER BY fromdate DESC) AS rn
+                        FROM maritalstatus
+                        WHERE person_id = :person_id
+                        AND thrudate IS NULL
+                    )
+                    UPDATE maritalstatus
+                    SET thrudate = CURRENT_DATE
+                    WHERE id IN (SELECT id FROM ranked_marital WHERE rn = 1)
+                """
+                await database.execute(query_marital_update, values={"person_id": person_id})
+                query_marital_insert = """
                     INSERT INTO maritalstatus (person_id, maritalstatustype_id, fromdate)
                     VALUES (:person_id, :maritalstatustype_id, CURRENT_DATE)
                 """
-                await database.execute(query_marital, values={
+                await database.execute(query_marital_insert, values={
                     "person_id": person_id,
                     "maritalstatustype_id": person.marital_status_type_id
                 })
 
             # Update physicalcharacteristic for height
             if person.height_val:
-                query_height = """
+                query_height_update = """
+                    WITH ranked_physical AS (
+                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id, physicalcharacteristictype_id ORDER BY fromdate DESC) AS rn
+                        FROM physicalcharacteristic
+                        WHERE person_id = :person_id
+                        AND physicalcharacteristictype_id = (SELECT id FROM physicalcharacteristictype WHERE description = 'Height')
+                        AND thrudate IS NULL
+                    )
+                    UPDATE physicalcharacteristic
+                    SET thrudate = CURRENT_DATE
+                    WHERE id IN (SELECT id FROM ranked_physical WHERE rn = 1)
+                """
+                await database.execute(query_height_update, values={"person_id": person_id})
+                query_height_insert = """
                     INSERT INTO physicalcharacteristic (person_id, val, physicalcharacteristictype_id, fromdate)
                     VALUES (:person_id, :val, (SELECT id FROM physicalcharacteristictype WHERE description = 'Height'), CURRENT_DATE)
                 """
-                await database.execute(query_height, values={"person_id": person_id, "val": person.height_val})
+                await database.execute(query_height_insert, values={"person_id": person_id, "val": person.height_val})
 
             # Update physicalcharacteristic for weight
             if person.weight_val:
-                query_weight = """
+                query_weight_update = """
+                    WITH ranked_physical AS (
+                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id, physicalcharacteristictype_id ORDER BY fromdate DESC) AS rn
+                        FROM physicalcharacteristic
+                        WHERE person_id = :person_id
+                        AND physicalcharacteristictype_id = (SELECT id FROM physicalcharacteristictype WHERE description = 'Weight')
+                        AND thrudate IS NULL
+                    )
+                    UPDATE physicalcharacteristic
+                    SET thrudate = CURRENT_DATE
+                    WHERE id IN (SELECT id FROM ranked_physical WHERE rn = 1)
+                """
+                await database.execute(query_weight_update, values={"person_id": person_id})
+                query_weight_insert = """
                     INSERT INTO physicalcharacteristic (person_id, val, physicalcharacteristictype_id, fromdate)
                     VALUES (:person_id, :val, (SELECT id FROM physicalcharacteristictype WHERE description = 'Weight'), CURRENT_DATE)
                 """
-                await database.execute(query_weight, values={"person_id": person_id, "val": person.weight_val})
+                await database.execute(query_weight_insert, values={"person_id": person_id, "val": person.weight_val})
 
             # Update citizenship
             if person.country_id:
-                query_citizenship = """
+                query_citizenship_update = """
+                    WITH ranked_citizenship AS (
+                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id ORDER BY fromdate DESC) AS rn
+                        FROM citizenship
+                        WHERE person_id = :person_id
+                        AND thrudate IS NULL
+                    )
+                    UPDATE citizenship
+                    SET thrudate = CURRENT_DATE
+                    WHERE id IN (SELECT id FROM ranked_citizenship WHERE rn = 1)
+                """
+                await database.execute(query_citizenship_update, values={"person_id": person_id})
+                query_citizenship_insert = """
                     INSERT INTO citizenship (person_id, country_id, fromdate)
                     VALUES (:person_id, :country_id, CURRENT_DATE)
                 """
-                await database.execute(query_citizenship, values={"person_id": person_id, "country_id": person.country_id})
+                await database.execute(query_citizenship_insert, values={"person_id": person_id, "country_id": person.country_id})
 
             return await get_person(person_id)
         except Exception as e:
@@ -471,21 +573,6 @@ async def update_person(person_id: int, person: PersonUpdate) -> Optional[Person
             raise
 
 async def delete_person(person_id: int) -> bool:
-    query_check = """
-        SELECT id FROM citizenship WHERE person_id = :id
-        UNION
-        SELECT id FROM personname WHERE person_id = :id
-        UNION
-        SELECT id FROM physicalcharacteristic WHERE person_id = :id
-        UNION
-        SELECT id FROM maritalstatus WHERE person_id = :id
-        LIMIT 1
-    """
-    referenced = await database.fetch_one(query=query_check, values={"id": person_id})
-    if referenced:
-        logger.warning(f"Cannot delete person: id={person_id}, referenced in related tables")
-        return False
-
     async with database.transaction():
         try:
             query_person = """
@@ -496,12 +583,6 @@ async def delete_person(person_id: int) -> bool:
             if not person_result:
                 logger.warning(f"Person not found for deletion: id={person_id}")
                 return False
-
-            query_party = """
-                DELETE FROM party WHERE id = :id
-                RETURNING id
-            """
-            await database.fetch_one(query=query_party, values={"id": person_id})
 
             logger.info(f"Deleted person: id={person_id}")
             return True
