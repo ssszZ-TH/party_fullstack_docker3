@@ -56,11 +56,18 @@ export async function get({ id }: { id: number }) {
 
 export async function create(data: {
   personal_id_number?: string;
-  birthdate?: string;
   mothermaidenname?: string;
   totalyearworkexperience?: number;
   comment?: string;
   gender_type_id?: number;
+  fname?: string;
+  mname?: string;
+  lname?: string;
+  nickname?: string;
+  marital_status_type_id?: number;
+  height_val?: number;
+  weight_val?: number;
+  country_id?: number;
 }) {
   try {
     const res = await axios.post(BASE_URL, data, {
@@ -79,11 +86,18 @@ export async function create(data: {
 export async function update(data: {
   id: number;
   personal_id_number?: string;
-  birthdate?: string;
   mothermaidenname?: string;
   totalyearworkexperience?: number;
   comment?: string;
   gender_type_id?: number;
+  fname?: string;
+  mname?: string;
+  lname?: string;
+  nickname?: string;
+  marital_status_type_id?: number;
+  height_val?: number;
+  weight_val?: number;
+  country_id?: number;
 }) {
   try {
     const res = await axios.put(`${BASE_URL}/${data.id}`, data, {
