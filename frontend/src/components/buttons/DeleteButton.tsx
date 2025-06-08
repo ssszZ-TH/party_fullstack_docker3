@@ -1,40 +1,39 @@
 import React from "react";
 import Button from "@mui/material/Button";
-import DeleteIcon from "@mui/icons-material/Delete"; // Icon ถังขยะ
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@mui/material/styles";
+import Tooltip from "@mui/material/Tooltip";
 
 interface DeleteButtonProps {
-  onClick: () => void; // รับฟังก์ชัน onClick จากภายนอก
-  disabled?: boolean; // เพิ่ม prop disabled เพื่อควบคุมการคลิก
+  onClick: () => void;
+  disabled?: boolean;
 }
 
-/**
- * Reusable Delete Button Component
- * - Uses theme's error color
- * - Displays delete icon
- * - Accepts onClick handler from parent
- */
 const DeleteButton: React.FC<DeleteButtonProps> = ({
   onClick,
   disabled = false,
 }) => {
-  const theme = useTheme(); // ดึง theme จาก MUI
+  const theme = useTheme();
 
   return (
-    <Button
-      variant="contained"
-      onClick={onClick}
-      disabled={disabled}
-      sx={{
-        backgroundColor: theme.palette.error.main, // สีจาก theme
-        color: theme.palette.error.contrastText, // สีข้อความจาก theme
-        "&:hover": {
-          backgroundColor: theme.palette.error.dark, // สีเมื่อโฮเวอร์
-        },
-      }}
-    >
-      <DeleteIcon />
-    </Button>
+    <Tooltip title="Delete" placement="top">
+      <Button
+        variant="contained"
+        onClick={onClick}
+        disabled={disabled}
+        sx={{
+          backgroundColor: theme.palette.error.main,
+          color: theme.palette.error.contrastText,
+          "&:hover": {
+            backgroundColor: theme.palette.error.dark,
+          },
+          margin: "4px",
+          textTransform: "none",
+        }}
+      >
+        <DeleteIcon />
+      </Button>
+    </Tooltip>
   );
 };
 

@@ -16,6 +16,8 @@ import {
 } from "@mui/material";
 import DeleteButton from "../../components/buttons/DeleteButton";
 import SaveButton from "../../components/buttons/SaveButton";
+import CancelButton from "../../components/buttons/CancelButton";
+import CitizenshipButton from "../../components/buttons/CitizenshipButton";
 
 interface Person {
   id: number;
@@ -96,9 +98,9 @@ export default function PersonDetail() {
     console.log("Person data from backend", person);
   }, [person]);
 
-  useEffect(() => {
-    console.log("Form data", formData);
-  }, [formData]);
+  // useEffect(() => {
+  //   console.log("Form data", formData);
+  // }, [formData]);
 
   const fetchPerson = async (id: number) => {
     setLoading(true);
@@ -148,26 +150,39 @@ export default function PersonDetail() {
         mothermaidenname: formData.mothermaidenname,
         totalyearworkexperience: Number(formData.totalyearworkexperience),
         comment: formData.comment,
-        gender_type_id: formData.gender_type_id ? Number(formData.gender_type_id) : undefined,
+        gender_type_id: formData.gender_type_id
+          ? Number(formData.gender_type_id)
+          : undefined,
         fname: formData.fname,
         mname: formData.mname,
         lname: formData.lname,
         nickname: formData.nickname,
-        marital_status_type_id: formData.marital_status_type_id ? Number(formData.marital_status_type_id) : undefined,
-        height_val: formData.height_val ? Number(formData.height_val) : undefined,
-        weight_val: formData.weight_val ? Number(formData.weight_val) : undefined,
-        country_id: formData.country_id ? Number(formData.country_id) : undefined,
+        marital_status_type_id: formData.marital_status_type_id
+          ? Number(formData.marital_status_type_id)
+          : undefined,
+        height_val: formData.height_val
+          ? Number(formData.height_val)
+          : undefined,
+        weight_val: formData.weight_val
+          ? Number(formData.weight_val)
+          : undefined,
+        country_id: formData.country_id
+          ? Number(formData.country_id)
+          : undefined,
       };
       if (payload.id === 0) {
-        console.log('Created person with payload:', payload);
+        console.log("Created person with payload:", payload);
         await create(payload);
       } else {
-        console.log('Updated person with payload:', payload);
+        console.log("Updated person with payload:", payload);
         await update(payload);
       }
-      navigate('/v1/person');
+      navigate("/v1/person");
     } catch (err: any) {
-      const errorMessage = (formData.id === 0) ? 'Failed to create person' : 'Failed to update person';
+      const errorMessage =
+        formData.id === 0
+          ? "Failed to create person"
+          : "Failed to update person";
       setError(errorMessage);
       console.error(`${errorMessage}:`, err);
     } finally {
@@ -181,10 +196,10 @@ export default function PersonDetail() {
     try {
       await deleteById({ id: currentId });
       console.log(`Deleted person with id: ${currentId}`);
-      navigate('/v1/person');
+      navigate("/v1/person");
     } catch (err: any) {
-      setError('Failed to delete person');
-      console.error('Failed to delete person:', err);
+      setError("Failed to delete person");
+      console.error("Failed to delete person:", err);
     } finally {
       setLoading(false);
     }
@@ -357,14 +372,32 @@ export default function PersonDetail() {
             ))}
           </TextField>
         </Box>
-        <Box sx={{ mt: 3, display: "flex", gap: 2, px: 2 }}>
-          <SaveButton onClick={handleSubmit} />
-          <Button variant="outlined" onClick={() => navigate("/v1/person")}>
-            Cancel
-          </Button>
-          {currentId && currentId > 0 && (
-            <DeleteButton onClick={handleDelete} />
-          )}
+        <Box
+          sx={{
+            mt: 3,
+            display: "flex",
+            gap: 2,
+            px: 2,
+            justifyContent: "space-between",
+          }}
+        >
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <CancelButton onClick={() => navigate("/v1/person")} />
+            {currentId && currentId > 0 && (
+              <DeleteButton onClick={handleDelete} />
+            )}
+          </Box>
+          <Box sx={{ display: "flex", gap: 2 }}>
+            {currentId && currentId > 0 && (
+              <CitizenshipButton
+                onClick={() =>
+                  navigate(`/v1/passportbycitizenship/${formData?.citizenship_id}`)
+                }
+                disabled={!formData?.citizenship_id}
+              />
+            )}
+            <SaveButton onClick={handleSubmit} />
+          </Box>
         </Box>
       </form>
     </Box>

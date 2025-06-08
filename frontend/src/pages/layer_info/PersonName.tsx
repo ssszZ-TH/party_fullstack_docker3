@@ -28,16 +28,16 @@ export default function PersonName() {
     { field: "fromdate", headerName: "From Date", width: 120 },
     { field: "thrudate", headerName: "Thru Date", width: 120 },
     { field: "person_id", headerName: "Person ID", width: 100 },
-    {
-      field: "person", // Column name in the table
-      headerName: "Person Details", // Title shown at the top of the column
-      width: 200, // How wide the column is (in pixels)
-      renderCell: (params) => {
-        // Function to show custom content in the cell
-        const obj = personDD.find((item) => item.id === params.row.person_id); // Find person data by matching person_id
-        return <>{obj ? obj.text : "N/A"}</>;
-      },
-    },
+    // {
+    //   field: "person", // Column name in the table
+    //   headerName: "Person Details", // Title shown at the top of the column
+    //   width: 200, // How wide the column is (in pixels)
+    //   renderCell: (params) => {
+    //     // Function to show custom content in the cell
+    //     const obj = personDD.find((item) => item.id === params.row.person_id); // Find person data by matching person_id
+    //     return <>{obj ? obj.text : "N/A"}</>;
+    //   },
+    // },
     { field: "personnametype_id", headerName: "Name Type ID", width: 120 },
     {
       field: "nametype", // Column name in the table
@@ -52,22 +52,22 @@ export default function PersonName() {
       },
     },
     { field: "name", headerName: "Name", width: 150 },
-    {
-      field: "update",
-      headerName: "",
-      width: 100,
-      renderCell: (params) => (
-        <UpdateButton onClick={() => handleUpdateButton(params.row)} />
-      ),
-    },
-    {
-      field: "delete",
-      headerName: "",
-      width: 100,
-      renderCell: (params) => (
-        <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
-      ),
-    },
+    // {
+    //   field: "update",
+    //   headerName: "",
+    //   width: 100,
+    //   renderCell: (params) => (
+    //     <UpdateButton onClick={() => handleUpdateButton(params.row)} />
+    //   ),
+    // },
+    // {
+    //   field: "delete",
+    //   headerName: "",
+    //   width: 100,
+    //   renderCell: (params) => (
+    //     <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
+    //   ),
+    // },
   ];
 
   const [rows, setRows] = useState([]);
@@ -222,11 +222,11 @@ export default function PersonName() {
       ) : (
         <DataTable columns={columns} rows={rows} getRowId={(row) => row.id} />
       )}
-      <AddButton
+      {/* <AddButton
         onClick={() => {
           openModal("create");
         }}
-      />
+      /> */}
       <PersonNameModal
         open={open}
         onClose={closeModal}

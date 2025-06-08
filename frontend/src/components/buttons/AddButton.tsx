@@ -2,6 +2,7 @@ import React from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add"; // Icon บวก
 import { useTheme } from "@mui/material/styles";
+import { Tooltip } from "@mui/material";
 
 interface AddButtonProps {
   onClick: () => void;
@@ -23,22 +24,24 @@ const AddButton: React.FC<AddButtonProps> = ({
   const theme = useTheme();
 
   return (
-    <Button
-      variant="contained"
-      onClick={onClick}
-      disabled={disabled}
-      sx={{
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.primary.contrastText,
-        "&:hover": {
-          backgroundColor: theme.palette.primary.dark,
-        },
-        margin: "4px",
-        textTransform: "none", // ป้องกันตัวอักษรใหญ่ทั้งหมด
-      }}
-    >
-      <AddIcon />
-    </Button>
+    <Tooltip title={label} placement="top">
+      <Button
+        variant="contained"
+        onClick={onClick}
+        disabled={disabled}
+        sx={{
+          backgroundColor: theme.palette.primary.main,
+          color: theme.palette.primary.contrastText,
+          "&:hover": {
+            backgroundColor: theme.palette.primary.dark,
+          },
+          margin: "4px",
+          textTransform: "none", // ป้องกันตัวอักษรใหญ่ทั้งหมด
+        }}
+      >
+        <AddIcon />
+      </Button>
+    </Tooltip>
   );
 };
 

@@ -31,23 +31,23 @@ export default function Citizenship() {
       headerName: "Person ID",
       width: 100,
     },
-    {
-      field: "person", // Column name in the table
-      headerName: "Person Comment", // Title shown at the top of the column
-      width: 300, // How wide the column is (in pixels)
-      renderCell: (params) => {
-        // Function to show custom content in the cell
-        const obj = personDD.find((item) => item.id === params.row.person_id); // Find person data by matching person_id
-        return (
-          <Typography
-            variant="body2" // Small text style
-            color={obj ? "text.primary" : "text.secondary"} // Black if found, gray if not
-          >
-            {obj ? obj.text : "N/A"}
-          </Typography>
-        );
-      },
-    },
+    // {
+    //   field: "person", // Column name in the table
+    //   headerName: "Person Comment", // Title shown at the top of the column
+    //   width: 300, // How wide the column is (in pixels)
+    //   renderCell: (params) => {
+    //     // Function to show custom content in the cell
+    //     const obj = personDD.find((item) => item.id === params.row.person_id); // Find person data by matching person_id
+    //     return (
+    //       <Typography
+    //         variant="body2" // Small text style
+    //         color={obj ? "text.primary" : "text.secondary"} // Black if found, gray if not
+    //       >
+    //         {obj ? obj.text : "N/A"}
+    //       </Typography>
+    //     );
+    //   },
+    // },
     {
       field: "country_id",
       headerName: "Country ID",
@@ -70,22 +70,22 @@ export default function Citizenship() {
       },
     },
 
-    {
-      field: "update",
-      headerName: "",
-      width: 100,
-      renderCell: (params) => (
-        <UpdateButton onClick={() => handleUpdateButton(params.row)} />
-      ),
-    },
-    {
-      field: "delete",
-      headerName: "",
-      width: 100,
-      renderCell: (params) => (
-        <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
-      ),
-    },
+    // {
+    //   field: "update",
+    //   headerName: "",
+    //   width: 100,
+    //   renderCell: (params) => (
+    //     <UpdateButton onClick={() => handleUpdateButton(params.row)} />
+    //   ),
+    // },
+    // {
+    //   field: "delete",
+    //   headerName: "",
+    //   width: 100,
+    //   renderCell: (params) => (
+    //     <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
+    //   ),
+    // },
   ];
 
   const [rows, setRows] = useState([]);
@@ -259,12 +259,12 @@ export default function Citizenship() {
           getRowId={(row) => row.id} // ใช้ geo_id เป็น id
         />
       )}
-      <AddButton
+      {/* <AddButton
         
         onClick={() => {
           openModal("create");
         }}
-      />
+      /> */}
 
       <Modal
         open={open}
