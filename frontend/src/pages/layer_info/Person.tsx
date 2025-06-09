@@ -30,17 +30,16 @@ const columns: GridColDef[] = [
   { field: "mname", headerName: "Middle Name", width: 120 },
   { field: "lname", headerName: "Last Name", width: 120 },
   { field: "nickname", headerName: "Nickname", width: 120 },
+  { field: "birthdate", headerName: "Birth Date (YYYY-MM-DD)", width: 120 },
   { field: "gender_description", headerName: "Gender", width: 120 },
+  { field: "marital_status_type_description", headerName: "Marital Status", width: 150 },
   { field: "citizenship_id", headerName: "Citizenship ID", width: 120 },
   { field: "country_name_en", headerName: "Current Citizenship", width: 150 },
-  { field: "totalyearworkexperience", headerName: "Work Experience (Years)", width: 150 },
-  { field: "birthdate", headerName: "Birth Date", width: 120 },
-  { field: "mothermaidenname", headerName: "Mother's Maiden Name", width: 150 },
   { field: "height_val", headerName: "Height (cm)", width: 100 },
   { field: "weight_val", headerName: "Weight (kg)", width: 100 },
-  { field: "marital_status_type_description", headerName: "Marital Status", width: 150 },
+  { field: "mothermaidenname", headerName: "Mother's Maiden Name", width: 150 },
+  { field: "totalyearworkexperience", headerName: "Work Experience (Years)", width: 150 },
   { field: "comment", headerName: "Comment", width: 200 },
-  
 ];
 
   const [rows, setRows] = useState([]);

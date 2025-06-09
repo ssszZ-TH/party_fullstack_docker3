@@ -253,15 +253,6 @@ export default function PersonDetail() {
             required
           />
           <TextField
-            label="Birthdate"
-            name="birthdate"
-            type="date"
-            value={formData.birthdate || ""}
-            onChange={handleChange}
-            fullWidth
-            InputLabelProps={{ shrink: true }}
-          />
-          <TextField
             label="First Name"
             name="fname"
             value={formData.fname || ""}
@@ -290,26 +281,13 @@ export default function PersonDetail() {
             fullWidth
           />
           <TextField
-            label="Mother's Maiden Name"
-            name="mothermaidenname"
-            value={formData.mothermaidenname}
+            label="Birthdate"
+            name="birthdate"
+            type="date"
+            value={formData.birthdate || ""}
             onChange={handleChange}
             fullWidth
-          />
-          <TextField
-            label="Work Experience (Years)"
-            name="totalyearworkexperience"
-            type="number"
-            value={formData.totalyearworkexperience}
-            onChange={handleChange}
-            fullWidth
-          />
-          <TextField
-            label="Comment"
-            name="comment"
-            value={formData.comment}
-            onChange={handleChange}
-            fullWidth
+            InputLabelProps={{ shrink: true }}
           />
           <TextField
             select
@@ -341,6 +319,21 @@ export default function PersonDetail() {
             ))}
           </TextField>
           <TextField
+            select
+            label="Citizenship Country"
+            name="country_id"
+            value={formData.country_id || ""}
+            onChange={handleChange}
+            fullWidth
+          >
+            <MenuItem value="">None</MenuItem>
+            {countries.map((option) => (
+              <MenuItem key={option.id} value={option.id}>
+                {option.name_en}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
             label="Height (cm)"
             name="height_val"
             type="number"
@@ -357,20 +350,27 @@ export default function PersonDetail() {
             fullWidth
           />
           <TextField
-            select
-            label="Citizenship Country"
-            name="country_id"
-            value={formData.country_id || ""}
+            label="Mother's Maiden Name"
+            name="mothermaidenname"
+            value={formData.mothermaidenname}
             onChange={handleChange}
             fullWidth
-          >
-            <MenuItem value="">None</MenuItem>
-            {countries.map((option) => (
-              <MenuItem key={option.id} value={option.id}>
-                {option.name_en}
-              </MenuItem>
-            ))}
-          </TextField>
+          />
+          <TextField
+            label="Work Experience (Years)"
+            name="totalyearworkexperience"
+            type="number"
+            value={formData.totalyearworkexperience}
+            onChange={handleChange}
+            fullWidth
+          />
+          <TextField
+            label="Comment"
+            name="comment"
+            value={formData.comment}
+            onChange={handleChange}
+            fullWidth
+          />
         </Box>
         <Box
           sx={{
@@ -391,7 +391,9 @@ export default function PersonDetail() {
             {currentId && currentId > 0 && (
               <CitizenshipButton
                 onClick={() =>
-                  navigate(`/v1/passportbycitizenship/${formData?.citizenship_id}`)
+                  navigate(
+                    `/v1/passportbycitizenship/${formData?.citizenship_id}`
+                  )
                 }
                 disabled={!formData?.citizenship_id}
               />
