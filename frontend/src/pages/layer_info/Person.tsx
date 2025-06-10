@@ -37,26 +37,12 @@ const columns: GridColDef[] = [
   { field: "country_name_en", headerName: "Current Citizenship", width: 150 },
   { field: "height_val", headerName: "Height (cm)", width: 100 },
   { field: "weight_val", headerName: "Weight (kg)", width: 100 },
-  { field: "mothermaidenname", headerName: "Mother's Maiden Name", width: 150 },
-  { field: "totalyearworkexperience", headerName: "Work Experience (Years)", width: 150 },
   { field: "comment", headerName: "Comment", width: 200 },
 ];
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
-
-  interface PersonRow {
-    id: number | null;
-    personal_id_number: string;
-    birthdate: string;
-    mothermaidenname: string;
-    totalyearworkexperience: number;
-    comment: string;
-    gender_type_id?: number;
-  }
-
   
 
   const fetchPerson = async () => {

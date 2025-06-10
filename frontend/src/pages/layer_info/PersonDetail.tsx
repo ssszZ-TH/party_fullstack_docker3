@@ -23,8 +23,6 @@ interface Person {
   id: number;
   personal_id_number: string;
   birthdate?: string;
-  mothermaidenname: string;
-  totalyearworkexperience: number;
   comment: string;
   gender_type_id?: number;
   gender_description?: string;
@@ -36,6 +34,7 @@ interface Person {
   height_val?: number;
   weight_val?: number;
   country_id?: number;
+  citizenship_id?: number;
 }
 
 export default function PersonDetail() {
@@ -50,7 +49,7 @@ export default function PersonDetail() {
   const [maritalStatusTypes, setMaritalStatusTypes] = useState<
     { id: number; description: string }[]
   >([]);
-  const [countries, setCountries] = useState<{ id: number; name_en: string }[]>(
+  const [countries, setCountries] = useState<{ id: number; name_en: string; name_th: string }[]>(
     []
   );
   const [loading, setLoading] = useState(true);
@@ -65,8 +64,6 @@ export default function PersonDetail() {
           id: 0,
           personal_id_number: "",
           birthdate: "",
-          mothermaidenname: "",
-          totalyearworkexperience: 0,
           comment: "",
           gender_type_id: undefined,
           fname: "",
@@ -77,6 +74,7 @@ export default function PersonDetail() {
           height_val: undefined,
           weight_val: undefined,
           country_id: undefined,
+          citizenship_id: undefined,
         });
         fetchDropdowns();
         setLoading(false);
@@ -147,8 +145,6 @@ export default function PersonDetail() {
         id: currentId || 0,
         personal_id_number: formData.personal_id_number,
         birthdate: formData.birthdate || undefined,
-        mothermaidenname: formData.mothermaidenname,
-        totalyearworkexperience: Number(formData.totalyearworkexperience),
         comment: formData.comment,
         gender_type_id: formData.gender_type_id
           ? Number(formData.gender_type_id)
@@ -329,7 +325,7 @@ export default function PersonDetail() {
             <MenuItem value="">None</MenuItem>
             {countries.map((option) => (
               <MenuItem key={option.id} value={option.id}>
-                {option.name_en}
+                {`${option.name_en} (${option.name_th})`}
               </MenuItem>
             ))}
           </TextField>
@@ -346,21 +342,6 @@ export default function PersonDetail() {
             name="weight_val"
             type="number"
             value={formData.weight_val || ""}
-            onChange={handleChange}
-            fullWidth
-          />
-          <TextField
-            label="Mother's Maiden Name"
-            name="mothermaidenname"
-            value={formData.mothermaidenname}
-            onChange={handleChange}
-            fullWidth
-          />
-          <TextField
-            label="Work Experience (Years)"
-            name="totalyearworkexperience"
-            type="number"
-            value={formData.totalyearworkexperience}
             onChange={handleChange}
             fullWidth
           />
