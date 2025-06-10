@@ -8,8 +8,8 @@ import Loading from "../../components/Loading";
 import { create, get, list, update, deleteById } from "../../services/passport"; // เเก้ service ด้วย
 
 import { list as listCitizenship } from "../../services/citizenship";
-import UpdateButton from "../../components/buttons/UpdateButton";
-import DeleteButton from "../../components/buttons/DeleteButton";
+// import UpdateButton from "../../components/buttons/UpdateButton";
+// import DeleteButton from "../../components/buttons/DeleteButton";
 import AddButton from "../../components/buttons/AddButton";
 
 export default function Passport() {
@@ -46,22 +46,22 @@ export default function Passport() {
         return <>{obj ? obj.text : "N/A"}</>;
       },
     },
-    {
-      field: "update",
-      headerName: "",
-      width: 100,
-      renderCell: (params) => (
-        <UpdateButton onClick={() => handleUpdateButton(params.row)} />
-      ),
-    },
-    {
-      field: "delete",
-      headerName: "",
-      width: 100,
-      renderCell: (params) => (
-        <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
-      ),
-    },
+    // {
+    //   field: "update",
+    //   headerName: "",
+    //   width: 100,
+    //   renderCell: (params) => (
+    //     <UpdateButton onClick={() => handleUpdateButton(params.row)} />
+    //   ),
+    // },
+    // {
+    //   field: "delete",
+    //   headerName: "",
+    //   width: 100,
+    //   renderCell: (params) => (
+    //     <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
+    //   ),
+    // },
   ];
 
   const [rows, setRows] = useState([]);
