@@ -114,7 +114,7 @@ async def get_person(person_id: int) -> Optional[PersonOut]:
         WITH ranked_names AS (
             SELECT 
                 pn.*, 
-                ROW_NUMBER() OVER (PARTITION BY pn.person_id, pn.personnametype_id ORDER BY pn.fromdate DESC) AS rn
+                ROW_NUMBER() OVER (PARTITION BY pn.person_id, pn.personnametype_id ORDER BY pn.fromdate DESC, pn.id DESC) AS rn
             FROM personname pn
         ),
         ranked_marital AS (
@@ -126,13 +126,13 @@ async def get_person(person_id: int) -> Optional[PersonOut]:
         ranked_physical AS (
             SELECT 
                 pc.*, 
-                ROW_NUMBER() OVER (PARTITION BY pc.person_id, pc.physicalcharacteristictype_id ORDER BY pc.fromdate DESC) AS rn
+                ROW_NUMBER() OVER (PARTITION BY pc.person_id, pc.physicalcharacteristictype_id ORDER BY pc.fromdate DESC, pc.id DESC) AS rn
             FROM physicalcharacteristic pc
         ),
         ranked_citizenship AS (
             SELECT 
                 c.*, 
-                ROW_NUMBER() OVER (PARTITION BY c.person_id ORDER BY c.fromdate DESC) AS rn
+                ROW_NUMBER() OVER (PARTITION BY c.person_id ORDER BY c.fromdate DESC, c.id DESC) AS rn
             FROM citizenship c
         )
         SELECT 
@@ -246,7 +246,7 @@ async def get_all_persons() -> List[PersonOut]:
         WITH ranked_names AS (
             SELECT 
                 pn.*, 
-                ROW_NUMBER() OVER (PARTITION BY pn.person_id, pn.personnametype_id ORDER BY pn.fromdate DESC) AS rn
+                ROW_NUMBER() OVER (PARTITION BY pn.person_id, pn.personnametype_id ORDER BY pn.fromdate DESC, pn.id DESC) AS rn
             FROM personname pn
         ),
         ranked_marital AS (
@@ -258,13 +258,13 @@ async def get_all_persons() -> List[PersonOut]:
         ranked_physical AS (
             SELECT 
                 pc.*, 
-                ROW_NUMBER() OVER (PARTITION BY pc.person_id, pc.physicalcharacteristictype_id ORDER BY pc.fromdate DESC) AS rn
+                ROW_NUMBER() OVER (PARTITION BY pc.person_id, pc.physicalcharacteristictype_id ORDER BY pc.fromdate DESC, pc.id DESC) AS rn
             FROM physicalcharacteristic pc
         ),
         ranked_citizenship AS (
             SELECT 
                 c.*, 
-                ROW_NUMBER() OVER (PARTITION BY c.person_id ORDER BY c.fromdate DESC) AS rn
+                ROW_NUMBER() OVER (PARTITION BY c.person_id ORDER BY c.fromdate DESC, c.id DESC) AS rn
             FROM citizenship c
         )
         SELECT 
