@@ -58,6 +58,16 @@ async def get_all_passports() -> List[PassportOut]:
     logger.info(f"Retrieved {len(results)} passports")
     return [PassportOut(**result) for result in results]
 
+async def get_passports_by_citizenship(citizenship_id: int) -> List[PassportOut]:
+    query = """
+        SELECT id, passportnumber, fromdate, thrudate, citizenship_id 
+        FROM passport 
+        WHERE citizenship_id = :citizenship_id
+    """
+    results = await database.fetch_all(query=query, values={"citizenship_id": citizenship_id_id})
+    logger.info(f"Retrieved {len(results)} passports for citizenship_id={citizenship_id_id}")
+    return [PassportOut(**result) for result in results]
+
 async def update_passport(passport_id: int, passport: PassportUpdate) -> Optional[PassportOut]:
     if passport.passportnumber or passport.citizenship_id:
         query = """

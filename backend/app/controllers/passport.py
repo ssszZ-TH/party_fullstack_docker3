@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from typing import List
 from app.models.passport import (
     create_passport, get_passport, get_all_passports,
-    update_passport, delete_passport
+    update_passport, delete_passport, get_passports_by_citizenship
 )
 from app.schemas.passport import PassportCreate, PassportUpdate, PassportOut
 from app.controllers.users.user import get_current_user
@@ -35,6 +35,12 @@ async def get_passport_endpoint(passport_id: int, current_user: dict = Depends(g
 async def get_all_passports_endpoint(current_user: dict = Depends(get_current_user)):
     results = await get_all_passports()
     logger.info(f"Retrieved {len(results)} passports")
+    return results
+
+@router.get("/bycitizenshipid/{citizenship_id}", response_model=List[PassportOut])
+async def get_passports_by_citizenship_endpoint(citizenship_id: int, current_user: dict = Depends(get_current_user)):
+    results = await get_passports_by_citizenship(citizenship_id)
+    logger.info(f"Retrieved {len(results)} passports for citizenship_id={citizenship_id}")
     return results
 
 @router.put("/{passport_id}", response_model=PassportOut)
