@@ -29,7 +29,7 @@ const getAuthHeaders = () => {
 
 // ฟังก์ชันสำหรับดึงข้อมูลโปรไฟล์ผู้ใช้ปัจจุบัน
 // ไม่ต้องรับ payload เพราะใช้ Bearer Token จาก cookie เพื่อระบุผู้ใช้
-export async function getProfile({}: {}) {
+export async function getProfile() {
   try {
     const res = await axios.get(`${BASE_URL}/me`, {
       headers: getAuthHeaders(),

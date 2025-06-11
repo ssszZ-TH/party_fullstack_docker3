@@ -373,7 +373,7 @@ export default function PersonDetail() {
               <CitizenshipButton
                 onClick={() =>
                   navigate(
-                    `/v1/passportbycitizenship/${formData?.citizenship_id}`
+                    `/v1/passportbycitizenshipid/${formData?.citizenship_id}`
                   )
                 }
                 disabled={!formData?.citizenship_id}

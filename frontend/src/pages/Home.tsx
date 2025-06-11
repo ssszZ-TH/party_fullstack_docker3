@@ -103,7 +103,7 @@ export default function Home() {
       }
       try {
         console.log("Home: Checking token with getProfile");
-        await getProfile({});
+        await getProfile();
         console.log("Home: Token is valid");
       } catch (err: any) {
         console.log("Home: Token check error:", err);

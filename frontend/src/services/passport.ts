@@ -60,11 +60,21 @@ export async function get({ id }: { id: number }) {
 }
 
 // สร้างข้อมูลใหม่
-export async function create(data: any) {
+export async function create(data: {
+  passportnumber: string;
+  fromdate?: string;
+  thrudate?: string;
+  citizenship_id?: number;
+}) {
   // ป้องกัน error จากวันที่เป็น string ว่าง
-  data.thrudate = data.thrudate?.trim() || null;
+  const payload = {
+    passportnumber: data.passportnumber,
+    fromdate: data.fromdate?.trim() || null,
+    thrudate: data.thrudate?.trim() || null,
+    citizenship_id: data.citizenship_id || null,
+  };
   try {
-    const res = await axios.post(BASE_URL, data, {
+    const res = await axios.post(BASE_URL, payload, {
       headers: getAuthHeaders(),
     });
     return res.data;
@@ -78,11 +88,23 @@ export async function create(data: any) {
 }
 
 // อัพเดทข้อมูล
-export async function update(data: any) {
+export async function update(data: {
+  id: number;
+  passportnumber: string;
+  fromdate?: string;
+  thrudate?: string;
+  citizenship_id?: number;
+}) {
   // ป้องกัน error จากวันที่เป็น string ว่าง
-  data.thrudate = data.thrudate?.trim() || null;
+  const payload = {
+    id: data.id,
+    passportnumber: data.passportnumber,
+    fromdate: data.fromdate?.trim() || null,
+    thrudate: data.thrudate?.trim() || null,
+    citizenship_id: data.citizenship_id || null,
+  };
   try {
-    const res = await axios.put(`${BASE_URL}/${data.id}`, data, {
+    const res = await axios.put(`${BASE_URL}/${data.id}`, payload, {
       headers: getAuthHeaders(),
     });
     return res.data;
@@ -104,6 +126,22 @@ export async function deleteById({ id }: { id: number }) {
     return res.data;
   } catch (error: any) {
     logError('deleteById', error, Cookies.get('access_token'));
+    if (error.response?.status === 401) {
+      throw new Error('Unauthorized: Invalid or expired token');
+    }
+    throw error;
+  }
+}
+
+// ดึงรายการตาม citizenship_id
+export async function listByCitizenshipId({ citizenship_id }: { citizenship_id: number }) {
+  try {
+    const res = await axios.get(`${BASE_URL}/bycitizenshipid/${citizenship_id}`, {
+      headers: getAuthHeaders(),
+    });
+    return res.data;
+  } catch (error: any) {
+    logError('listByCitizenshipId', error, Cookies.get('access_token'));
     if (error.response?.status === 401) {
       throw new Error('Unauthorized: Invalid or expired token');
     }

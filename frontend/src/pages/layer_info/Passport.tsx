@@ -46,22 +46,7 @@ export default function Passport() {
         return <>{obj ? obj.text : "N/A"}</>;
       },
     },
-    // {
-    //   field: "update",
-    //   headerName: "",
-    //   width: 100,
-    //   renderCell: (params) => (
-    //     <UpdateButton onClick={() => handleUpdateButton(params.row)} />
-    //   ),
-    // },
-    // {
-    //   field: "delete",
-    //   headerName: "",
-    //   width: 100,
-    //   renderCell: (params) => (
-    //     <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
-    //   ),
-    // },
+    
   ];
 
   const [rows, setRows] = useState([]);
@@ -109,13 +94,7 @@ export default function Passport() {
     openModal("update");
   };
 
-  const handleDeleteButton = async (id: number) => {
-    console.log("delete button receive value = ", id);
-    setLoading(true);
-    await deleteById({ id });
-    await fetchDataTable();
-    setLoading(false);
-  };
+
 
   const fetchDataTable = async () => {
     setLoading(true);
@@ -136,7 +115,7 @@ export default function Passport() {
     const res: Array<TypeOfCitizenship> = await listCitizenship();
     const DD = res.map((item) => ({
       id: item.id,
-      text: `ID:${item.id} person:${item.person_id} live in country:${item.country_id} from ${item.fromdate} to ${item.thrudate}`,
+      text: `citizenship:${item.id} is person:${item.person_id} live in country:${item.country_id} from ${item.fromdate} to ${item.thrudate}`,
     }));
     setCitizenshipDD(DD);
   };
@@ -203,7 +182,7 @@ export default function Passport() {
   };
   return (
     <>
-      <AppBarCustom title="Passport หนังสือเดินทาง" />
+      <AppBarCustom title="All Passport หนังสือเดินทางทั้งหมด" />
       {loading ? (
         <Loading /> // แสดง loading component ถ้ากำลังโหลด
       ) : (
@@ -213,11 +192,11 @@ export default function Passport() {
           getRowId={(row) => row.id} // ใช้ geo_id เป็น id
         />
       )}
-      <AddButton
+      {/* <AddButton
         onClick={() => {
           openModal("create");
         }}
-      />
+      /> */}
       <Modal
         open={open}
         onClose={closeModal}
