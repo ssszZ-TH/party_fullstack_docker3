@@ -141,6 +141,11 @@ const routes = [
     path: "/v1/persondetail",
     component: lazy(() => import("./pages/layer_info/PersonDetail")),
   },
+  {
+    path: "/v1/organizationmenu",
+    component: lazy(() => import("./pages/layer_info/OrganizationMenu")),
+  },
+
 ];
 
 // สร้าง root element และ render แอปพลิเคชัน

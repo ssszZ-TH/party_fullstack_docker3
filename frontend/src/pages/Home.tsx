@@ -38,8 +38,7 @@ const services_layer_type = [
     path: "/v1/physicalcharacteristictype",
   },
   { name: "Country", path: "/v1/country" },
-  
-  
+
   { name: "Party Type", path: "/v1/partytype" },
 
   // { name: "Legal Organization", path: "/v1/legalorganization" },
@@ -50,33 +49,25 @@ const services_layer_type = [
   { name: "Employee Count Range", path: "/v1/employeecountrange" },
   { name: "Minority Type", path: "/v1/minoritytype" },
   { name: "Gender Type", path: "/v1/gendertype" },
-  { name: "Other Informal Organization", path: "/v1/otherinformalorganization" },
-  { name: "Team", path: "/v1/team" },
-  { name: "Family", path: "/v1/family" },
-
-  { name: "Government Agency", path: "/v1/governmentagency" },
-  { name: "Corporation", path: "/v1/corporation" },
-
 ];
 
 const services_layer_info = [
+  { name: "Person", path: "/v1/person" },
+  { name: "Organization", path: "/v1/organizationmenu" },
   { name: "Marital Status", path: "/v1/maritalstatus" },
   { name: "Person Name", path: "/v1/personname" },
   { name: "Citizenship", path: "/v1/citizenship" },
   { name: "Passport", path: "/v1/passport" },
-  { name: "Person", path: "/v1/person" },
   { name: "Physical Characteristic", path: "/v1/physicalcharacteristic" },
   { name: "Classify by EEOC", path: "/v1/classifybyeeoc" },
   { name: "Classify by Income", path: "/v1/classifybyincome" },
   { name: "Classify by Industry", path: "/v1/classifybyindustry" },
   { name: "Classify by Size", path: "/v1/classifybysize" },
   { name: "Classify by Minority", path: "/v1/classifybyminority" },
-  
 ];
 
 const services_layer_relation = [
   { name: "Classify by Minority", path: "/v1/classifybyminority" },
-
 ];
 
 // Navigation items
@@ -325,7 +316,7 @@ export default function Home() {
               </Box>
             ))}
           </Box>
-          
+
           <hr style={{ margin: "20px 0" }} />
 
           {/* Services Grid */}
