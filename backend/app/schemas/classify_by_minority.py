@@ -6,14 +6,14 @@ class ClassifyByMinorityCreate(BaseModel):
     fromdate: Optional[date] = None
     thrudate: Optional[date] = None
     party_id: int
-    party_type_id: int
+    party_type_id: Optional[int] = 3 # Default to 3 if not provided
     minority_type_id: int
 
 class ClassifyByMinorityUpdate(BaseModel):
     fromdate: Optional[date] = None
     thrudate: Optional[date] = None
     party_id: Optional[int] = None
-    party_type_id: Optional[int] = None
+    party_type_id: Optional[int] = 3 # Default to 3 if not provided
     minority_type_id: Optional[int] = None
 
 class ClassifyByMinorityOut(BaseModel):
@@ -23,8 +23,7 @@ class ClassifyByMinorityOut(BaseModel):
     party_id: int
     party_type_id: int
     minority_type_id: int
-    name_en: str
-    name_th: str
+
 
     class Config:
         from_attributes = True

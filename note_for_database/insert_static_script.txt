@@ -128,11 +128,17 @@ FROM '/staticData/passport/passport.csv'
 DELIMITER ','
 CSV HEADER;
 
+COPY party_type (id, description)
+FROM '/staticData/party_type/party_type.csv'
+DELIMITER ','
+CSV HEADER;
+
 COPY  ()
 FROM '/staticData/'
 DELIMITER ','
 CSV HEADER;
 
+อย่าลืม res max seq id
 
 ----------template
 COPY  ()
