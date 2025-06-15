@@ -5,14 +5,16 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Loading from "./components/Loading";
-import PersonDetail from "./pages/layer_info/PersonDetail";
-import PassportByCitizenshipId from "./pages/layer_info/PassportByCitizenshipId";
-import PassportDetail from "./pages/layer_info/PassportDetail";
+
 
 // Lazy load pages เพื่อเพิ่มประสิทธิภาพโดยโหลดเฉพาะหน้าเมื่อจำเป็น
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
+const PersonDetail = lazy(() => import("./pages/layer_info/PersonDetail"));
+const PassportByCitizenshipId = lazy(
+  () => import("./pages/layer_info/PassportByCitizenshipId")
+);
 
 // กำหนด array ของ routes สำหรับหน้าเพิ่มเติม
 // แต่ละ route มี path และ component ที่ lazy load
@@ -145,7 +147,22 @@ const routes = [
     path: "/v1/organizationmenu",
     component: lazy(() => import("./pages/layer_info/OrganizationMenu")),
   },
-
+  {
+    path: "/v1/person/:paramId",
+    component: PersonDetail,
+  },
+  {
+    path: "/v1/passportbycitizenshipid/:paramId",
+    component: PassportByCitizenshipId,
+  },
+  {
+    path: "/v1/eeocbypersonid/:paramId",
+    component: lazy(() => import("./pages/layer_info/EeocByPersonId")),
+  },
+  {
+    path: "/v1/incomebypersonid/:paramId",
+    component: lazy(() => import("./pages/layer_info/IncomeByPersonId")),
+  },
 ];
 
 // สร้าง root element และ render แอปพลิเคชัน
@@ -188,36 +205,6 @@ createRoot(document.getElementById("root")!).render(
                   }
                 />
               ))}
-
-              {/* เส้นทางสำหรับ PersonDetail ด้วย dynamic parameter :id */}
-              <Route
-                path="/v1/person/:paramId"
-                element={
-                  <ProtectedRoute>
-                    <PersonDetail />
-                  </ProtectedRoute>
-                }
-              />
-
-              {/* เส้นทางสำหรับ passport by citizenship id ด้วย dynamic parameter :id */}
-              <Route
-                path="/v1/passportbycitizenshipid/:paramId"
-                element={
-                  <ProtectedRoute>
-                    <PassportByCitizenshipId />
-                  </ProtectedRoute>
-                }
-              />
-
-              {/* เส้นทางสำหรับ passport detail ด้วย dynamic parameter :id และ query parameter */}
-              <Route
-                path="/v1/passport/:paramId"
-                element={
-                  <ProtectedRoute>
-                    <PassportDetail />
-                  </ProtectedRoute>
-                }
-              />
 
               {/* เส้นทางสำหรับหน้า 404 เมื่อ URL ไม่ตรงกับ route ใด ๆ */}
               <Route path="*" element={<h1>404 Not Found</h1>} />

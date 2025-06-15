@@ -17,7 +17,9 @@ import {
 import DeleteButton from "../../components/buttons/DeleteButton";
 import SaveButton from "../../components/buttons/SaveButton";
 import CancelButton from "../../components/buttons/CancelButton";
-import CitizenshipButton from "../../components/buttons/CitizenshipButton";
+import PassportButton from "../../components/buttons/PassportButton";
+import EeocButton from "../../components/buttons/EeocButton";
+import IncomeButton from "../../components/buttons/IncomeButton";
 
 interface Person {
   id: number;
@@ -49,9 +51,9 @@ export default function PersonDetail() {
   const [maritalStatusTypes, setMaritalStatusTypes] = useState<
     { id: number; description: string }[]
   >([]);
-  const [countries, setCountries] = useState<{ id: number; name_en: string; name_th: string }[]>(
-    []
-  );
+  const [countries, setCountries] = useState<
+    { id: number; name_en: string; name_th: string }[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -370,14 +372,26 @@ export default function PersonDetail() {
           </Box>
           <Box sx={{ display: "flex", gap: 2 }}>
             {currentId && currentId > 0 && (
-              <CitizenshipButton
-                onClick={() =>
-                  navigate(
-                    `/v1/passportbycitizenshipid/${formData?.citizenship_id}`
-                  )
-                }
-                disabled={!formData?.citizenship_id}
-              />
+              <>
+                <PassportButton
+                  onClick={() =>
+                    navigate(
+                      `/v1/passportbycitizenshipid/${formData?.citizenship_id}`
+                    )
+                  }
+                  disabled={!formData?.citizenship_id}
+                />
+                <EeocButton
+                  onClick={() => navigate(`/v1/eeocbypersonid/${formData?.id}`)}
+                  disabled={!formData?.id}
+                />
+                <IncomeButton
+                  onClick={() =>
+                    navigate(`/v1/incomebypersonid/${formData?.id}`)
+                  }
+                  disabled={!formData?.id}
+                />
+              </>
             )}
             <SaveButton onClick={handleSubmit} />
           </Box>
