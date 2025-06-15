@@ -27,3 +27,15 @@ class ClassifyByIncomeOut(BaseModel):
 
     class Config:
         from_attributes = True
+        
+class ClassifyByIncomeByPersonIdOut(BaseModel):
+    id: int
+    fromdate: Optional[date] = None
+    thrudate: Optional[date] = None
+    party_id: int
+    party_type_id: int
+    income_range_id: int
+    description: Optional[str] = None
+
+    class Config:
+        from_attributes = True

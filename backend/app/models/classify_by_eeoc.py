@@ -1,7 +1,7 @@
 from typing import Optional, List
 from app.config.database import database
 import logging
-from app.schemas.classify_by_eeoc import ClassifyByEeocCreate, ClassifyByEeocUpdate, ClassifyByEeocOut
+from app.schemas.classify_by_eeoc import ClassifyByEeocCreate, ClassifyByEeocUpdate, ClassifyByEeocOut, ClassifyByEeocByPersonIdOut
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -89,6 +89,21 @@ async def get_all_classify_by_eeocs() -> List[ClassifyByEeocOut]:
     logger.info(f"Retrieved {len(results)} classify_by_eeocs")
     return [ClassifyByEeocOut(**result) for result in results]
 
+async def get_classify_by_eeoc_by_person_id(person_id: int) -> List[ClassifyByEeocByPersonIdOut]:
+    query = """
+        SELECT pc.id, pc.fromdate, pc.thrudate, pc.party_id, pc.party_type_id, 
+               ce.ethnicity_id, e.name_en, e.name_th
+        FROM classify_by_eeoc ce
+        JOIN person_classification pcn ON ce.id = pcn.id
+        JOIN party_classification pc ON ce.id = pc.id
+        JOIN ethnicity e ON ce.ethnicity_id = e.id
+        WHERE pc.party_id = :person_id
+        ORDER BY pc.id ASC
+    """
+    results = await database.fetch_all(query=query, values={"person_id": person_id})
+    logger.info(f"Retrieved {len(results)} classify_by_eeoc by person_id: {person_id}")
+    return [ClassifyByEeocByPersonIdOut(**result) for result in results]
+
 async def update_classify_by_eeoc(classify_by_eeoc_id: int, classify_by_eeoc: ClassifyByEeocUpdate) -> Optional[ClassifyByEeocOut]:
     async with database.transaction():
         try:
@@ -171,3 +186,4 @@ async def delete_classify_by_eeoc(classify_by_eeoc_id: int) -> bool:
         except Exception as e:
             logger.error(f"Error deleting classify_by_eeoc: {str(e)}")
             raise
+        

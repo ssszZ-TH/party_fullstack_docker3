@@ -1,7 +1,7 @@
 from typing import Optional, List
 from app.config.database import database
 import logging
-from app.schemas.classify_by_income import ClassifyByIncomeCreate, ClassifyByIncomeUpdate, ClassifyByIncomeOut
+from app.schemas.classify_by_income import ClassifyByIncomeCreate, ClassifyByIncomeUpdate, ClassifyByIncomeOut, ClassifyByIncomeByPersonIdOut
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -88,6 +88,21 @@ async def get_all_classify_by_incomes() -> List[ClassifyByIncomeOut]:
     results = await database.fetch_all(query=query)
     logger.info(f"Retrieved {len(results)} classify_by_incomes")
     return [ClassifyByIncomeOut(**result) for result in results]
+
+async def get_classify_by_income_by_person_id(person_id: int) -> List[ClassifyByIncomeByPersonIdOut]:
+    query = """
+        SELECT pc.id, pc.fromdate, pc.thrudate, pc.party_id, pc.party_type_id, 
+               ci.income_range_id, ir.description
+        FROM classify_by_income ci
+        JOIN person_classification pcn ON ci.id = pcn.id
+        JOIN party_classification pc ON ci.id = pc.id
+        JOIN income_range ir ON ci.income_range_id = ir.id
+        WHERE pc.party_id = :person_id
+        ORDER BY pc.id ASC
+    """
+    results = await database.fetch_all(query=query, values={"person_id": person_id})
+    logger.info(f"Retrieved {len(results)} classify_by_income by person_id: {person_id}")
+    return [ClassifyByIncomeByPersonIdOut(**result) for result in results]
 
 async def update_classify_by_income(classify_by_income_id: int, classify_by_income: ClassifyByIncomeUpdate) -> Optional[ClassifyByIncomeOut]:
     async with database.transaction():

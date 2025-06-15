@@ -2,9 +2,9 @@ from fastapi import APIRouter, HTTPException, Depends
 from typing import List
 from app.models.classify_by_eeoc import (
     create_classify_by_eeoc, get_classify_by_eeoc, get_all_classify_by_eeocs,
-    update_classify_by_eeoc, delete_classify_by_eeoc
+    update_classify_by_eeoc, delete_classify_by_eeoc, get_classify_by_eeoc_by_person_id
 )
-from app.schemas.classify_by_eeoc import ClassifyByEeocCreate, ClassifyByEeocUpdate, ClassifyByEeocOut
+from app.schemas.classify_by_eeoc import ClassifyByEeocCreate, ClassifyByEeocUpdate, ClassifyByEeocOut, ClassifyByEeocByPersonIdOut
 from app.controllers.users.user import get_current_user
 import logging
 
@@ -34,6 +34,15 @@ async def get_classify_by_eeoc_endpoint(classify_by_eeoc_id: int, current_user: 
 async def get_all_classify_by_eeocs_endpoint(current_user: dict = Depends(get_current_user)):
     results = await get_all_classify_by_eeocs()
     logger.info(f"Retrieved {len(results)} classify_by_eeocs")
+    return results
+
+@router.get("/bypersonid/{person_id}", response_model=List[ClassifyByEeocByPersonIdOut])
+async def get_classify_by_eeoc_by_person_id_endpoint(person_id: int, current_user: dict = Depends(get_current_user)):
+    results = await get_classify_by_eeoc_by_person_id(person_id)
+    if not results:
+        logger.warning(f"No classify_by_eeoc found for person_id: {person_id}")
+        return []
+    logger.info(f"Retrieved {len(results)} classify_by_eeoc by person_id: {person_id}")
     return results
 
 @router.put("/{classify_by_eeoc_id}", response_model=ClassifyByEeocOut)

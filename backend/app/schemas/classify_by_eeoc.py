@@ -26,3 +26,16 @@ class ClassifyByEeocOut(BaseModel):
 
     class Config:
         from_attributes = True
+        
+class ClassifyByEeocByPersonIdOut(BaseModel):
+    id: int
+    fromdate: Optional[date] = None
+    thrudate: Optional[date] = None
+    party_id: Optional[int] = None
+    party_type_id: Optional[int] = None
+    ethnicity_id: Optional[int] = None
+    name_en: Optional[str] = None
+    name_th: Optional[str] = None
+
+    class Config:
+        from_attributes = True
