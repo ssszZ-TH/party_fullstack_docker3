@@ -163,6 +163,11 @@ const routes = [
     path: "/v1/incomebypersonid/:paramId",
     component: lazy(() => import("./pages/layer_info/IncomeByPersonId")),
   },
+  {
+    path: "/v1/organization",
+    component: lazy(() => import("./pages/layer_type/Organization")),
+  },
+
 ];
 
 // สร้าง root element และ render แอปพลิเคชัน

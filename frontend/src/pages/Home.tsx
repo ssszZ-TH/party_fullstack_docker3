@@ -62,7 +62,8 @@ const services_layer_person = [
   { name: "Physical Characteristic", path: "/v1/physicalcharacteristic" },
 ];
 const services_layer_organization = [
-  { name: "Organization", path: "/v1/organizationmenu" },
+  { name: "Organization", path: "/v1/organization" },
+  { name: "Specific Organization Type", path: "/v1/organizationmenu" },
 ];
 
 const services_layer_classify = [
