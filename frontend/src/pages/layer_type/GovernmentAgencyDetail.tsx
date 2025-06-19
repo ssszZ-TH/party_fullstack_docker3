@@ -189,7 +189,7 @@ export default function GovernmentAgencyDetail() {
           }}
         >
           <Box sx={{ display: "flex", gap: 2 }}>
-            <CancelButton onClick={() => navigate("/v1/governmentagency")} />
+            <CancelButton onClick={() => navigate("/v1/organization")} />
             {currentId && currentId > 0 && (
               <DeleteButton onClick={handleDelete} />
             )}

@@ -92,7 +92,7 @@ export default function OtherInformalOrganizationDetail() {
       } else {
         await update(payload);
       }
-      navigate("/v1/otherinformalorganization");
+      navigate("/v1/organization");
     } catch (err: any) {
       const errorMessage =
         formData.id === 0
@@ -110,7 +110,7 @@ export default function OtherInformalOrganizationDetail() {
     setLoading(true);
     try {
       await deleteById({ id: currentId });
-      navigate("/v1/otherinformalorganization");
+      navigate("/v1/organization");
     } catch (err: any) {
       setError("Failed to delete organization");
       console.error("Failed to delete organization:", err);
@@ -194,7 +194,7 @@ export default function OtherInformalOrganizationDetail() {
         >
           <Box sx={{ display: "flex", gap: 2 }}>
             <CancelButton
-              onClick={() => navigate("/v1/otherinformalorganization")}
+              onClick={() => navigate("/v1/organization")}
             />
             {currentId && currentId > 0 && (
               <DeleteButton onClick={handleDelete} />

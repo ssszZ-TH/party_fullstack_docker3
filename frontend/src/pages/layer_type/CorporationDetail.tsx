@@ -107,7 +107,7 @@ export default function CorporationDetail() {
     setLoading(true);
     try {
       await deleteById({ id: currentId });
-      navigate("/v1/corporation");
+      navigate("/v1/organization");
     } catch (err: any) {
       setError("Failed to delete corporation");
       console.error("Failed to delete corporation:", err);
@@ -189,7 +189,7 @@ export default function CorporationDetail() {
           }}
         >
           <Box sx={{ display: "flex", gap: 2 }}>
-            <CancelButton onClick={() => navigate("/v1/corporation")} />
+            <CancelButton onClick={() => navigate("/v1/organization")} />
             {currentId && currentId > 0 && (
               <DeleteButton onClick={handleDelete} />
             )}

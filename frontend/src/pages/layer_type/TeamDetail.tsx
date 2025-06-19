@@ -89,7 +89,7 @@ export default function TeamDetail() {
       } else {
         await update(payload);
       }
-      navigate("/v1/team");
+      navigate("/v1/organization");
     } catch (err: any) {
       const errorMessage =
         formData.id === 0
@@ -107,7 +107,7 @@ export default function TeamDetail() {
     setLoading(true);
     try {
       await deleteById({ id: currentId });
-      navigate("/v1/team");
+      navigate("/v1/organization");
     } catch (err: any) {
       setError("Failed to delete team");
       console.error("Failed to delete team:", err);
@@ -190,7 +190,7 @@ export default function TeamDetail() {
           }}
         >
           <Box sx={{ display: "flex", gap: 2 }}>
-            <CancelButton onClick={() => navigate("/v1/team")} />
+            <CancelButton onClick={() => navigate("/v1/organization")} />
             {currentId && currentId > 0 && (
               <DeleteButton onClick={handleDelete} />
             )}
