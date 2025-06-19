@@ -6,7 +6,6 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Loading from "./components/Loading";
 
-
 // Lazy load pages เพื่อเพิ่มประสิทธิภาพโดยโหลดเฉพาะหน้าเมื่อจำเป็น
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
@@ -167,7 +166,32 @@ const routes = [
     path: "/v1/organization",
     component: lazy(() => import("./pages/layer_type/Organization")),
   },
-
+  {
+    path: "/v1/organization/:param",
+    component: lazy(() => import("./pages/layer_type/Organization")),
+  },
+  {
+    path: "/v1/corporation/:paramId",
+    component: lazy(() => import("./pages/layer_type/CorporationDetail")),
+  },
+  {
+    path: "/v1/governmentagency/:paramId",
+    component: lazy(() => import("./pages/layer_type/GovernmentAgencyDetail")),
+  },
+  {
+    path: "/v1/family/:paramId",
+    component: lazy(() => import("./pages/layer_type/FamilyDetail")),
+  },
+  {
+    path: "/v1/otherinformalorganization/:paramId",
+    component: lazy(
+      () => import("./pages/layer_type/OtherInformalOrganizationDetail")
+    ),
+  },
+  {
+    path: "/v1/team/:paramId",
+    component: lazy(() => import("./pages/layer_type/TeamDetail")),
+  },
 ];
 
 // สร้าง root element และ render แอปพลิเคชัน

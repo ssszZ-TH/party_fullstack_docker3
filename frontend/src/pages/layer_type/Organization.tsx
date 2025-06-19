@@ -21,12 +21,12 @@ const organizationTypes = [
   { key: "corporation", name: "Corporation", service: corporationService },
   { key: "family", name: "Family", service: familyService },
   {
-    key: "governmentAgency",
+    key: "governmentagency",
     name: "Government Agency",
     service: governmentAgencyService,
   },
   {
-    key: "other_informal_organization",
+    key: "otherinformalorganization",
     name: "Other Informal Org",
     service: otherInformalOrgService,
   },
