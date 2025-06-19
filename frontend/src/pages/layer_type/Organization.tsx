@@ -132,7 +132,7 @@ export default function OrganizationPage() {
             rows={rows}
             getRowId={(row) => `${row.organization_type}-${row.id}`}
           />
-          <AddButton onClick={() => navigate("/organization/create")} />
+          <AddButton onClick={() => navigate("/v1/organization/create")} />
         </>
       )}
     </>

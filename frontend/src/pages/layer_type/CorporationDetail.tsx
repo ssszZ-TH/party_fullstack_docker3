@@ -89,7 +89,7 @@ export default function CorporationDetail() {
       } else {
         await update(payload);
       }
-      navigate("/v1/corporation");
+      navigate("/v1/organization");
     } catch (err: any) {
       const errorMessage =
         formData.id === 0

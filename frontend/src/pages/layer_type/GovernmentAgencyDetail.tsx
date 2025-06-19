@@ -89,7 +89,7 @@ export default function GovernmentAgencyDetail() {
       } else {
         await update(payload);
       }
-      navigate("/v1/governmentagency");
+      navigate("/v1/organization");
     } catch (err: any) {
       const errorMessage =
         formData.id === 0
@@ -107,7 +107,7 @@ export default function GovernmentAgencyDetail() {
     setLoading(true);
     try {
       await deleteById({ id: currentId });
-      navigate("/v1/governmentagency");
+      navigate("/v1/organization");
     } catch (err: any) {
       setError("Failed to delete government agency");
       console.error("Failed to delete agency:", err);

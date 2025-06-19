@@ -192,6 +192,10 @@ const routes = [
     path: "/v1/team/:paramId",
     component: lazy(() => import("./pages/layer_type/TeamDetail")),
   },
+  {
+    path: "/v1/organization/create",
+    component: lazy(() => import("./pages/layer_type/OrganizationCreate")),
+  },
 ];
 
 // สร้าง root element และ render แอปพลิเคชัน
