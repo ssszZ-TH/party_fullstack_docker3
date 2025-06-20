@@ -31,7 +31,7 @@ import { getProfile } from "../services/profile";
 // อาร์เรย์ของ services
 const services_layer_base = [
   { name: "Country", path: "/v1/country" },
-  { name: "Party Type", path: "/v1/partytype" },
+  // { name: "Party Type", path: "/v1/partytype" },
 ];
 // อาร์เรย์ของ services
 const services_layer_type = [
@@ -194,10 +194,10 @@ export default function Home() {
           {/* Page Header */}
           <Box sx={{ textAlign: "center", mb: 4 }}>
             <Typography variant="h4" gutterBottom>
-              Party Model Admin
+              Party Sync
             </Typography>
             <Typography variant="subtitle1" color="text.secondary">
-              Explore and manage your services
+              manage comprehensive party details, including individuals and organizations, with a focus on relationships, communications with layered data management.
             </Typography>
           </Box>
 
