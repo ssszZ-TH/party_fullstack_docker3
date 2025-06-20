@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "@mui/material/Button";
-import EqualizerIcon from "@mui/icons-material/Equalizer";
+import EqualizerIcon from "@mui/icons-material/Face";
 import { useTheme } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 
