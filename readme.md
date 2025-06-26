@@ -1,8 +1,6 @@
 # Full-Stack Development Based on Reference Data Model
 
-![database diagram](./mockup/diagram_layer_1_2.png)
-database
-![database diagram](./mockup/diagram_only_layer3.png)
+![database diagram](./mockup/v2_partycommu.png)
 database
 
 ![](./image/front/Screenshot%202025-04-14%20002035.png)
