@@ -28,24 +28,24 @@ export default function Team() {
       headerName: "Thai Name",
       width: 200, // คอลัมน์ชื่อทีมภาษาไทย
     },
-    {
-      field: "update",
-      headerName: "",
-      width: 100,
-      renderCell: (params) => (
-        // ปุ่ม Update เรียก handleUpdateButton
-        <UpdateButton onClick={() => handleUpdateButton(params.row)} />
-      ),
-    },
-    {
-      field: "delete",
-      headerName: "",
-      width: 100,
-      renderCell: (params) => (
-        // ปุ่ม Delete เรียก handleDeleteButton
-        <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
-      ),
-    },
+    // {
+    //   field: "update",
+    //   headerName: "",
+    //   width: 100,
+    //   renderCell: (params) => (
+    //     // ปุ่ม Update เรียก handleUpdateButton
+    //     <UpdateButton onClick={() => handleUpdateButton(params.row)} />
+    //   ),
+    // },
+    // {
+    //   field: "delete",
+    //   headerName: "",
+    //   width: 100,
+    //   renderCell: (params) => (
+    //     // ปุ่ม Delete เรียก handleDeleteButton
+    //     <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
+    //   ),
+    // },
   ];
 
   // State สำหรับเก็บข้อมูลตาราง
@@ -167,11 +167,11 @@ export default function Team() {
           getRowId={(row) => row.id} // ใช้ id เป็น key
         />
       )}
-      <AddButton
+      {/* <AddButton
         onClick={() => {
           openModal("create"); // เปิด Modal ในโหมด create
         }}
-      />
+      /> */}
       <Modal
         open={open}
         onClose={closeModal}

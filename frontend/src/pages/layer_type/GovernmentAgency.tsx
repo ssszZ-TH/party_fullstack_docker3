@@ -15,22 +15,22 @@ export default function GovernmentAgency() {
     { field: "name_en", headerName: "English Name", width: 200 },
     { field: "name_th", headerName: "Thai Name", width: 200 },
     { field: "federal_tax_id_number", headerName: "Federal Tax ID", width: 150 },
-    {
-      field: "update",
-      headerName: "",
-      width: 100,
-      renderCell: (params) => (
-        <UpdateButton onClick={() => handleUpdateButton(params.row)} />
-      ),
-    },
-    {
-      field: "delete",
-      headerName: "",
-      width: 100,
-      renderCell: (params) => (
-        <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
-      ),
-    },
+    // {
+    //   field: "update",
+    //   headerName: "",
+    //   width: 100,
+    //   renderCell: (params) => (
+    //     <UpdateButton onClick={() => handleUpdateButton(params.row)} />
+    //   ),
+    // },
+    // {
+    //   field: "delete",
+    //   headerName: "",
+    //   width: 100,
+    //   renderCell: (params) => (
+    //     <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
+    //   ),
+    // },
   ];
 
   const [rows, setRows] = useState([]);
@@ -139,11 +139,11 @@ export default function GovernmentAgency() {
           getRowId={(row) => row.id}
         />
       )}
-      <AddButton
+      {/* <AddButton
         onClick={() => {
           openModal("create");
         }}
-      />
+      /> */}
       <Modal
         open={open}
         onClose={closeModal}
