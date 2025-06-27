@@ -373,36 +373,50 @@ async def get_all_persons() -> List[PersonOut]:
 async def update_person(person_id: int, person: PersonUpdate) -> Optional[PersonOut]:
     async with database.transaction():
         try:
-            # Update person table
-            query_person = """
-                UPDATE person
-                SET personal_id_number = COALESCE(:personal_id_number, personal_id_number),
-                    birthdate = COALESCE(:birthdate, birthdate),
-                    mothermaidenname = COALESCE(:mothermaidenname, mothermaidenname),
-                    totalyearworkexperience = COALESCE(:totalyearworkexperience, totalyearworkexperience),
-                    comment = COALESCE(:comment, comment),
-                    gender_type_id = COALESCE(:gender_type_id, gender_type_id)
-                WHERE id = :id
-                RETURNING id
-            """
-            result = await database.fetch_one(query=query_person, values={
-                "personal_id_number": person.personal_id_number,
-                "birthdate": person.birthdate,
-                "mothermaidenname": person.mothermaidenname,
-                "totalyearworkexperience": person.totalyearworkexperience,
-                "comment": person.comment,
-                "gender_type_id": person.gender_type_id,
-                "id": person_id
-            })
-            if not result:
+            # Fetch current person data
+            current_person = await get_person(person_id)
+            if not current_person:
                 logger.warning(f"Person not found for update: id={person_id}")
                 return None
 
+            # Update person table only if values have changed
+            person_updates = {}
+            if person.personal_id_number and person.personal_id_number != current_person.personal_id_number:
+                person_updates["personal_id_number"] = person.personal_id_number
+            if person.birthdate and person.birthdate != current_person.birthdate:
+                person_updates["birthdate"] = person.birthdate
+            if person.mothermaidenname and person.mothermaidenname != current_person.mothermaidenname:
+                person_updates["mothermaidenname"] = person.mothermaidenname
+            if person.totalyearworkexperience and person.totalyearworkexperience != current_person.totalyearworkexperience:
+                person_updates["totalyearworkexperience"] = person.totalyearworkexperience
+            if person.comment and person.comment != current_person.comment:
+                person_updates["comment"] = person.comment
+            if person.gender_type_id and person.gender_type_id != current_person.gender_type_id:
+                person_updates["gender_type_id"] = person.gender_type_id
+
+            if person_updates:
+                query_person = """
+                    UPDATE person
+                    SET personal_id_number = COALESCE(:personal_id_number, personal_id_number),
+                        birthdate = COALESCE(:birthdate, birthdate),
+                        mothermaidenname = COALESCE(:mothermaidenname, mothermaidenname),
+                        totalyearworkexperience = COALESCE(:totalyearworkexperience, totalyearworkexperience),
+                        comment = COALESCE(:comment, comment),
+                        gender_type_id = COALESCE(:gender_type_id, gender_type_id)
+                    WHERE id = :id
+                    RETURNING id
+                """
+                person_updates["id"] = person_id
+                result = await database.fetch_one(query=query_person, values=person_updates)
+                if not result:
+                    logger.warning(f"Person not found for update: id={person_id}")
+                    return None
+
             # Update personname for fname
-            if person.fname:
+            if person.fname and person.fname != current_person.fname:
                 query_fname_update = """
                     WITH ranked_names AS (
-                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id, personnametype_id ORDER BY fromdate DESC) AS rn
+                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id, personnametype_id ORDER BY fromdate DESC, id DESC) AS rn
                         FROM personname
                         WHERE person_id = :person_id
                         AND personnametype_id = (SELECT id FROM personnametype WHERE description = 'FirstName')
@@ -420,10 +434,10 @@ async def update_person(person_id: int, person: PersonUpdate) -> Optional[Person
                 await database.execute(query_fname_insert, values={"person_id": person_id, "name": person.fname})
 
             # Update personname for mname
-            if person.mname:
+            if person.mname and person.mname != current_person.mname:
                 query_mname_update = """
                     WITH ranked_names AS (
-                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id, personnametype_id ORDER BY fromdate DESC) AS rn
+                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id, personnametype_id ORDER BY fromdate DESC, id DESC) AS rn
                         FROM personname
                         WHERE person_id = :person_id
                         AND personnametype_id = (SELECT id FROM personnametype WHERE description = 'MiddleName')
@@ -441,10 +455,10 @@ async def update_person(person_id: int, person: PersonUpdate) -> Optional[Person
                 await database.execute(query_mname_insert, values={"person_id": person_id, "name": person.mname})
 
             # Update personname for lname
-            if person.lname:
+            if person.lname and person.lname != current_person.lname:
                 query_lname_update = """
                     WITH ranked_names AS (
-                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id, personnametype_id ORDER BY fromdate DESC) AS rn
+                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id, personnametype_id ORDER BY fromdate DESC, id DESC) AS rn
                         FROM personname
                         WHERE person_id = :person_id
                         AND personnametype_id = (SELECT id FROM personnametype WHERE description = 'LastName')
@@ -462,10 +476,10 @@ async def update_person(person_id: int, person: PersonUpdate) -> Optional[Person
                 await database.execute(query_lname_insert, values={"person_id": person_id, "name": person.lname})
 
             # Update personname for nickname
-            if person.nickname:
+            if person.nickname and person.nickname != current_person.nickname:
                 query_nickname_update = """
                     WITH ranked_names AS (
-                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id, personnametype_id ORDER BY fromdate DESC) AS rn
+                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id, personnametype_id ORDER BY fromdate DESC, id DESC) AS rn
                         FROM personname
                         WHERE person_id = :person_id
                         AND personnametype_id = (SELECT id FROM personnametype WHERE description = 'Nickname')
@@ -483,10 +497,10 @@ async def update_person(person_id: int, person: PersonUpdate) -> Optional[Person
                 await database.execute(query_nickname_insert, values={"person_id": person_id, "name": person.nickname})
 
             # Update maritalstatus
-            if person.marital_status_type_id:
+            if person.marital_status_type_id and person.marital_status_type_id != current_person.marital_status_type_id:
                 query_marital_update = """
                     WITH ranked_marital AS (
-                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id ORDER BY fromdate DESC) AS rn
+                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id ORDER BY fromdate DESC, id DESC) AS rn
                         FROM maritalstatus
                         WHERE person_id = :person_id
                         AND thrudate IS NULL
@@ -506,10 +520,10 @@ async def update_person(person_id: int, person: PersonUpdate) -> Optional[Person
                 })
 
             # Update physicalcharacteristic for height
-            if person.height_val:
+            if person.height_val and person.height_val != current_person.height_val:
                 query_height_update = """
                     WITH ranked_physical AS (
-                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id, physicalcharacteristictype_id ORDER BY fromdate DESC) AS rn
+                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id, physicalcharacteristictype_id ORDER BY fromdate DESC, id DESC) AS rn
                         FROM physicalcharacteristic
                         WHERE person_id = :person_id
                         AND physicalcharacteristictype_id = (SELECT id FROM physicalcharacteristictype WHERE description = 'Height')
@@ -527,10 +541,10 @@ async def update_person(person_id: int, person: PersonUpdate) -> Optional[Person
                 await database.execute(query_height_insert, values={"person_id": person_id, "val": person.height_val})
 
             # Update physicalcharacteristic for weight
-            if person.weight_val:
+            if person.weight_val and person.weight_val != current_person.weight_val:
                 query_weight_update = """
                     WITH ranked_physical AS (
-                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id, physicalcharacteristictype_id ORDER BY fromdate DESC) AS rn
+                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id, physicalcharacteristictype_id ORDER BY fromdate DESC, id DESC) AS rn
                         FROM physicalcharacteristic
                         WHERE person_id = :person_id
                         AND physicalcharacteristictype_id = (SELECT id FROM physicalcharacteristictype WHERE description = 'Weight')
@@ -548,10 +562,10 @@ async def update_person(person_id: int, person: PersonUpdate) -> Optional[Person
                 await database.execute(query_weight_insert, values={"person_id": person_id, "val": person.weight_val})
 
             # Update citizenship
-            if person.country_id:
+            if person.country_id and person.country_id != current_person.country_id:
                 query_citizenship_update = """
                     WITH ranked_citizenship AS (
-                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id ORDER BY fromdate DESC) AS rn
+                        SELECT id, ROW_NUMBER() OVER (PARTITION BY person_id ORDER BY fromdate DESC, id DESC) AS rn
                         FROM citizenship
                         WHERE person_id = :person_id
                         AND thrudate IS NULL
