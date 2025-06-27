@@ -1,4 +1,3 @@
-// ไฟล์นี้เป็น service สำหรับจัดการ ใช้สำหรับจัดการ API calls สำหรับ classifybyeeoc
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -53,6 +52,17 @@ export async function get({ id }: { id: number }) {
   }
 }
 
+// ดึงข้อมูลตาม party_id
+export async function listByPartyId({ party_id }: { party_id: number }) {
+  try {
+    const res = await api.get(`/bypersonid/${party_id}`);
+    return res.data;
+  } catch (error: any) {
+    logError("listByPartyId", error);
+    throw error;
+  }
+}
+
 // สร้างข้อมูลใหม่
 export async function create({
   fromdate,
@@ -61,8 +71,8 @@ export async function create({
   party_type_id,
   income_range_id,
 }: {
-  fromdate: string;
-  thrudate: string;
+  fromdate?: string;
+  thrudate?: string;
   party_id: number;
   party_type_id: number;
   income_range_id: number;
@@ -92,8 +102,8 @@ export async function update({
   income_range_id,
 }: {
   id: number;
-  fromdate: string;
-  thrudate: string;
+  fromdate?: string;
+  thrudate?: string;
   party_id: number;
   party_type_id: number;
   income_range_id: number;

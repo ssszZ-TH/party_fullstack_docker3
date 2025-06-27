@@ -4,16 +4,14 @@ import AppBarCustom from "../../components/AppBarCustom";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../../components/DataTable";
 import Loading from "../../components/Loading";
-import { listByCitizenshipId, deleteById } from "../../services/passport";
+import { listByPartyId } from "../../services/classifybyeeoc";
 import UpdateButton from "../../components/buttons/UpdateButton";
-import DeleteButton from "../../components/buttons/DeleteButton";
 import AddButton from "../../components/buttons/AddButton";
 import { Box } from "@mui/material";
 
-export default function PassportByCitizenshipId() {
+export default function EeocByPersonId() {
   const { paramId } = useParams<{ paramId: string }>();
   const navigate = useNavigate();
-
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -21,11 +19,13 @@ export default function PassportByCitizenshipId() {
     if (!paramId) return;
     setLoading(true);
     try {
-      const res = await listByCitizenshipId({ citizenship_id: Number(paramId) });
+      const res = await listByPartyId({
+        party_id: Number(paramId),
+      });
       setRows(res);
     } catch (error) {
-      console.error("Failed to fetch passport data:", error);
-      setRows([]); // Clear rows on error
+      console.error("Failed to fetch EEOC data:", error);
+      setRows([]);
     } finally {
       setLoading(false);
     }
@@ -36,20 +36,17 @@ export default function PassportByCitizenshipId() {
   }, [paramId]);
 
   const handleUpdate = (id: number) => {
-    // นำทางไปยังหน้า detail ของ passport เพื่อแก้ไข
-    navigate(`/v1/passport/${id}`);
+    navigate(`/v1/eeocdetail/${id}`);
   };
-  
+
   const handleAdd = () => {
-    // นำทางไปยังหน้า detail เพื่อสร้าง passport ใหม่, ส่ง citizenship_id ไปด้วย
-    navigate(`/v1/passport/new?citizenship_id=${paramId}`);
+    navigate(`/v1/eeocdetail/new?party_id=${paramId}`);
   };
-
-
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 90 },
-    { field: "passportnumber", headerName: "Passport Number", width: 200 },
+    { field: "name_en", headerName: "Ethnicity (English)", width: 200 },
+    { field: "name_th", headerName: "Ethnicity (Thai)", width: 200 },
     { field: "fromdate", headerName: "From Date", width: 150 },
     { field: "thrudate", headerName: "Thru Date", width: 150 },
     {
@@ -58,7 +55,7 @@ export default function PassportByCitizenshipId() {
       width: 100,
       sortable: false,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', gap: 1 }}>
+        <Box sx={{ display: "flex", gap: 1 }}>
           <UpdateButton onClick={() => handleUpdate(params.row.id)} />
         </Box>
       ),
@@ -67,22 +64,13 @@ export default function PassportByCitizenshipId() {
 
   return (
     <>
-      <AppBarCustom title={`Passports for Citizenship ID: ${paramId}`} />
-      
-      <Box sx={{ p: 2 }}>
-        <AddButton onClick={handleAdd} />
-        {loading ? (
-          <Loading />
-        ) : (
-          <Box sx={{ mt: 2 }}>
-            <DataTable
-              columns={columns}
-              rows={rows}
-              getRowId={(row) => row.id}
-            />
-          </Box>
-        )}
-      </Box>
+      <AppBarCustom title={`EEOC for Person ID: ${paramId}`} />
+      {loading ? (
+        <Loading />
+      ) : (
+        <DataTable columns={columns} rows={rows} getRowId={(row) => row.id} />
+      )}
+      <AddButton onClick={handleAdd} />
     </>
   );
 }

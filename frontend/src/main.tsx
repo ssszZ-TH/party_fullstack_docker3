@@ -74,6 +74,7 @@ const routes = [
     path: "/v1/classifybyeeoc",
     component: lazy(() => import("./pages/layer_info/ClassifyByeeoc")),
   },
+
   {
     path: "/v1/classifybysize",
     component: lazy(() => import("./pages/layer_info/ClassifyBySize")),
@@ -85,6 +86,10 @@ const routes = [
   {
     path: "/v1/classifybyincome",
     component: lazy(() => import("./pages/layer_info/ClassifyByIncome")),
+  },
+  {
+    path: "/v1/incomedetail/:paramId",
+    component: lazy(() => import("./pages/layer_info/IncomeDetail")),
   },
   // { path: '/v1/legalorganization', component: lazy(() => import('./pages/layer_type/LegalOrganization')) },
   {
@@ -161,6 +166,10 @@ const routes = [
   {
     path: "/v1/eeocbypersonid/:paramId",
     component: lazy(() => import("./pages/layer_info/EeocByPersonId")),
+  },
+  {
+    path: "/v1/eeocdetail/:paramId",
+    component: lazy(() => import("./pages/layer_info/EeocDetail")),
   },
   {
     path: "/v1/incomebypersonid/:paramId",
