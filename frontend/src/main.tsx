@@ -33,6 +33,10 @@ const routes = [
     path: "/v1/passport",
     component: lazy(() => import("./pages/layer_info/Passport")),
   },
+  {
+    path: "/v1/passport/:paramId",
+    component: lazy(() => import("./pages/layer_info/PassportDetail")),
+  },
   { path: "/v1/profile", component: lazy(() => import("./pages/Profile")) },
   {
     path: "/v1/partytype",

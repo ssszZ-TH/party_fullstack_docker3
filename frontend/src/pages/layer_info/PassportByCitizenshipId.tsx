@@ -21,7 +21,9 @@ export default function PassportByCitizenshipId() {
     if (!paramId) return;
     setLoading(true);
     try {
-      const res = await listByCitizenshipId({ citizenship_id: Number(paramId) });
+      const res = await listByCitizenshipId({
+        citizenship_id: Number(paramId),
+      });
       setRows(res);
     } catch (error) {
       console.error("Failed to fetch passport data:", error);
@@ -39,13 +41,11 @@ export default function PassportByCitizenshipId() {
     // นำทางไปยังหน้า detail ของ passport เพื่อแก้ไข
     navigate(`/v1/passport/${id}`);
   };
-  
+
   const handleAdd = () => {
     // นำทางไปยังหน้า detail เพื่อสร้าง passport ใหม่, ส่ง citizenship_id ไปด้วย
     navigate(`/v1/passport/new?citizenship_id=${paramId}`);
   };
-
-
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 90 },
@@ -58,7 +58,7 @@ export default function PassportByCitizenshipId() {
       width: 100,
       sortable: false,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', gap: 1 }}>
+        <Box sx={{ display: "flex", gap: 1 }}>
           <UpdateButton onClick={() => handleUpdate(params.row.id)} />
         </Box>
       ),
@@ -68,20 +68,12 @@ export default function PassportByCitizenshipId() {
   return (
     <>
       <AppBarCustom title={`Passports for Citizenship ID: ${paramId}`} />
-      <Box sx={{ p: 2 }}>
-        <AddButton onClick={handleAdd} />
-        {loading ? (
-          <Loading />
-        ) : (
-          <Box sx={{ mt: 2 }}>
-            <DataTable
-              columns={columns}
-              rows={rows}
-              getRowId={(row) => row.id}
-            />
-          </Box>
-        )}
-      </Box>
+      {loading ? (
+        <Loading />
+      ) : (
+        <DataTable columns={columns} rows={rows} getRowId={(row) => row.id} />
+      )}
+      <AddButton onClick={handleAdd} />
     </>
   );
 }
