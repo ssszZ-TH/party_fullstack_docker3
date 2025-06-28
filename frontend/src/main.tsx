@@ -63,6 +63,18 @@ const routes = [
     component: lazy(() => import("./pages/layer_type/IndustryType")),
   },
   {
+    path: "/v1/industrybyorganizationid/:paramId",
+    component: lazy(() => import("./pages/layer_info/IndustryByOrganizationId")),
+  },
+  {
+    path: "/v1/sizebyorganizationid/:paramId",
+    component: lazy(() => import("./pages/layer_info/SizeByOrganization")),
+  },
+  {
+    path: "/v1/minoritybyorganizationid/:paramId",
+    component: lazy(() => import("./pages/layer_info/MinorityByOrganizationId")),
+  },
+  {
     path: "/v1/minoritytype",
     component: lazy(() => import("./pages/layer_type/MinorityType")),
   },
