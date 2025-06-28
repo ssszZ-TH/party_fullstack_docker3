@@ -12,6 +12,9 @@ import { Box, Typography, Alert, TextField } from "@mui/material";
 import DeleteButton from "../../components/buttons/DeleteButton";
 import SaveButton from "../../components/buttons/SaveButton";
 import CancelButton from "../../components/buttons/CancelButton";
+import IndustryButton from "../../components/buttons/IndustryButton";
+import SizeButton from "../../components/buttons/SizeButton";
+import MinorityButton from "../../components/buttons/MinorityButton";
 
 interface OtherInformalOrganization {
   id: number;
@@ -201,6 +204,13 @@ export default function OtherInformalOrganizationDetail() {
             )}
           </Box>
           <Box sx={{ display: "flex", gap: 2 }}>
+            {currentId && currentId > 0 && (
+              <>
+                <IndustryButton onClick={() => navigate(`/v1/industrybyorganizationid/${currentId}`)} />
+                <SizeButton onClick={() => navigate(`/v1/sizebyorganizationid/${currentId}`)} />
+                <MinorityButton onClick={() => navigate(`/v1/minoritybyorganizationid/${currentId}`)} />
+              </>
+            )}
             <SaveButton onClick={handleSubmit} />
           </Box>
         </Box>
