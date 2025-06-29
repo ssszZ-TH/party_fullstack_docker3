@@ -64,7 +64,7 @@ export async function create({
   fromdate: string;
   thrudate: string;
   party_id: number;
-  party_type_id: number;
+  party_type_id: number | undefined;
   employee_count_range_id: number;
 }) {
   try {

@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from typing import List
 from app.models.classify_by_minority import (
     create_classify_by_minority, get_classify_by_minority, get_all_classify_by_minorities,
-    update_classify_by_minority, delete_classify_by_minority
+    update_classify_by_minority, delete_classify_by_minority, get_classify_by_minorities_by_organization
 )
 from app.schemas.classify_by_minority import ClassifyByMinorityCreate, ClassifyByMinorityUpdate, ClassifyByMinorityOut
 from app.controllers.users.user import get_current_user
@@ -35,6 +35,12 @@ async def get_classify_by_minority_endpoint(classify_by_minority_id: int, curren
 async def get_all_classify_by_minorities_endpoint(current_user: dict = Depends(get_current_user)):
     results = await get_all_classify_by_minorities()
     logger.info(f"Retrieved {len(results)} classify_by_minorities")
+    return results
+
+@router.get("/byorganizationid/{organization_id}", response_model=List[ClassifyByMinorityOut])
+async def get_classify_by_minorities_by_organization_endpoint(organization_id: int, current_user: dict = Depends(get_current_user)):
+    results = await get_classify_by_minorities_by_organization(organization_id)
+    logger.info(f"Retrieved {len(results)} classify_by_minorities for organization_id={organization_id}")
     return results
 
 @router.put("/{classify_by_minority_id}", response_model=ClassifyByMinorityOut)

@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from typing import List
 from app.models.classify_by_industry import (
     create_classify_by_industry, get_classify_by_industry, get_all_classify_by_industries,
-    update_classify_by_industry, delete_classify_by_industry
+    update_classify_by_industry, delete_classify_by_industry, get_classify_by_industries_by_organization
 )
 from app.schemas.classify_by_industry import ClassifyByIndustryCreate, ClassifyByIndustryUpdate, ClassifyByIndustryOut
 from app.controllers.users.user import get_current_user
@@ -35,6 +35,12 @@ async def get_classify_by_industry_endpoint(classify_by_industry_id: int, curren
 async def get_all_classify_by_industries_endpoint(current_user: dict = Depends(get_current_user)):
     results = await get_all_classify_by_industries()
     logger.info(f"Retrieved {len(results)} classify_by_industries")
+    return results
+
+@router.get("/byorganizationid/{organization_id}", response_model=List[ClassifyByIndustryOut])
+async def get_classify_by_industries_by_organization_endpoint(organization_id: int, current_user: dict = Depends(get_current_user)):
+    results = await get_classify_by_industries_by_organization(organization_id)
+    logger.info(f"Retrieved {len(results)} classify_by_industries for organization_id={organization_id}")
     return results
 
 @router.put("/{classify_by_industry_id}", response_model=ClassifyByIndustryOut)
