@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from typing import List
 from app.models.classify_by_size import (
     create_classify_by_size, get_classify_by_size, get_all_classify_by_sizes,
-    update_classify_by_size, delete_classify_by_size
+    update_classify_by_size, delete_classify_by_size, get_classify_by_sizes_by_organization
 )
 from app.schemas.classify_by_size import ClassifyBySizeCreate, ClassifyBySizeUpdate, ClassifyBySizeOut
 from app.controllers.users.user import get_current_user
@@ -35,6 +35,12 @@ async def get_classify_by_size_endpoint(classify_by_size_id: int, current_user: 
 async def get_all_classify_by_sizes_endpoint(current_user: dict | None = Depends(get_current_user)):
     results = await get_all_classify_by_sizes()
     logger.info(f"Retrieved {len(results)} classify_by_sizes")
+    return results
+
+@router.get("/byorganizationid/{organization_id}", response_model=List[ClassifyBySizeOut])
+async def get_classify_by_sizes_by_organization_endpoint(organization_id: int, current_user: dict | None = Depends(get_current_user)):
+    results = await get_classify_by_sizes_by_organization(organization_id)
+    logger.info(f"Retrieved {len(results)} classify_by_sizes for organization_id={organization_id}")
     return results
 
 @router.put("/{classify_by_size_id}", response_model=ClassifyBySizeOut)

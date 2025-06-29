@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 async def create_classify_by_size(classify_by_size: ClassifyBySizeCreate) -> Optional[ClassifyBySizeOut]:
     async with database.transaction():
         try:
-            # 1. Insert into party_classification
             query_party_cl = """
                 INSERT INTO party_classification (fromdate, thrudate, party_id, party_type_id)
                 VALUES (:fromdate, :thrudate, :party_id, :party_type_id)
@@ -23,14 +22,12 @@ async def create_classify_by_size(classify_by_size: ClassifyBySizeCreate) -> Opt
             })
             new_id = party_cl_result["id"]
 
-            # 2. Insert into organization_classification
             query_org_cl = """
                 INSERT INTO organization_classification (id)
                 VALUES (:id)
             """
             await database.execute(query=query_org_cl, values={"id": new_id})
 
-            # 3. Insert into classify_by_size
             query_size = """
                 INSERT INTO classify_by_size (id, employee_count_range_id)
                 VALUES (:id, :employee_count_range_id)
@@ -41,7 +38,6 @@ async def create_classify_by_size(classify_by_size: ClassifyBySizeCreate) -> Opt
                 "employee_count_range_id": classify_by_size.employee_count_range_id
             })
 
-            # Fetch the complete data
             query_fetch = """
                 SELECT pc.id, pc.fromdate, pc.thrudate, pc.party_id, pc.party_type_id, 
                        cs.employee_count_range_id, ecr.description
@@ -89,10 +85,24 @@ async def get_all_classify_by_sizes() -> List[ClassifyBySizeOut]:
     logger.info(f"Retrieved {len(results)} classify_by_sizes")
     return [ClassifyBySizeOut(**result) for result in results]
 
+async def get_classify_by_sizes_by_organization(organization_id: int) -> List[ClassifyBySizeOut]:
+    query = """
+        SELECT pc.id, pc.fromdate, pc.thrudate, pc.party_id, pc.party_type_id, 
+               cs.employee_count_range_id, ecr.description
+        FROM classify_by_size cs
+        JOIN organization_classification oc ON cs.id = oc.id
+        JOIN party_classification pc ON cs.id = pc.id
+        JOIN employee_count_range ecr ON cs.employee_count_range_id = ecr.id
+        WHERE pc.party_id = :organization_id
+        ORDER BY pc.fromdate DESC, pc.id DESC
+    """
+    results = await database.fetch_all(query=query, values={"organization_id": organization_id})
+    logger.info(f"Retrieved {len(results)} classify_by_sizes for organization_id={organization_id}")
+    return [ClassifyBySizeOut(**result) for result in results]
+
 async def update_classify_by_size(classify_by_size_id: int, classify_by_size: ClassifyBySizeUpdate) -> Optional[ClassifyBySizeOut]:
     async with database.transaction():
         try:
-            # Update party_classification
             query_party_cl = """
                 UPDATE party_classification
                 SET fromdate = COALESCE(:fromdate, fromdate),
@@ -109,7 +119,6 @@ async def update_classify_by_size(classify_by_size_id: int, classify_by_size: Cl
                 "id": classify_by_size_id
             })
 
-            # Update classify_by_size
             query_size = """
                 UPDATE classify_by_size
                 SET employee_count_range_id = COALESCE(:employee_count_range_id, employee_count_range_id)
@@ -124,7 +133,6 @@ async def update_classify_by_size(classify_by_size_id: int, classify_by_size: Cl
                 logger.warning(f"Classify_by_size not found for update: id={classify_by_size_id}")
                 return None
 
-            # Fetch updated data
             query_fetch = """
                 SELECT pc.id, pc.fromdate, pc.thrudate, pc.party_id, pc.party_type_id, 
                        cs.employee_count_range_id, ecr.description
@@ -144,7 +152,6 @@ async def update_classify_by_size(classify_by_size_id: int, classify_by_size: Cl
 async def delete_classify_by_size(classify_by_size_id: int) -> bool:
     async with database.transaction():
         try:
-            # Delete from classify_by_size
             query_size = """
                 DELETE FROM classify_by_size WHERE id = :id
                 RETURNING id
@@ -154,13 +161,11 @@ async def delete_classify_by_size(classify_by_size_id: int) -> bool:
                 logger.warning(f"Classify_by_size not found for deletion: id={classify_by_size_id}")
                 return False
 
-            # Delete from organization_classification
             query_org_cl = """
                 DELETE FROM organization_classification WHERE id = :id
             """
             await database.execute(query=query_org_cl, values={"id": classify_by_size_id})
 
-            # Delete from party_classification
             query_party_cl = """
                 DELETE FROM party_classification WHERE id = :id
             """
