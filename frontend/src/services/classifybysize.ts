@@ -58,13 +58,11 @@ export async function create({
   fromdate,
   thrudate,
   party_id,
-  party_type_id,
   employee_count_range_id,
 }: {
   fromdate: string;
   thrudate: string;
   party_id: number;
-  party_type_id: number | undefined;
   employee_count_range_id: number;
 }) {
   try {
@@ -72,7 +70,6 @@ export async function create({
       fromdate,
       thrudate,
       party_id,
-      party_type_id,
       employee_count_range_id,
     });
     return res.data;
@@ -88,14 +85,12 @@ export async function update({
   fromdate,
   thrudate,
   party_id,
-  party_type_id,
   employee_count_range_id,
 }: {
   id: number;
   fromdate: string;
   thrudate: string;
   party_id: number;
-  party_type_id: number;
   employee_count_range_id: number;
 }) {
   try {
@@ -103,7 +98,6 @@ export async function update({
       fromdate,
       thrudate,
       party_id,
-      party_type_id,
       employee_count_range_id,
     });
     return res.data;
