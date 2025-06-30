@@ -42,6 +42,16 @@ export async function list() {
   }
 }
 
+export async function listByOrganizationId({ organization_id }: { organization_id: number }) {
+  try {
+    const res = await api.get(`/byorganizationid/${organization_id}`);
+    return res.data;
+  } catch (error: any) {
+    logError("listByOrganizationId", error);
+    throw error;
+  }
+}
+
 // ดึงข้อมูลตาม ID
 export async function get({ id }: { id: number }) {
   try {

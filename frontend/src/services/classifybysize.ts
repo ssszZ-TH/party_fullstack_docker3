@@ -53,6 +53,16 @@ export async function get({ id }: { id: number }) {
   }
 }
 
+export async function listByOrganizationId({ organization_id }: { organization_id: number }) {
+  try {
+    const res = await api.get(`/byorganizationid/${organization_id}`);
+    return res.data;
+  } catch (error: any) {
+    logError("listByOrganizationId", error);
+    throw error;
+  }
+}
+
 // สร้างข้อมูลใหม่
 export async function create({
   fromdate,

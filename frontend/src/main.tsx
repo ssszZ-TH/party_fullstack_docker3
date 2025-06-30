@@ -64,7 +64,9 @@ const routes = [
   },
   {
     path: "/v1/industrybyorganizationid/:paramId",
-    component: lazy(() => import("./pages/layer_info/IndustryByOrganizationId")),
+    component: lazy(
+      () => import("./pages/layer_info/IndustryByOrganizationId")
+    ),
   },
   {
     path: "/v1/sizebyorganizationid/:paramId",
@@ -72,7 +74,9 @@ const routes = [
   },
   {
     path: "/v1/minoritybyorganizationid/:paramId",
-    component: lazy(() => import("./pages/layer_info/MinorityByOrganizationId")),
+    component: lazy(
+      () => import("./pages/layer_info/MinorityByOrganizationId")
+    ),
   },
   {
     path: "/v1/minoritytype",
@@ -220,6 +224,18 @@ const routes = [
   {
     path: "/v1/organization/create",
     component: lazy(() => import("./pages/layer_type/OrganizationCreate")),
+  },
+  {
+    path: "/v1/industrydetail/:paramId",
+    component: lazy(() => import("./pages/layer_info/IndustryDetail")),
+  },
+  {
+    path: "/v1/minoritydetail/:paramId",
+    component: lazy(() => import("./pages/layer_info/MinorityDetail")),
+  },
+  {
+    path: "/v1/sizedetail/:paramId",
+    component: lazy(() => import("./pages/layer_info/SizeDetail")),
   },
 ];
 
