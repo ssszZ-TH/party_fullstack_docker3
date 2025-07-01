@@ -106,4 +106,4 @@ async def shutdown():
 
 @app.get("/")
 async def root():
-    return {"message": "FastAPI Backend"}
+    return {"message": "FastAPI Backend","github":"https://github.com/ssszZ-TH/party_fullstack_docker3"}
