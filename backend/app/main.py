@@ -34,8 +34,13 @@ from app.controllers.physical_characteristic import router as physical_character
 from app.controllers.physical_characteristic_type import router as physical_characteristic_type_router
 from app.controllers.team import router as team_router
 from app.controllers.users.user import router as user_router
-from app.controllers.classify_by_income import router as classify_by_income_router
-from app.controllers.classify_by_eeoc import router as classify_by_eeoc_router
+from app.controllers.role_type import router as role_type_router
+from app.controllers.party_relationship_type import router as party_relationship_type_router
+from app.controllers.party_relationship_status_type import router as party_relationship_status_type_router
+from app.controllers.priority_type import router as priority_type_router
+from app.controllers.communication_event_status_type import router as communication_event_status_type_router
+from app.controllers.contact_mechanism_type import router as contact_mechanism_type_router
+from app.controllers.communication_event_purpose_type import router as communication_event_purpose_type_router
 
 # โหลด .env ก่อน import อื่นๆ
 load_dotenv()
@@ -83,8 +88,13 @@ app.include_router(physical_characteristic_router)
 app.include_router(physical_characteristic_type_router)
 app.include_router(team_router)
 app.include_router(user_router)
-app.include_router(classify_by_income_router)
-app.include_router(classify_by_eeoc_router)
+app.include_router(role_type_router)
+app.include_router(party_relationship_type_router)
+app.include_router(party_relationship_status_type_router)
+app.include_router(priority_type_router)
+app.include_router(communication_event_status_type_router)
+app.include_router(contact_mechanism_type_router)
+app.include_router(communication_event_purpose_type_router)
 
 @app.on_event("startup")
 async def startup():
