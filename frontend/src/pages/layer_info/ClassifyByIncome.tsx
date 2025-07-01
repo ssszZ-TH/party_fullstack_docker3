@@ -42,59 +42,59 @@ export default function ClassifyByIncome() {
       headerName: "Party ID",
       width: 100, // คอลัมน์รหัส Party (จาก Person)
     },
-    {
-      field: "party",
-      headerName: "Person Details",
-      width: 200,
-      renderCell: (params) => {
-        // แสดงข้อมูล Person จาก personDD โดยค้นหาด้วย party_id
-        const obj = personDD.find((item) => item.id === params.row.party_id);
-        return <>{obj ? obj.text : "N/A"}</>;
-      },
-    },
-    {
-      field: "party_type_id",
-      headerName: "Party Type ID",
-      width: 100, // คอลัมน์รหัสประเภท Party
-    },
-    {
-      field: "party_type",
-      headerName: "Party Type",
-      width: 200,
-      renderCell: (params) => {
-        // แสดงข้อมูล PartyType จาก partyTypeDD
-        const item = partyTypeDD.find((c) => c.id === params.row.party_type_id);
-        return <>{item ? item.text : "N/A"}</>;
-      },
-    },
+    // {
+    //   field: "party",
+    //   headerName: "Person Details",
+    //   width: 200,
+    //   renderCell: (params) => {
+    //     // แสดงข้อมูล Person จาก personDD โดยค้นหาด้วย party_id
+    //     const obj = personDD.find((item) => item.id === params.row.party_id);
+    //     return <>{obj ? obj.text : "N/A"}</>;
+    //   },
+    // },
+    // {
+    //   field: "party_type_id",
+    //   headerName: "Party Type ID",
+    //   width: 100, // คอลัมน์รหัสประเภท Party
+    // },
+    // {
+    //   field: "party_type",
+    //   headerName: "Party Type",
+    //   width: 200,
+    //   renderCell: (params) => {
+    //     // แสดงข้อมูล PartyType จาก partyTypeDD
+    //     const item = partyTypeDD.find((c) => c.id === params.row.party_type_id);
+    //     return <>{item ? item.text : "N/A"}</>;
+    //   },
+    // },
     {
       field: "income_range_id",
       headerName: "Income Range ID",
       width: 100, // คอลัมน์รหัสช่วงรายได้
     },
-    {
-      field: "description",
-      headerName: "Income Range Description",
-      width: 200, // คอลัมน์คำอธิบายช่วงรายได้ (จาก incomerange)
-    },
-    {
-      field: "update",
-      headerName: "",
-      width: 100,
-      renderCell: (params) => (
-        // ปุ่ม Update เรียก handleUpdateButton
-        <UpdateButton onClick={() => handleUpdateButton(params.row)} />
-      ),
-    },
-    {
-      field: "delete",
-      headerName: "",
-      width: 100,
-      renderCell: (params) => (
-        // ปุ่ม Delete เรียก handleDeleteButton
-        <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
-      ),
-    },
+    // {
+    //   field: "description",
+    //   headerName: "Income Range Description",
+    //   width: 200, // คอลัมน์คำอธิบายช่วงรายได้ (จาก incomerange)
+    // },
+    // {
+    //   field: "update",
+    //   headerName: "",
+    //   width: 100,
+    //   renderCell: (params) => (
+    //     // ปุ่ม Update เรียก handleUpdateButton
+    //     <UpdateButton onClick={() => handleUpdateButton(params.row)} />
+    //   ),
+    // },
+    // {
+    //   field: "delete",
+    //   headerName: "",
+    //   width: 100,
+    //   renderCell: (params) => (
+    //     // ปุ่ม Delete เรียก handleDeleteButton
+    //     <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
+    //   ),
+    // },
   ];
 
   // State สำหรับเก็บข้อมูลตาราง
@@ -305,11 +305,11 @@ export default function ClassifyByIncome() {
           getRowId={(row) => row.id} // ใช้ id เป็น key
         />
       )}
-      <AddButton
+      {/* <AddButton
         onClick={() => {
           openModal("create"); // เปิด Modal ในโหมด create
         }}
-      />
+      /> */}
       <Modal_classifybyincome
         open={open}
         onClose={closeModal}

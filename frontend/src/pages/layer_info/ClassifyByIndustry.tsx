@@ -59,21 +59,21 @@ export default function ClassifyByIndustry() {
         );
       },
     },
-    {
-      field: "party_type_id",
-      headerName: "Party Type ID",
-      width: 100, // คอลัมน์รหัสประเภท Party
-    },
-    {
-      field: "party_type",
-      headerName: "Party Type",
-      width: 200,
-      renderCell: (params) => {
-        // แสดงข้อมูล PartyType จาก partyTypeDD
-        const item = partyTypeDD.find((c) => c.id === params.row.party_type_id);
-        return <>{item ? item.text : "N/A"}</>;
-      },
-    },
+    // {
+    //   field: "party_type_id",
+    //   headerName: "Party Type ID",
+    //   width: 100, // คอลัมน์รหัสประเภท Party
+    // },
+    // {
+    //   field: "party_type",
+    //   headerName: "Party Type",
+    //   width: 200,
+    //   renderCell: (params) => {
+    //     // แสดงข้อมูล PartyType จาก partyTypeDD
+    //     const item = partyTypeDD.find((c) => c.id === params.row.party_type_id);
+    //     return <>{item ? item.text : "N/A"}</>;
+    //   },
+    // },
     {
       field: "industry_type_id",
       headerName: "Industry Type ID",
@@ -89,24 +89,24 @@ export default function ClassifyByIndustry() {
       headerName: "Industry Description",
       width: 200, // คอลัมน์คำอธิบายประเภทอุตสาหกรรม (จาก industrytype)
     },
-    {
-      field: "update",
-      headerName: "",
-      width: 100,
-      renderCell: (params) => (
-        // ปุ่ม Update เรียก handleUpdateButton
-        <UpdateButton onClick={() => handleUpdateButton(params.row)} />
-      ),
-    },
-    {
-      field: "delete",
-      headerName: "",
-      width: 100,
-      renderCell: (params) => (
-        // ปุ่ม Delete เรียก handleDeleteButton
-        <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
-      ),
-    },
+    // {
+    //   field: "update",
+    //   headerName: "",
+    //   width: 100,
+    //   renderCell: (params) => (
+    //     // ปุ่ม Update เรียก handleUpdateButton
+    //     <UpdateButton onClick={() => handleUpdateButton(params.row)} />
+    //   ),
+    // },
+    // {
+    //   field: "delete",
+    //   headerName: "",
+    //   width: 100,
+    //   renderCell: (params) => (
+    //     // ปุ่ม Delete เรียก handleDeleteButton
+    //     <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
+    //   ),
+    // },
   ];
 
   // State สำหรับเก็บข้อมูลตาราง
@@ -335,11 +335,11 @@ export default function ClassifyByIndustry() {
           getRowId={(row) => row.id} // ใช้ id เป็น key
         />
       )}
-      <AddButton
+      {/* <AddButton
         onClick={() => {
           openModal("create"); // เปิด Modal ในโหมด create
         }}
-      />
+      /> */}
       <Modal_classifybyindustry
         open={open}
         onClose={closeModal}

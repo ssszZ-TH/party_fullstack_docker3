@@ -84,24 +84,24 @@ export default function ClassifyBySize() {
       headerName: "Employee Count Range",
       width: 200, // คอลัมน์คำอธิบายช่วงจำนวนพนักงาน (จาก employeecountrange)
     },
-    {
-      field: "update",
-      headerName: "",
-      width: 100,
-      renderCell: (params) => (
-        // ปุ่ม Update เรียก handleUpdateButton
-        <UpdateButton onClick={() => handleUpdateButton(params.row)} />
-      ),
-    },
-    {
-      field: "delete",
-      headerName: "",
-      width: 100,
-      renderCell: (params) => (
-        // ปุ่ม Delete เรียก handleDeleteButton
-        <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
-      ),
-    },
+    // {
+    //   field: "update",
+    //   headerName: "",
+    //   width: 100,
+    //   renderCell: (params) => (
+    //     // ปุ่ม Update เรียก handleUpdateButton
+    //     <UpdateButton onClick={() => handleUpdateButton(params.row)} />
+    //   ),
+    // },
+    // {
+    //   field: "delete",
+    //   headerName: "",
+    //   width: 100,
+    //   renderCell: (params) => (
+    //     // ปุ่ม Delete เรียก handleDeleteButton
+    //     <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
+    //   ),
+    // },
   ];
 
   // State สำหรับเก็บข้อมูลตาราง
@@ -328,11 +328,11 @@ export default function ClassifyBySize() {
           getRowId={(row) => row.id} // ใช้ id เป็น key
         />
       )}
-      <AddButton
+      {/* <AddButton
         onClick={() => {
           openModal("create"); // เปิด Modal ในโหมด create
         }}
-      />
+      /> */}
       <Modal_classifybysize
         open={open}
         onClose={closeModal}

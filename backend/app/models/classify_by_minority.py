@@ -78,7 +78,7 @@ async def get_all_classify_by_minorities() -> List[ClassifyByMinorityOut]:
         FROM classify_by_minority cm
         JOIN organization_classification oc ON cm.id = oc.id
         JOIN party_classification pc ON cm.id = pc.id
-        JOIN minority_type mt ON cm.minority_type_id = get_classify_by_minorities_by_organization
+        JOIN minority_type mt ON cm.minority_type_id = mt.id
         ORDER BY pc.id ASC
     """
     results = await database.fetch_all(query=query)
