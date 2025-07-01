@@ -11,7 +11,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/v1/partyrelationshiptypes", tags=["partyrelationshiptypes"])
+router = APIRouter(prefix="/v1/partyrelationshiptype", tags=["partyrelationshiptype"])
 
 @router.post("/", response_model=PartyRelationshipTypeOut)
 async def create_party_relationship_type_endpoint(party_relationship_type: PartyRelationshipTypeCreate, current_user: dict = Depends(get_current_user)):

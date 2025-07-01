@@ -11,7 +11,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/v1/prioritytypes", tags=["prioritytypes"])
+router = APIRouter(prefix="/v1/prioritytype", tags=["prioritytype"])
 
 @router.post("/", response_model=PriorityTypeOut)
 async def create_priority_type_endpoint(priority_type: PriorityTypeCreate, current_user: dict = Depends(get_current_user)):

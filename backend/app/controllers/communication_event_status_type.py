@@ -11,7 +11,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/v1/communicationeventstatustypes", tags=["communicationeventstatustypes"])
+router = APIRouter(prefix="/v1/communicationeventstatustype", tags=["communicationeventstatustype"])
 
 @router.post("/", response_model=CommunicationEventStatusTypeOut)
 async def create_communication_event_status_type_endpoint(communication_event_status_type: CommunicationEventStatusTypeCreate, current_user: dict = Depends(get_current_user)):

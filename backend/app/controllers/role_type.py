@@ -11,7 +11,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/v1/roletypes", tags=["roletypes"])
+router = APIRouter(prefix="/v1/roletype", tags=["roletype"])
 
 @router.post("/", response_model=RoleTypeOut)
 async def create_role_type_endpoint(role_type: RoleTypeCreate, current_user: dict = Depends(get_current_user)):

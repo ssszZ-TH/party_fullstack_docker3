@@ -11,7 +11,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/v1/contactmechanismtypes", tags=["contactmechanismtypes"])
+router = APIRouter(prefix="/v1/contactmechanismtype", tags=["contactmechanismtype"])
 
 @router.post("/", response_model=ContactMechanismTypeOut)
 async def create_contact_mechanism_type_endpoint(contact_mechanism_type: ContactMechanismTypeCreate, current_user: dict = Depends(get_current_user)):
