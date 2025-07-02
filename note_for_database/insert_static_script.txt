@@ -133,43 +133,17 @@ FROM '/staticData/party_type/party_type.csv'
 DELIMITER ','
 CSV HEADER;
 
-COPY organization (id, name_en, name_th)
-FROM '/staticData/organization/organization.csv'
+------------------------------------------------
+organization layer
+
+
+COPY party_type (id, description)
+FROM '/staticData/organization/party_type.csv'
 DELIMITER ','
 CSV HEADER;
 
-COPY legal_organization (id, federal_tax_id_number)
-FROM '/staticData/organization/legal_organization.csv'
-DELIMITER ','
-CSV HEADER;
-
-COPY corporation (id)
-FROM '/staticData/organization/corporation.csv'
-DELIMITER ','
-CSV HEADER;
-
-COPY government_agency (id)
-FROM '/staticData/organization/government_agency.csv'
-DELIMITER ','
-CSV HEADER;
-
-COPY informal_organization (id)
-FROM '/staticData/organization/informal_organization.csv'
-DELIMITER ','
-CSV HEADER;
-
-COPY team (id)
-FROM '/staticData/organization/team.csv'
-DELIMITER ','
-CSV HEADER;
-
-COPY family (id)
-FROM '/staticData/organization/family.csv'
-DELIMITER ','
-CSV HEADER;
-
-COPY other_informal_organization (id)
-FROM '/staticData/organization/other_informal_organization.csv'
+COPY party_classification (id, fromdate, thrudate, party_id, party_type_id)
+FROM '/staticData/organization/party_classification.csv'
 DELIMITER ','
 CSV HEADER;
 
@@ -208,13 +182,43 @@ FROM '/staticData/organization/classify_by_eeoc.csv'
 DELIMITER ','
 CSV HEADER;
 
-COPY party_classification (id, fromdate, thrudate, party_id, party_type_id)
-FROM '/staticData/organization/party_classification.csv'
+COPY organization (id, name_en, name_th)
+FROM '/staticData/organization/organization.csv'
 DELIMITER ','
 CSV HEADER;
 
-COPY party_type (id, description)
-FROM '/staticData/organization/party_type.csv'
+COPY legal_organization (id, federal_tax_id_number)
+FROM '/staticData/organization/legal_organization.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY corporation (id)
+FROM '/staticData/organization/corporation.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY government_agency (id)
+FROM '/staticData/organization/government_agency.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY informal_organization (id)
+FROM '/staticData/organization/informal_organization.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY team (id)
+FROM '/staticData/organization/team.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY family (id)
+FROM '/staticData/organization/family.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY other_informal_organization (id)
+FROM '/staticData/organization/other_informal_organization.csv'
 DELIMITER ','
 CSV HEADER;
 
