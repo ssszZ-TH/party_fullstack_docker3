@@ -1,0 +1,203 @@
+นี่คือ party.csv เป็น supper type ของ person เเละ organization
+
+id
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+เพิ่ม 11-20 ให้หน่อย เป็นของ organization
+
+
+นี่คือ person.csv
+"id","personal_id_number","birthdate","mothermaidenname","totalyearworkexperience","comment","gender_type_id"
+1,"123-45-6789","1995-03-15","Smith",5,"Software Developer (USA)",1
+2,"987654321012","1988-07-22","Yamada",10,"Project Manager (Japan)",2
+3,"123456789012","1992-01-10","Patel",7,"Data Analyst (India)",1
+4,"123.456.789-01","1990-12-05","Silva",8,"Marketing Specialist (Brazil)",2
+5,"123456789012345","1985-05-25","Dubois",12,"HR Manager (France)",2
+6,"1101234567891","1998-09-18","Somsri",3,"Graphic Designer (Thailand)",2
+7,"123456789","2000-11-30","Brown",2,"Financial Analyst (Australia)",1
+8,"12345678901","1983-04-12","Okeke",15,"Senior Consultant (Nigeria)",1
+9,"123456789012","1997-06-08","Ivanova",4,"Engineer (Russia)",2
+10,"950101-1234567","1993-02-20","Kim",6,"Product Designer (South Korea)",3
+
+ช่วยสร้าง csv เพื่อใช้ในการ insert ใน table ดังต่อไปนี้ให้หน่อย
+
+1. CREATE TABLE organization (
+    id SERIAL PRIMARY KEY REFERENCES party(id) ON DELETE CASCADE, -- Links to the party table
+    name_en VARCHAR(128),                       -- English name of the organization
+    name_th VARCHAR(128)                        -- Thai name of the organization
+);
+
+2. CREATE TABLE legal_organization (
+    id SERIAL PRIMARY KEY REFERENCES organization(id) ON DELETE CASCADE, -- Links to organization
+    federal_tax_id_number VARCHAR(64)                  -- Federal tax ID (e.g., EIN in the US)
+);
+
+3. CREATE TABLE corporation (
+    id SERIAL PRIMARY KEY REFERENCES legal_organization(id) ON DELETE CASCADE -- Links to legal_organization
+);
+
+4. CREATE TABLE government_agency (
+    id SERIAL PRIMARY KEY REFERENCES legal_organization(id) ON DELETE CASCADE -- Links to legal_organization
+);
+
+5. CREATE TABLE informal_organization (
+    id SERIAL PRIMARY KEY REFERENCES organization(id) ON DELETE CASCADE -- Links to organization
+);
+
+6. CREATE TABLE team (
+    id SERIAL PRIMARY KEY REFERENCES informal_organization(id) ON DELETE CASCADE -- Links to informal_organization
+);
+
+7. CREATE TABLE family (
+    id SERIAL PRIMARY KEY REFERENCES informal_organization(id) ON DELETE CASCADE -- Links to informal_organization
+);
+
+8. CREATE TABLE other_informal_organization (
+    id SERIAL PRIMARY KEY REFERENCES informal_organization(id) ON DELETE CASCADE -- Links to informal_organization
+);
+
+9. CREATE TABLE organization_classification (
+    id SERIAL PRIMARY KEY REFERENCES party_classification(id) ON DELETE CASCADE -- Unique identifier for organization classifications
+);
+
+10. CREATE TABLE person_classification (
+    id SERIAL PRIMARY KEY REFERENCES party_classification(id) ON DELETE CASCADE -- Links to party_classification
+);
+
+11. CREATE TABLE classify_by_size (
+    id SERIAL PRIMARY KEY REFERENCES organization_classification(id) ON DELETE CASCADE, -- Links to organization_classification
+    employee_count_range_id INT REFERENCES employee_count_range(id) ON DELETE CASCADE   -- Foreign key to employee_count_range
+);
+
+12. CREATE TABLE classify_by_industry (
+    id SERIAL PRIMARY KEY REFERENCES organization_classification(id) ON DELETE CASCADE, -- Links to organization_classification
+    industry_type_id INT REFERENCES industry_type(id) ON DELETE CASCADE                 -- Foreign key to industry_type
+);
+
+13. CREATE TABLE classify_by_minority (
+    id SERIAL PRIMARY KEY REFERENCES organization_classification(id) ON DELETE CASCADE, -- Links to organization_classification
+    minority_type_id INT REFERENCES minority_type(id) ON DELETE CASCADE                 -- Foreign key to minority_type
+);
+
+14. CREATE TABLE classify_by_income (
+    id SERIAL PRIMARY KEY REFERENCES person_classification(id) ON DELETE CASCADE, -- Links to person_classification
+    income_range_id INT REFERENCES income_range(id) ON DELETE CASCADE             -- Foreign key to income_range
+);
+
+15. CREATE TABLE classify_by_eeoc (
+    id SERIAL PRIMARY KEY REFERENCES person_classification(id) ON DELETE CASCADE, -- Links to person_classification
+    ethnicity_id INT REFERENCES ethnicity(id) ON DELETE CASCADE                   -- Foreign key to ethnicity
+);
+
+
+16. CREATE TABLE party_classification (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for each classification
+    fromdate DATE,                      -- Start date of the classification
+    thrudate DATE,                      -- End date of the classification (NULL if still active)
+    party_id INT REFERENCES party(id) ON DELETE CASCADE,  -- Foreign key linking to the party
+    party_type_id INT REFERENCES party_type(id) ON DELETE CASCADE -- Foreign key linking to the party type
+);
+
+
+17. CREATE TABLE party_type (
+    id SERIAL PRIMARY KEY,              -- Unique identifier for party types
+    description VARCHAR(128)            -- Description of the party type (e.g., "eeoc classification")
+);
+
+gen csv ทั้งหมด 17 ตัว เอาเเต่ code csv นะ จะได้ประหยัด token
+
+ต่อไปนี้คือ type ของ classification ตัวพวกนี้ไม่ต้อง gen มา เเค่เอาเป็นข้อมุลในการใช้ gen code ด้านบน เฉยๆ
+
+industry_type
+id,naics_code,description
+1,111110,Soybean Farming
+2,111120,Oilseed (except Soybean) Farming 
+3,111130,Dry Pea and Bean Farming 
+4,111140,Wheat Farming
+5,111150,Corn Farming 
+6,111160,Rice Farming
+เเละอื่นๆ อีกเพียบ
+
+employee_count_range (ใช้ในการ classify by size)
+id,description
+1,0 employees
+2,1-9 employees
+3,10-99 employees
+4,100-999 employees
+5,1000-9999 employees
+
+minority_type
+id,name_en,name_th
+1,Racial and ethnic minorities,ชนกลุ่มน้อยทางเชื้อชาติและชาติพันธุ์
+2,National minorities,ชนกลุ่มน้อยแห่งชาติ
+3,Involuntary minorities,ชนกลุ่มน้อยโดยไม่สมัครใจ
+4,Voluntary minorities,ชนกลุ่มน้อยโดยสมัครใจ
+5,Gender and sexuality minorities,ชนกลุ่มน้อยด้านเพศและอัตลักษณ์ทางเพศ
+6,Disabled people,ผู้พิการ
+7,Religious minorities,ชนกลุ่มน้อยทางศาสนา
+8,Women as a disadvantaged group,สตรีในฐานะกลุ่มด้อยโอกาส
+
+income_range
+"id","description"
+1,"0 THB"
+2,"1 - 10,000 THB"
+3,"10,001 - 20,000 THB"
+4,"20,001 - 30,000 THB"
+5,"30,001 - 40,000 THB"
+6,"40,001 - 50,000 THB"
+7,"50,001 - 75,000 THB"
+8,"75,001 - 100,000 THB"
+9,"100,001 - 150,000 THB"
+10,"150,001 - 200,000 THB"
+11,"200,001 - 300,000 THB"
+12,"300,001 THB and above"
+
+ethnicity (ใช้ในการ classify_by_eeoc)
+"id","name_en","name_th"
+1,"White","ขาว (คอเคเซียน)"
+2,"Black or African American","ดำหรือแอฟริกันอเมริกัน"
+3,"Asian","เอเชียน"
+4,"American Indian or Alaska Native","อเมริกันพื้นเมืองหรืออะแลสกาเนทีฟ"
+5,"Native Hawaiian or Other Pacific Islander","ชาวฮาวายพื้นเมืองหรือหมู่เกาะแปซิฟิกอื่นๆ"
+6,"Hispanic or Latino","ฮิสแปนิกหรือลาติน"
+7,"Multiracial or Other","หลายเชื้อชาติหรืออื่นๆ"
+
+party_type (relation กับ party_classification)
+id,description
+1,Classify Person By Eeoc
+2,Classify Person By Income
+3,Classify Organization By Minority
+4,Classify Organization By Industry
+5,Classify Organization By Size
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+จาก csv ที่ gen มา เเก้ใขนิดนึง
+
+---
+
+organization มี subtype คือ legal กับ informal 
+party (ชนิดองค์กรณ์ id 11-20) จะเป็นได้เเค่ 1 สายเท่านั้น จะเป็นหลายทางไม่ได้ party ในบริบทนี้คือ บุคคลหรือองค์กรณ์ เเต่ตอนนี้ผมสนใจองค์กร
+legal จะเเยกเป็นอีก 2 สายคือ government_agency กับ corporation
+informal จะเเยกเป็น 3 สายคือ team family other_informal_organization
+
+party_classification มี subtype คือ organization_classification กับ person_classification
+party จะเป็นได้หลายสาย เเต่ต้องเป็นประเภท person หรือ organization ตามของมันเอง (1-10 เป็น person 11-20 เป็น organization)
+organization_classification มี 3 สายคือ industry size minority
+person_classification มี 2 สายคือ income eeoc
+
+party ใช้ระบุว่าจะ classify ไปทางสายใหน
+1,Classify Person By Eeoc
+2,Classify Person By Income
+3,Classify Organization By Minority
+4,Classify Organization By Industry
+5,Classify Organization By Size
