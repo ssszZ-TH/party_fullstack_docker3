@@ -1,0 +1,11 @@
+id,description
+1,High
+2,Medium
+3,Low
+4,Urgent
+5,Normal
+6,Critical
+7,Minor
+8,Immediate
+9,Deferred
+10,Routine

@@ -1,0 +1,11 @@
+id,description
+1,Scheduled
+2,In Progress
+3,Completed
+4,Cancelled
+5,Postponed
+6,Failed
+7,Pending Approval
+8,On Hold
+9,Rescheduled
+10,Aborted

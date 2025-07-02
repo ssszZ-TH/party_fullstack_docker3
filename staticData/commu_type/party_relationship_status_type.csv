@@ -1,0 +1,11 @@
+id,description
+1,Active
+2,Inactive
+3,Pending
+4,Terminated
+5,Suspended
+6,Probation
+7,On Hold
+8,Expired
+9,Under Review
+10,Completed
