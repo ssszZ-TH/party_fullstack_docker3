@@ -41,6 +41,8 @@ from app.controllers.priority_type import router as priority_type_router
 from app.controllers.communication_event_status_type import router as communication_event_status_type_router
 from app.controllers.contact_mechanism_type import router as contact_mechanism_type_router
 from app.controllers.communication_event_purpose_type import router as communication_event_purpose_type_router
+from app.controllers.party_role import router as party_role_router
+
 
 # โหลด .env ก่อน import อื่นๆ
 load_dotenv()
@@ -95,6 +97,7 @@ app.include_router(priority_type_router)
 app.include_router(communication_event_status_type_router)
 app.include_router(contact_mechanism_type_router)
 app.include_router(communication_event_purpose_type_router)
+app.include_router(party_role_router)
 
 @app.on_event("startup")
 async def startup():
