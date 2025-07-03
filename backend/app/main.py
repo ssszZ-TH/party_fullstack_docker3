@@ -42,6 +42,7 @@ from app.controllers.communication_event_status_type import router as communicat
 from app.controllers.contact_mechanism_type import router as contact_mechanism_type_router
 from app.controllers.communication_event_purpose_type import router as communication_event_purpose_type_router
 from app.controllers.party_role import router as party_role_router
+from app.controllers.party_relationship import router as party_relationship_router
 
 
 # โหลด .env ก่อน import อื่นๆ
@@ -98,6 +99,7 @@ app.include_router(communication_event_status_type_router)
 app.include_router(contact_mechanism_type_router)
 app.include_router(communication_event_purpose_type_router)
 app.include_router(party_role_router)
+app.include_router(party_relationship_router)
 
 @app.on_event("startup")
 async def startup():
