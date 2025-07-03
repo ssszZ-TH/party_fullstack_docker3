@@ -28,10 +28,12 @@ async def create_party_role(party_role: PartyRoleCreate) -> Optional[PartyRoleOu
                            WHEN p.id IS NOT NULL THEN 'person'
                            WHEN o.id IS NOT NULL THEN 'organization'
                        END AS type,
-                       o.name_en, o.name_th, p.personal_id_number, p.comment
+                       o.name_en, o.name_th, p.personal_id_number, p.comment,
+                       rt.description AS role_type_description
                 FROM party_role pr
                 LEFT JOIN person p ON pr.party_id = p.id
                 LEFT JOIN organization o ON pr.party_id = o.id
+                LEFT JOIN role_type rt ON pr.role_type_id = rt.id
                 WHERE pr.id = :id
             """
             result = await database.fetch_one(query=query_fetch, values={"id": new_id})
@@ -48,10 +50,12 @@ async def get_party_role(party_role_id: int) -> Optional[PartyRoleOut]:
                    WHEN p.id IS NOT NULL THEN 'person'
                    WHEN o.id IS NOT NULL THEN 'organization'
                END AS type,
-               o.name_en, o.name_th, p.personal_id_number, p.comment
+               o.name_en, o.name_th, p.personal_id_number, p.comment,
+               rt.description AS role_type_description
         FROM party_role pr
         LEFT JOIN person p ON pr.party_id = p.id
         LEFT JOIN organization o ON pr.party_id = o.id
+        LEFT JOIN role_type rt ON pr.role_type_id = rt.id
         WHERE pr.id = :id
     """
     result = await database.fetch_one(query=query, values={"id": party_role_id})
@@ -68,10 +72,12 @@ async def get_all_party_roles() -> List[PartyRoleOut]:
                    WHEN p.id IS NOT NULL THEN 'person'
                    WHEN o.id IS NOT NULL THEN 'organization'
                END AS type,
-               o.name_en, o.name_th, p.personal_id_number, p.comment
+               o.name_en, o.name_th, p.personal_id_number, p.comment,
+               rt.description AS role_type_description
         FROM party_role pr
         LEFT JOIN person p ON pr.party_id = p.id
         LEFT JOIN organization o ON pr.party_id = o.id
+        LEFT JOIN role_type rt ON pr.role_type_id = rt.id
         ORDER BY pr.id ASC
     """
     results = await database.fetch_all(query=query)
@@ -85,10 +91,12 @@ async def get_party_roles_by_party_id(party_id: int) -> List[PartyRoleOut]:
                    WHEN p.id IS NOT NULL THEN 'person'
                    WHEN o.id IS NOT NULL THEN 'organization'
                END AS type,
-               o.name_en, o.name_th, p.personal_id_number, p.comment
+               o.name_en, o.name_th, p.personal_id_number, p.comment,
+               rt.description AS role_type_description
         FROM party_role pr
         LEFT JOIN person p ON pr.party_id = p.id
         LEFT JOIN organization o ON pr.party_id = o.id
+        LEFT JOIN role_type rt ON pr.role_type_id = rt.id
         WHERE pr.party_id = :party_id
         ORDER BY pr.fromdate DESC, pr.id DESC
     """
@@ -125,10 +133,12 @@ async def update_party_role(party_role_id: int, party_role: PartyRoleUpdate) -> 
                            WHEN p.id IS NOT NULL THEN 'person'
                            WHEN o.id IS NOT NULL THEN 'organization'
                        END AS type,
-                       o.name_en, o.name_th, p.personal_id_number, p.comment
+                       o.name_en, o.name_th, p.personal_id_number, p.comment,
+                       rt.description AS role_type_description
                 FROM party_role pr
                 LEFT JOIN person p ON pr.party_id = p.id
                 LEFT JOIN organization o ON pr.party_id = o.id
+                LEFT JOIN role_type rt ON pr.role_type_id = rt.id
                 WHERE pr.id = :id
             """
             result = await database.fetch_one(query=query_fetch, values={"id": party_role_id})

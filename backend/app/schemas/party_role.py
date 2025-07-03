@@ -25,6 +25,7 @@ class PartyRoleOut(BaseModel):
     name_th: Optional[str] = None
     personal_id_number: Optional[str] = None
     comment: Optional[str] = None
+    role_type_description: Optional[str] = None
 
     class Config:
         from_attributes = True
