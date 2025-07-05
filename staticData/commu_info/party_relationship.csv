@@ -1,0 +1,26 @@
+id,from_date,thru_date,comment,from_party_role_id,to_party_role_id,party_relationship_type_id,priority_type_id,party_relationship_status_type_id
+1,"2025-01-01",,"Team lead for project",2,1,1,1,1
+2,"2025-01-01",,"Client contract",4,11,3,2,1
+3,"2025-01-01",,"Supplier agreement",10,12,3,3,1
+4,"2025-01-01",,"Collaboration on project",5,13,2,2,1
+5,"2025-01-01",,"Volunteer coordination",18,20,10,4,1
+6,"2025-02-01","2025-07-31","Temporary contract",7,14,7,3,4
+7,"2025-03-01",,"Board oversight",23,11,9,1,1
+8,"2025-04-01",,"Shareholder agreement",24,12,8,2,1
+9,"2025-05-01",,"Team membership",6,18,6,3,1
+10,"2025-06-01",,"Family support",19,9,4,4,1
+11,"2025-01-01",,"Consulting services",8,15,7,2,1
+12,"2025-01-01",,"Logistics partnership",3,13,3,3,1
+13,"2025-02-01",,"Training program",5,16,3,2,1
+14,"2025-03-01",,"Media collaboration",9,17,2,4,1
+15,"2025-04-01",,"Community outreach",20,18,10,3,1
+16,"2025-01-15",,"Supplier contract",26,12,3,2,1
+17,"2025-02-15",,"Consulting engagement",27,15,7,3,1
+18,"2025-03-15",,"Project collaboration",28,13,2,2,1
+19,"2025-04-15",,"Team assignment",29,18,6,3,1
+20,"2025-05-15",,"Board membership",31,14,9,1,1
+21,"2025-01-01",,"Shareholder role",32,15,8,2,1
+22,"2025-01-01",,"Supplier contract",33,16,3,3,1
+23,"2025-01-01",,"Media partnership",34,17,2,4,1
+24,"2025-01-01",,"Volunteer team",35,18,10,3,1
+25,"2025-01-01",,"Customer contract",4,11,3,2,1

@@ -260,6 +260,29 @@ FROM '/staticData/commu_type/contact_mechanism_type.csv'
 DELIMITER ','
 CSV HEADER;
 
+-----------------------------------------------------
+commu info zone
+
+COPY party_role (id, fromdate, thrudate, party_id, role_type_id)
+FROM '/staticData/commu_info/party_role.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY party_relationship (id, from_date, thru_date, comment, from_party_role_id, to_party_role_id, party_relationship_type_id, priority_type_id, party_relationship_status_type_id)
+FROM '/staticData/commu_info/party_relationship.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY communication_event (id, datetime_start, datetime_end, note, contact_mechanism_type_id, communication_event_status_type_id, party_relationship_id)
+FROM '/staticData/commu_info/communication_event.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY communication_event_purpose (id, communication_event_id, communication_event_purpose_type_id)
+FROM '/staticData/commu_info/communication_event_purpose.csv'
+DELIMITER ','
+CSV HEADER;
+
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
