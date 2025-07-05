@@ -128,10 +128,7 @@ FROM '/staticData/passport/passport.csv'
 DELIMITER ','
 CSV HEADER;
 
-COPY party_type (id, description)
-FROM '/staticData/party_type/party_type.csv'
-DELIMITER ','
-CSV HEADER;
+
 
 ------------------------------------------------
 organization layer
