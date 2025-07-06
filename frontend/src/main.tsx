@@ -281,6 +281,22 @@ const routes = [
     path: "/v1/partyrelationship/:paramId",
     component: lazy(() => import("./pages/layer_relationship/PartyRelationshipDetail")),
   },
+  {
+    path: "/v1/communicationevent/",
+    component: lazy(() => import("./pages/layer_commu_event/CommunicationEvent")),
+  },
+  {
+    path: "/v1/communicationevent/:paramId",
+    component: lazy(() => import("./pages/layer_commu_event/CommunicationEventDetail")),
+  },
+  {
+    path: "/v1/communicationeventpurpose/",
+    component: lazy(() => import("./pages/layer_commu_purpose/CommunicationEventPurpose")),
+  },
+  {
+    path: "/v1/communicationeventpurpose/:paramId",
+    component: lazy(() => import("./pages/layer_commu_purpose/CommunicationEventPurposeDetail")),
+  },
 ];
 
 // สร้าง root element และ render แอปพลิเคชัน

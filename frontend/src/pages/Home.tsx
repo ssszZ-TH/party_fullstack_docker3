@@ -30,6 +30,8 @@ const services = [
     items: [
       { name: "Party Role", path: "/v1/partyrole" },
       { name: "Party Relationship", path: "/v1/partyrelationship" },
+      { name: "Communication Event", path: "/v1/communicationevent" },
+      { name: "Communication Event Purpose", path: "/v1/communicationeventpurpose" },
     ],
   },
   {
