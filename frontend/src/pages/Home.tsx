@@ -66,10 +66,28 @@ const services = [
       { name: "Industry Type", path: "/v1/industrytype" },
       { name: "Income Range", path: "/v1/incomerange" },
       { name: "Ethnicity", path: "/v1/ethnicity" },
-      { name: "Physical Characteristic Type", path: "/v1/physicalcharacteristictype" },
+      {
+        name: "Physical Characteristic Type",
+        path: "/v1/physicalcharacteristictype",
+      },
       { name: "Person Name Type", path: "/v1/personnametype" },
       { name: "Marital Status Type", path: "/v1/maritalstatustype" },
-      
+      {
+        name: "Communication Event Purpose Type",
+        path: "/v1/communicationeventpurposetype",
+      },
+      { name: "Contact Mechanism Type", path: "/v1/contactmechanismtype" },
+      {
+        name: "Communication Event Status Type",
+        path: "/v1/communicationeventstatustype",
+      },
+      { name: "Priority Type", path: "/v1/prioritytype" },
+      {
+        name: "Party Relationship Status Type",
+        path: "/v1/partyrelationshipstatustype",
+      },
+      { name: "Party Relationship Type", path: "/v1/partyrelationshiptype" },
+      { name: "Role Type", path: "/v1/roletype" },
     ],
   },
   {
@@ -114,7 +132,9 @@ export default function Home() {
     checkTokenValidity();
   }, [logout, navigate]);
 
-  const renderServiceGrid = (serviceItems: { name: string; path: string }[]) => (
+  const renderServiceGrid = (
+    serviceItems: { name: string; path: string }[]
+  ) => (
     <Box
       sx={{
         display: "flex",
@@ -142,7 +162,9 @@ export default function Home() {
           }}
         >
           <Avatar
-            src={`/home_thumbnail/${service.name.toLowerCase().replace(/\s+/g, "_")}.png`}
+            src={`/home_thumbnail/${service.name
+              .toLowerCase()
+              .replace(/\s+/g, "_")}.png`}
             sx={{
               width: 60,
               height: 60,
@@ -243,7 +265,9 @@ export default function Home() {
               Party Sync
             </Typography>
             <Typography variant="subtitle1" color="text.secondary">
-              manage comprehensive party details, including individuals and organizations, with a focus on relationships, communications with layered data management.
+              manage comprehensive party details, including individuals and
+              organizations, with a focus on relationships, communications with
+              layered data management.
             </Typography>
           </Box>
           {services.map((section) => (

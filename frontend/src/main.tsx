@@ -237,6 +237,34 @@ const routes = [
     path: "/v1/sizedetail/:paramId",
     component: lazy(() => import("./pages/layer_info/SizeDetail")),
   },
+  {
+    path: "/v1/communicationeventpurposetype",
+    component: lazy(() => import("./pages/layer_type/CommunicationEventPurposeType")),
+  },
+  {
+    path: "/v1/contactmechanismtype",
+    component: lazy(() => import("./pages/layer_type/ContactMechanismType")),
+  },
+  {
+    path: "/v1/communicationeventstatustype",
+    component: lazy(() => import("./pages/layer_type/CommunicationEventStatusType")),
+  },
+  {
+    path: "/v1/prioritytype",
+    component: lazy(() => import("./pages/layer_type/PriorityType")),
+  },
+  {
+    path: "/v1/partyrelationshipstatustype",
+    component: lazy(() => import("./pages/layer_type/PartyRelationshipStatusType")),
+  },
+  {
+    path: "/v1/partyrelationshiptype",
+    component: lazy(() => import("./pages/layer_type/PartyRelationshipType")),
+  },
+  {
+    path: "/v1/roletype",
+    component: lazy(() => import("./pages/layer_type/RoleType")),
+  },
 ];
 
 // สร้าง root element และ render แอปพลิเคชัน
