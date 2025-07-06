@@ -26,8 +26,11 @@ import { getProfile } from "../services/profile";
 // Services data arrays
 const services = [
   {
-    title: "Role",
-    items: [{ name: "Party Role", path: "/v1/partyrole" }],
+    title: "Relationship and Communication",
+    items: [
+      { name: "Party Role", path: "/v1/partyrole" },
+      { name: "Party Relationship", path: "/v1/partyrelationship" },
+    ],
   },
   {
     title: "Classify",

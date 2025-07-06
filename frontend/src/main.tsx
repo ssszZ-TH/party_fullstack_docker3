@@ -273,6 +273,14 @@ const routes = [
     path: "/v1/partyrole/:paramId",
     component: lazy(() => import("./pages/layer_role/PartyRoleDetail")),
   },
+  {
+    path: "/v1/partyrelationship/",
+    component: lazy(() => import("./pages/layer_relationship/PartyRelationship")),
+  },
+  {
+    path: "/v1/partyrelationship/:paramId",
+    component: lazy(() => import("./pages/layer_relationship/PartyRelationshipDetail")),
+  },
 ];
 
 // สร้าง root element และ render แอปพลิเคชัน
