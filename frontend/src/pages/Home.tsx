@@ -3,7 +3,6 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import {
   Box,
   Container,
-  Grid,
   Typography,
   Avatar,
   List,
@@ -19,63 +18,64 @@ import {
   Info as AboutIcon,
   Storage as DatabaseIcon,
   School as TutorialIcon,
-  ArrowForward as ArrowForwardIcon,
 } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
-
-// to check authentication
 import { AuthContext } from "../contexts/AuthContext";
 import { getProfile } from "../services/profile";
 
-// Services data array
-// อาร์เรย์ของ services
-const services_layer_base = [
-  { name: "Country", path: "/v1/country" },
-  // { name: "Party Type", path: "/v1/partytype" },
-];
-// อาร์เรย์ของ services
-const services_layer_type = [
-  { name: "Marital Status Type", path: "/v1/maritalstatustype" },
-
-  { name: "Person Name Type", path: "/v1/personnametype" },
+// Services data arrays
+const services = [
   {
-    name: "Physical Characteristic Type",
-    path: "/v1/physicalcharacteristictype",
+    title: "Relation",
+    items: [{ name: "Classify by Minority", path: "/v1/classifybyminority" }],
   },
-
-  // { name: "Legal Organization", path: "/v1/legalorganization" },
-  // { name: "Informal Organization", path: "/v1/informalorganization" },
-  { name: "Ethnicity", path: "/v1/ethnicity" },
-  { name: "Income Range", path: "/v1/incomerange" },
-  { name: "Industry Type", path: "/v1/industrytype" },
-  { name: "Employee Count Range", path: "/v1/employeecountrange" },
-  { name: "Minority Type", path: "/v1/minoritytype" },
-  { name: "Gender Type", path: "/v1/gendertype" },
-];
-
-const services_layer_person = [
-  { name: "Person", path: "/v1/person" },
-  { name: "Marital Status", path: "/v1/maritalstatus" },
-  { name: "Person Name", path: "/v1/personname" },
-  { name: "Citizenship", path: "/v1/citizenship" },
-  { name: "Passport", path: "/v1/passport" },
-  { name: "Physical Characteristic", path: "/v1/physicalcharacteristic" },
-];
-const services_layer_organization = [
-  { name: "Organization", path: "/v1/organization" },
-  { name: "Specific Organization Type", path: "/v1/organizationmenu" },
-];
-
-const services_layer_classify = [
-  { name: "Classify by EEOC", path: "/v1/classifybyeeoc" },
-  { name: "Classify by Income", path: "/v1/classifybyincome" },
-  { name: "Classify by Industry", path: "/v1/classifybyindustry" },
-  { name: "Classify by Size", path: "/v1/classifybysize" },
-  { name: "Classify by Minority", path: "/v1/classifybyminority" },
-];
-
-const services_layer_relation = [
-  { name: "Classify by Minority", path: "/v1/classifybyminority" },
+  {
+    title: "Classify",
+    items: [
+      { name: "Classify by Minority", path: "/v1/classifybyminority" },
+      { name: "Classify by Size", path: "/v1/classifybysize" },
+      { name: "Classify by Industry", path: "/v1/classifybyindustry" },
+      { name: "Classify by Income", path: "/v1/classifybyincome" },
+      { name: "Classify by EEOC", path: "/v1/classifybyeeoc" },
+    ],
+  },
+  {
+    title: "Organization",
+    items: [
+      { name: "Specific Organization Type", path: "/v1/organizationmenu" },
+      { name: "Organization", path: "/v1/organization" },
+    ],
+  },
+  {
+    title: "Person",
+    items: [
+      { name: "Physical Characteristic", path: "/v1/physicalcharacteristic" },
+      { name: "Passport", path: "/v1/passport" },
+      { name: "Citizenship", path: "/v1/citizenship" },
+      { name: "Person Name", path: "/v1/personname" },
+      { name: "Marital Status", path: "/v1/maritalstatus" },
+      { name: "Person", path: "/v1/person" },
+    ],
+  },
+  {
+    title: "Type",
+    items: [
+      { name: "Gender Type", path: "/v1/gendertype" },
+      { name: "Minority Type", path: "/v1/minoritytype" },
+      { name: "Employee Count Range", path: "/v1/employeecountrange" },
+      { name: "Industry Type", path: "/v1/industrytype" },
+      { name: "Income Range", path: "/v1/incomerange" },
+      { name: "Ethnicity", path: "/v1/ethnicity" },
+      { name: "Physical Characteristic Type", path: "/v1/physicalcharacteristictype" },
+      { name: "Person Name Type", path: "/v1/personnametype" },
+      { name: "Marital Status Type", path: "/v1/maritalstatustype" },
+      
+    ],
+  },
+  {
+    title: "Base",
+    items: [{ name: "Country", path: "/v1/country" }],
+  },
 ];
 
 // Navigation items
@@ -88,9 +88,9 @@ const navItems = [
 ];
 
 export default function Home() {
-  //do about authentication
   const { isAuthenticated, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const theme = useTheme();
 
   useEffect(() => {
     const checkTokenValidity = async () => {
@@ -112,13 +112,70 @@ export default function Home() {
     };
 
     checkTokenValidity();
-  }, [logout, navigate]); // ถ้าม logout หรือ navigate เปลี่ยนแปลง จะเรียก useEffect ใหม่
+  }, [logout, navigate]);
 
-  const theme = useTheme();
+  const renderServiceGrid = (serviceItems: { name: string; path: string }[]) => (
+    <Box
+      sx={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "12px",
+        justifyContent: "flex-start",
+      }}
+    >
+      {serviceItems.map((service) => (
+        <Box
+          key={service.path}
+          component={RouterLink}
+          to={service.path}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "110px",
+            height: "110px",
+            textDecoration: "none",
+            transition: "transform 0.2s",
+            "&:hover": {
+              transform: "scale(1.05)",
+            },
+          }}
+        >
+          <Avatar
+            src={`/home_thumbnail/${service.name.toLowerCase().replace(/\s+/g, "_")}.png`}
+            sx={{
+              width: 60,
+              height: 60,
+              mb: 0.5,
+              borderRadius: "10%",
+            }}
+          />
+          <Typography
+            variant="body2"
+            align="center"
+            color="text.primary"
+            sx={{
+              fontWeight: 500,
+              fontSize: "0.75rem",
+              lineHeight: 1.2,
+              height: "28px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {service.name}
+          </Typography>
+        </Box>
+      ))}
+    </Box>
+  );
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
-      {/* Vertical Navigation Bar */}
       <Box
         sx={{
           width: 240,
@@ -129,7 +186,6 @@ export default function Home() {
           zIndex: 10,
         }}
       >
-        {/* Logo */}
         <Box sx={{ p: 2, textAlign: "center" }}>
           <img
             src="/sphere_wire_frame.svg"
@@ -140,10 +196,7 @@ export default function Home() {
             }}
           />
         </Box>
-
         <Divider />
-
-        {/* Navigation Items */}
         <List>
           {navItems.map((item) => (
             <ListItem key={item.name} disablePadding>
@@ -163,17 +216,14 @@ export default function Home() {
           ))}
         </List>
       </Box>
-
-      {/* Main Content Area */}
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          ml: 30, // Match nav width + spacing
+          ml: 30,
           position: "relative",
         }}
       >
-        {/* Background Graphic */}
         <img
           src="/sphere_wire_frame.svg"
           alt="Background"
@@ -181,17 +231,13 @@ export default function Home() {
             position: "fixed",
             top: 0,
             left: 0,
-            // width: "100%",
             height: "100vh",
             objectFit: "cover",
             zIndex: -1,
             opacity: 0.2,
           }}
         />
-
-        {/* Content Container */}
         <Container maxWidth="lg" sx={{ py: 4 }}>
-          {/* Page Header */}
           <Box sx={{ textAlign: "center", mb: 4 }}>
             <Typography variant="h4" gutterBottom>
               Party Sync
@@ -200,383 +246,12 @@ export default function Home() {
               manage comprehensive party details, including individuals and organizations, with a focus on relationships, communications with layered data management.
             </Typography>
           </Box>
-
-          {/* Services Grid */}
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "12px", // Reduced gap between items
-              justifyContent: "flex-start",
-            }}
-          >
-            {services_layer_base.map((service) => (
-              <Box
-                key={service.path}
-                component={RouterLink}
-                to={service.path}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  width: "110px", // Compact width
-                  height: "110px", // Compact height
-                  textDecoration: "none",
-                  transition: "transform 0.2s",
-                  "&:hover": {
-                    transform: "scale(1.05)",
-                  },
-                }}
-              >
-                <Avatar
-                  src={`/home_thumbnail/${service.name
-                    .toLowerCase()
-                    .replace(/\s+/g, "_")}.png`}
-                  sx={{
-                    width: 60, // Smaller thumbnail
-                    height: 60,
-                    mb: 0.5, // Reduced margin
-                    borderRadius: "10%",
-                  }}
-                />
-                <Typography
-                  variant="body2"
-                  align="center"
-                  color="text.primary"
-                  sx={{
-                    fontWeight: 500,
-                    fontSize: "0.75rem", // Smaller text
-                    lineHeight: 1.2,
-                    height: "28px", // Fixed height for text
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "100%",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {service.name}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
-
-          <hr style={{ margin: "20px 0" }} />
-
-          {/* Services Grid */}
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "12px", // Reduced gap between items
-              justifyContent: "flex-start",
-            }}
-          >
-            {services_layer_type.map((service) => (
-              <Box
-                key={service.path}
-                component={RouterLink}
-                to={service.path}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  width: "110px", // Compact width
-                  height: "110px", // Compact height
-                  textDecoration: "none",
-                  transition: "transform 0.2s",
-                  "&:hover": {
-                    transform: "scale(1.05)",
-                  },
-                }}
-              >
-                <Avatar
-                  src={`/home_thumbnail/${service.name
-                    .toLowerCase()
-                    .replace(/\s+/g, "_")}.png`}
-                  sx={{
-                    width: 60, // Smaller thumbnail
-                    height: 60,
-                    mb: 0.5, // Reduced margin
-                    borderRadius: "10%",
-                  }}
-                />
-                <Typography
-                  variant="body2"
-                  align="center"
-                  color="text.primary"
-                  sx={{
-                    fontWeight: 500,
-                    fontSize: "0.75rem", // Smaller text
-                    lineHeight: 1.2,
-                    height: "28px", // Fixed height for text
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "100%",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {service.name}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
-
-          <hr style={{ margin: "20px 0" }} />
-
-          {/* Services Grid */}
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "12px", // Reduced gap between items
-              justifyContent: "flex-start",
-            }}
-          >
-            {services_layer_person.map((service) => (
-              <Box
-                key={service.path}
-                component={RouterLink}
-                to={service.path}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  width: "110px", // Compact width
-                  height: "110px", // Compact height
-                  textDecoration: "none",
-                  transition: "transform 0.2s",
-                  "&:hover": {
-                    transform: "scale(1.05)",
-                  },
-                }}
-              >
-                <Avatar
-                  src={`/home_thumbnail/${service.name
-                    .toLowerCase()
-                    .replace(/\s+/g, "_")}.png`}
-                  sx={{
-                    width: 60, // Smaller thumbnail
-                    height: 60,
-                    mb: 0.5, // Reduced margin
-                    borderRadius: "10%",
-                  }}
-                />
-                <Typography
-                  variant="body2"
-                  align="center"
-                  color="text.primary"
-                  sx={{
-                    fontWeight: 500,
-                    fontSize: "0.75rem", // Smaller text
-                    lineHeight: 1.2,
-                    height: "28px", // Fixed height for text
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "100%",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {service.name}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
-
-          <hr style={{ margin: "20px 0" }} />
-
-          {/* Services Grid */}
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "12px", // Reduced gap between items
-              justifyContent: "flex-start",
-            }}
-          >
-            {services_layer_organization.map((service) => (
-              <Box
-                key={service.path}
-                component={RouterLink}
-                to={service.path}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  width: "110px", // Compact width
-                  height: "110px", // Compact height
-                  textDecoration: "none",
-                  transition: "transform 0.2s",
-                  "&:hover": {
-                    transform: "scale(1.05)",
-                  },
-                }}
-              >
-                <Avatar
-                  src={`/home_thumbnail/${service.name
-                    .toLowerCase()
-                    .replace(/\s+/g, "_")}.png`}
-                  sx={{
-                    width: 60, // Smaller thumbnail
-                    height: 60,
-                    mb: 0.5, // Reduced margin
-                    borderRadius: "10%",
-                  }}
-                />
-                <Typography
-                  variant="body2"
-                  align="center"
-                  color="text.primary"
-                  sx={{
-                    fontWeight: 500,
-                    fontSize: "0.75rem", // Smaller text
-                    lineHeight: 1.2,
-                    height: "28px", // Fixed height for text
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "100%",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {service.name}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
-
-          <hr style={{ margin: "20px 0" }} />
-
-
-          {/* Services Grid */}
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "12px", // Reduced gap between items
-              justifyContent: "flex-start",
-            }}
-          >
-            {services_layer_classify.map((service) => (
-              <Box
-                key={service.path}
-                component={RouterLink}
-                to={service.path}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  width: "110px", // Compact width
-                  height: "110px", // Compact height
-                  textDecoration: "none",
-                  transition: "transform 0.2s",
-                  "&:hover": {
-                    transform: "scale(1.05)",
-                  },
-                }}
-              >
-                <Avatar
-                  src={`/home_thumbnail/${service.name
-                    .toLowerCase()
-                    .replace(/\s+/g, "_")}.png`}
-                  sx={{
-                    width: 60, // Smaller thumbnail
-                    height: 60,
-                    mb: 0.5, // Reduced margin
-                    borderRadius: "10%",
-                  }}
-                />
-                <Typography
-                  variant="body2"
-                  align="center"
-                  color="text.primary"
-                  sx={{
-                    fontWeight: 500,
-                    fontSize: "0.75rem", // Smaller text
-                    lineHeight: 1.2,
-                    height: "28px", // Fixed height for text
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "100%",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {service.name}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
-
-          <hr style={{ margin: "20px 0" }} />
-
-          {/* Services Grid */}
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "12px", // Reduced gap between items
-              justifyContent: "flex-start",
-            }}
-          >
-            {services_layer_relation.map((service) => (
-              <Box
-                key={service.path}
-                component={RouterLink}
-                to={service.path}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  width: "110px", // Compact width
-                  height: "110px", // Compact height
-                  textDecoration: "none",
-                  transition: "transform 0.2s",
-                  "&:hover": {
-                    transform: "scale(1.05)",
-                  },
-                }}
-              >
-                <Avatar
-                  src={`/home_thumbnail/${service.name
-                    .toLowerCase()
-                    .replace(/\s+/g, "_")}.png`}
-                  sx={{
-                    width: 60, // Smaller thumbnail
-                    height: 60,
-                    mb: 0.5, // Reduced margin
-                    borderRadius: "10%",
-                  }}
-                />
-                <Typography
-                  variant="body2"
-                  align="center"
-                  color="text.primary"
-                  sx={{
-                    fontWeight: 500,
-                    fontSize: "0.75rem", // Smaller text
-                    lineHeight: 1.2,
-                    height: "28px", // Fixed height for text
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "100%",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {service.name}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
+          {services.map((section) => (
+            <Box key={section.title}>
+              {renderServiceGrid(section.items)}
+              <hr style={{ margin: "20px 0" }} />
+            </Box>
+          ))}
         </Container>
       </Box>
     </Box>
