@@ -74,24 +74,24 @@ export default function PhysicalCharacteristic() {
       headerName: "Value",
       width: 100, // คอลัมน์ค่าลักษณะทางกายภาพ (เช่น ความสูง, น้ำหนัก)
     },
-    {
-      field: "update",
-      headerName: "",
-      width: 100,
-      renderCell: (params) => (
-        // ปุ่ม Update เรียก handleUpdateButton
-        <UpdateButton onClick={() => handleUpdateButton(params.row)} />
-      ),
-    },
-    {
-      field: "delete",
-      headerName: "",
-      width: 100,
-      renderCell: (params) => (
-        // ปุ่ม Delete เรียก handleDeleteButton
-        <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
-      ),
-    },
+    // {
+    //   field: "update",
+    //   headerName: "",
+    //   width: 100,
+    //   renderCell: (params) => (
+    //     // ปุ่ม Update เรียก handleUpdateButton
+    //     <UpdateButton onClick={() => handleUpdateButton(params.row)} />
+    //   ),
+    // },
+    // {
+    //   field: "delete",
+    //   headerName: "",
+    //   width: 100,
+    //   renderCell: (params) => (
+    //     // ปุ่ม Delete เรียก handleDeleteButton
+    //     <DeleteButton onClick={() => handleDeleteButton(params.row.id)} />
+    //   ),
+    // },
   ];
 
   // State สำหรับเก็บข้อมูลตาราง
@@ -285,11 +285,7 @@ export default function PhysicalCharacteristic() {
           getRowId={(row) => row.id} // ใช้ id เป็น key
         />
       )}
-      <AddButton
-        onClick={() => {
-          openModal("create"); // เปิด Modal ในโหมด create
-        }}
-      />
+      
       <Modal_physicalcharacteristic
         open={open}
         onClose={closeModal}
