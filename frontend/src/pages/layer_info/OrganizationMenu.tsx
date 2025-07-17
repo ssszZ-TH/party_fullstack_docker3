@@ -1,15 +1,15 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-import { Box, Button, AppBar, Toolbar, Typography } from "@mui/material";
+import { Box, Button, } from "@mui/material";
 import AppBarCustom from "../../components/AppBarCustom";
 
 const organizationMenuItems = [
-  { name: "Other Informal Organization", path: "/v1/otherinformalorganization" },
   { name: "Team", path: "/v1/team" },
   { name: "Family", path: "/v1/family" },
   { name: "Government Agency", path: "/v1/governmentagency" },
   { name: "Corporation", path: "/v1/corporation" },
+  { name: "Other Informal Organization", path: "/v1/otherinformalorganization" },
 ];
 
 export default function OrganizationMenu() {
