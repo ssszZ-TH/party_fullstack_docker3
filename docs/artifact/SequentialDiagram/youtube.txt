@@ -1,3 +1,5 @@
+Sequence Diagrams - by Code With Yousaf
 https://www.youtube.com/playlist?list=PLnZgHKyxHOECUIYNG1_0QLzqUbZc2a5HN
 
+How to Make a UML Sequence Diagram - lucid_software
 https://www.youtube.com/watch?v=pCK6prSq8aw
